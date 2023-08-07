@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ScrollView, View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
+import {ScrollView, View, Text, Image, StyleSheet, Button, useWindowDimensions} from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import Profile from '../../../assets/icons/profile.png';
 import Helpcenter from '../../../assets/icons/helpcenter.png';
@@ -20,19 +20,15 @@ const ProfilePage = () => {
     const {height} = useWindowDimensions();
     const Navigation = useNavigation();
     
-    const onRegisterPressed = () => {
-        Navigation.navigate('SignUpConfirmationPage');
+    const onLogoutPressed = () => {
+        Navigation.navigate('SignInPage')
     }
-
-    const onSignInPressed = () => {
-        Navigation.navigate('SignInPage');
-    }
-
+   
     return (
         <SafeAreaView> 
         <ScrollView showVerticalScrollIndicator={false}>
         <View> 
-        <View style={{flexDirection: 'row', marginTop: 15}}>
+        <View style={{flexDirection: 'row'}}>
 
             <Image source={Logo} 
             style={[styles.logo, {height: height*0.3}]} 
@@ -86,6 +82,10 @@ const ProfilePage = () => {
 
         </View>
 
+        <View style = {styles.custom}> 
+        <CustomButton  text="LOGOUT" onPress={onLogoutPressed} />
+        </View>
+        
         </View>
         </ScrollView>
         </SafeAreaView>
@@ -94,7 +94,12 @@ const ProfilePage = () => {
 
 const styles = StyleSheet.create({
     root: {
-        alignItems: 'center'
+        alignItems: 'center',
+    },
+
+    custom:{
+        alignItems: 'center',
+
     },
 
     logo: {

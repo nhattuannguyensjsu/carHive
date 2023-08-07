@@ -8,7 +8,8 @@ import ForgotPasswordPage from "../Pages/ForgotPasswordPage/ForgotPasswordPage";
 import NewPasswordPage from "../Pages/NewPasswordPage/NewPasswordPage";
 import WelcomePage from '../Pages/WelcomePage/WelcomePage';
 import SignUpConfirmationPage from '../Pages/SignUpConfirmationPage/SignUpConfirmationPage';
-
+import ProfilePage from '../Pages/ProfilePage/ProfilePage';
+import Homepage  from '../Pages/Homepage/Homepage';
 const Stack = createNativeStackNavigator();
 
 export default function Navigation() {
@@ -22,6 +23,10 @@ export default function Navigation() {
         <Stack.Screen name="ForgotPasswordPage" component={ForgotPasswordPage} />
         <Stack.Screen name="NewPasswordPage" component={NewPasswordPage} />
         <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} />
+        <Stack.Screen name="ProfilePage" component={ProfilePage} />
+        <Stack.Screen name="Homepage" component={Homepage} />
+
+
 
       </Stack.Navigator>
     

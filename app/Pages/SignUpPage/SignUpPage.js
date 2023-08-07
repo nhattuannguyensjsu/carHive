@@ -4,18 +4,33 @@ import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
-
+import axios from "axios";
 const SignUpPage = () => {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
+    const [inputs, setInputs] = useState({
+        name:"",
+        email:"",
+        password:"",
+    })
+
+    const handleChange =  e => {
+        setInputs(prev=>({...prev, [e.target.name]: e.target.value}))
+    }
+
+
     const [passwordRepeat, setPasswordRepeat] = useState('');
     const {height} = useWindowDimensions();
     const Navigation = useNavigation();
     
-    const onRegisterPressed = () => {
-        Navigation.navigate('SignUpConfirmationPage');
+    const onRegisterPressed = async e => {
+        e.preventDefault()
+        try { 
+            const res = await axios.post("/auth/register", inputs)
+            console.log(res)
+        } catch(err) {
+            console.log(res)
+        }
+
     }
 
     const onSignInPressed = () => {
@@ -33,26 +48,31 @@ const SignUpPage = () => {
             <Text style={styles.text}> Welcome to CarHive! </Text>
             <Text style={styles.text_sub} > SIGN UP </Text>
             <Text> Name </Text>
-            <CustomInput 
-                placeholder="Name" 
-                value={name} 
-                setValue={setName} 
+            <CustomInput required
+                placeholder="name" 
+                type="text"
+                name='name' 
+                onChange={handleChange}
             />
             <Text> Email </Text>
-            <CustomInput 
-                placeholder="Email" 
-                value={email} 
-                setValue={setEmail} 
+            <CustomInput required
+                placeholder="email" 
+                type="email"
+                name='email' 
+                onChange={handleChange}
+
             />
             <Text> Password </Text>
-            <CustomInput 
-                placeholder="Password" 
-                value={password} 
-                setValue={setPassword} 
+            <CustomInput required
+                placeholder="password" 
+                type="password"
+                name='password'
                 secureTextEntry  
+                onChange={handleChange}
+
             />
             <Text> Re-enter Password </Text>
-            <CustomInput 
+            <CustomInput required
                 placeholder="passwordRepeat" 
                 value={passwordRepeat} 
                 setValue={setPasswordRepeat} 

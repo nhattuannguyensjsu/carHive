@@ -4,6 +4,7 @@ import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import Tabs from '../../navigation/Tabs';
 
 const SignInPage = () => {
 
@@ -56,7 +57,6 @@ const SignInPage = () => {
             <Text style={{color:"blue", textDecorationLine: "underline", fontWeight: "bold"}} 
             onPress={onSignupPressed}> Dont't have an account? Click here to sign up 
             </Text>
-     
         </View>
         </ScrollView>
 

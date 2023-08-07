@@ -18,13 +18,13 @@ import SignUpPage from "./Pages/SignUpPage/SignUpPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage/ForgotPasswordPage";
 import NewPasswordPage from "./Pages/NewPasswordPage/NewPasswordPage";
 import Navigation from './navigation/navigation';
-import Homepage from "./Pages/WelcomePage/WelcomePage";
+import Tabs from './navigation/Tabs';
 import SignUpConfirmationPage from './Pages/SignUpConfirmationPage/SignUpConfirmationPage';
 import ProfilePage from './Pages/ProfilePage/ProfilePage';
 import { SplashScreen } from 'expo-router/src/views/Splash';
 import WelcomePage from './Pages/WelcomePage/WelcomePage';
-
-
+import Homepage from './Pages/Homepage/Homepage';
+import { NavigationContainer } from '@react-navigation/native';
 
 const Home = () => {
 
@@ -47,7 +47,8 @@ const Home = () => {
 
     return (
         <SafeAreaView style={styles.text}>
-            <ProfilePage/>
+                <Navigation/>
+
         </SafeAreaView>
     );
 };
