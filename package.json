@@ -14,6 +14,7 @@
     "@react-navigation/native-stack": "^6.9.13",
     "async": "^3.2.4",
     "axios": "^1.4.0",
+    "bcrypt": "^5.1.1",
     "expo": "^48.0.7",
     "expo-constants": "~14.2.1",
     "expo-font": "~11.1.1",
@@ -47,6 +48,5 @@
     "metro": "^0.73.7",
     "metro-resolver": "^0.73.7"
   },
-  "proxy": "http://localhost:8800/backend", 
-  "private": true
+  "proxy": "http://localhost:8800/backend/"
 }

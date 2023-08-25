@@ -1,41 +1,40 @@
 import React from "react";
-import {View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from "react-native";
 
-const CustomButton = ({onPress, text, type}) => {
-    return (
-        <Pressable onPress={onPress} style={[styles.container, styles[`container_${type}`]]}>
-            <Text style={[styles.text, styles[`text_${type}`]]}> {text} </Text>
-        </Pressable>
-    );
+const CustomButton = ({ onPress, text, type }) => {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.container, styles[`container_${type}`]]}
+    >
+      <Text style={[styles.text, styles[`text_${type}`]]}> {text} </Text>
+    </Pressable>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#FFD43C',
-        width: '40%',
-        padding: 15,
-        marginVertical: 15,
+  container: {
+    backgroundColor: "#FFD43C",
+    width: "20%",
+    padding: 15,
+    marginVertical: 15,
+    alignItems: "center",
+    borderRadius: 25,
+  },
 
-        alignItems: 'center',
-        borderRadius: 15,
-    },
+  container_primary: {
+    backgroundColor: "black",
+  },
 
-    container_primary: {
-        backgroundColor: 'black',
-    },
+  text_tertiary: {
+    color: "blue",
+    textDecorationLine: "underline",
+  },
 
-
-    text_tertiary: {
-        color: 'blue',
-        textDecorationLine: "underline", 
-    
-    },
-
-    text: {
-        fontWeight: 'bold',
-        color: 'black'
-
-    },
+  text: {
+    fontWeight: "bold",
+    color: "black",
+  },
 });
 
-export default  CustomButton;
+export default CustomButton;
