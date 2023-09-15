@@ -18,13 +18,15 @@ const db = mysql.createConnection({
   database: "carhive",
 });
 
-// app.get("/users", (req, res) => {
-//   const q = "SELECT * FROM users";
-//   db.query(q, (err, data) => {
-//     if (err) return res.json("Error");
-//     return res.json(data);
-//   });
-// });
+
+
+app.get("/users", (req, res) => {
+  const q = "SELECT * FROM users";
+  db.query(q, (err, data) => {
+    if (err) return res.json("Error");
+    return res.json(data);
+  });
+});
 
 app.use("/backend/posts", postRoutes);
 app.use("/backend/auth", authRoutes);

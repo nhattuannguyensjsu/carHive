@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {ScrollView, View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 const ForgotPasswordPage = () => {
 
     const [email, setEmail] = useState('');
-    const {height} = useWindowDimensions();
+    const { height } = useWindowDimensions();
     const Navigation = useNavigation();
 
 
@@ -22,28 +22,28 @@ const ForgotPasswordPage = () => {
 
     return (
         <ScrollView showVerticalScrollIndicator={false}>
-        <View style={styles.root}>
-            <Image source={Logo} 
-            style={[styles.logo, {height: height*0.3}]} 
-            resizeMode="contain" 
-            />
-       
-            <Text style={styles.text}> Reset Your Password </Text>
-          
-            <Text style={styles.text_sub}> Email </Text>
-            <CustomInput 
-                placeholder="Email" 
-                value={email} 
-                setValue={setEmail} 
-            />
-            
-            <CustomButton text="SEND CODE" onPress={onSendPressed} />
+            <View style={styles.root}>
+                <Image source={Logo}
+                    style={[styles.logo, { height: height * 0.3 }]}
+                    resizeMode="contain"
+                />
 
-            <Text style={{color:"blue", textDecorationLine: "underline", fontWeight: "bold"}} 
-            onPress={onBackSignInPressed}> Back To Sign In 
-            </Text>
-     
-        </View>
+                <Text style={styles.text}> Reset Your Password </Text>
+
+                <Text style={styles.text_sub}> Email </Text>
+                <CustomInput
+                    placeholder="Email"
+                    value={email}
+                    setValue={setEmail}
+                />
+
+                <CustomButton text="SEND CODE" onPress={onSendPressed} />
+
+                <Text style={{ color: "blue", textDecorationLine: "underline" }}
+                    onPress={onBackSignInPressed}> Back To Sign In
+                </Text>
+
+            </View>
         </ScrollView>
     );
 };
@@ -58,17 +58,16 @@ const styles = StyleSheet.create({
         maxWidth: 300,
         maxHeight: 200,
     },
-    text: { 
+    text: {
         fontSize: 25,
         margin: 10,
-        fontWeight: 'bold'
     },
     text_sub: {
         fontSize: 20,
         margin: 10,
-        
+
     }
-    
+
 });
 
 export default ForgotPasswordPage;

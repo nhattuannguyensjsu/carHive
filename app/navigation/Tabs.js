@@ -126,7 +126,7 @@ const Tabs = () => {
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center" }}>
               <Image
-                source={require("../../assets/icons/resume.png")}
+                source={require("../../assets/icons/profile.png")}
                 resizeMode="contain"
                 style={{
                   width: 30,

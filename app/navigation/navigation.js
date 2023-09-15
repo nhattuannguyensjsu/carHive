@@ -20,10 +20,7 @@ export default function Navigation() {
       <Stack.Screen name="SignUpPage" component={SignUpPage} />
       <Stack.Screen name="ForgotPasswordPage" component={ForgotPasswordPage} />
       <Stack.Screen name="NewPasswordPage" component={NewPasswordPage} />
-      <Stack.Screen
-        name="SignUpConfirmationPage"
-        component={SignUpConfirmationPage}
-      />
+      <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage}/>
       <Stack.Screen name="ProfilePage" component={ProfilePage} />
       <Stack.Screen name="Homepage" component={Homepage} />
     </Stack.Navigator>
