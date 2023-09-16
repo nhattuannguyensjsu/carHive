@@ -37,31 +37,6 @@ const ProfilePage = () => {
 
     }
 
-    // useEffect(() => {
-    //     const users_info = async () => {
-    //         try {
-    //             const querySnapshot = await onSnapshot(collection(FIREBASE_DATABASE, 'usersInfo'));
-
-    //             const users = [];
-    //             querySnapshot.forEach((doc) => {
-    //                 const { email, password } = doc.data();
-    //                 users.push({
-    //                     id: doc.id,
-    //                     email,
-    //                     password,
-    //                 });
-    //             });
-
-    //             setUsers(users);
-    //         } catch (error) {
-    //             console.error('Error fetching users:', error);
-    //         }
-    //     };
-
-    //     users_info();
-    // }, [])
-
-
     useEffect(() => {
         // Call getUsersInfo when the component mounts
         getUsersInfo();
@@ -69,7 +44,7 @@ const ProfilePage = () => {
 
     return (
         <SafeAreaView style={styles.safe}>
-            <ScrollView showVerticalScrollIndicator={true}>
+            <ScrollView showVerticalScrollIndicator={false}>
                 <View>
                     <View style={{ flexDirection: 'row' }}>
 
@@ -95,14 +70,14 @@ const ProfilePage = () => {
                         <Text style={styles.text_sub}>  Password:   {userInfo ? userInfo.password : ''} </Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row' }}>
+                    {/* <View style={{ flexDirection: 'row' }}>
 
                         <Image source={Helpcenter} style={styles.icon}
                             resizeMode="contain"
                         />
                         <Text style={styles.text_sub}> Help Center </Text>
 
-                    </View>
+                    </View> */}
 
                     <View style={{ flexDirection: 'row' }}>
 

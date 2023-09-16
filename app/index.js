@@ -1,11 +1,9 @@
 import React from "react";
-import * as Font from "expo-font";
 import {
   View,
   SafeAreaView,
   StyleSheet,
   Text,
-  useColorScheme,
   Image, TouchableOpacity
 } from "react-native";
 
@@ -39,6 +37,50 @@ const InsideStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
+function InsideLayout() {
+  return (
+    <SafeAreaView style={styles.text}>
+      <InsideStack.Navigator>
+        <InsideStack.Screen name="HomepageNavi" component={HomepageNavi} options={{ headerShown: false }} />
+      </InsideStack.Navigator>
+    </SafeAreaView>
+  )
+}
+
+export default function Home() {
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      setUser(user);
+    });
+  }, []);
+
+  return (
+    <SafeAreaView style={styles.text}>
+      <NavigationContainer independent={true}>
+
+        <Stack.Navigator initialRouteName='WelcomePage'>
+
+          {user ? (
+            <Stack.Screen name='Inside' component={InsideLayout} options={{ headerShown: false }} />
+          ) : (
+            <Stack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
+          )}
+
+          <Stack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} />
+          <Stack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />
+          <Stack.Screen name='SignUpConfirmationPage' component={SignUpConfirmationPage} options={{ headerShown: false }} />
+
+        </Stack.Navigator>
+
+      </NavigationContainer>
+    </SafeAreaView>
+
+  );
+}
+
 const CustomTabBarButton = ({ children, onPress }) => (
   <TouchableOpacity
     style={{ top: -20, justifyContent: "center", alignItems: "center" }}
@@ -49,16 +91,6 @@ const CustomTabBarButton = ({ children, onPress }) => (
     </View>
   </TouchableOpacity>
 );
-
-function InsideLayout() {
-  return (
-    <SafeAreaView style={styles.text}>
-      <InsideStack.Navigator>
-        <InsideStack.Screen name="HomepageNavi" component={HomepageNavi} options={{ headerShown: false }} />
-      </InsideStack.Navigator>
-    </SafeAreaView>
-  )
-}
 
 const screenOptions = {
   tabBarShowLabel: false,
@@ -73,7 +105,6 @@ const screenOptions = {
     background: "#FFD43C"
   }
 }
-
 
 function HomepageNavi() {
   return (
@@ -179,43 +210,6 @@ function HomepageNavi() {
     </SafeAreaView>
   )
 }
-
-
-export default function Home() {
-
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      setUser(user);
-    });
-  }, []);
-
-  return (
-    <SafeAreaView style={styles.text}>
-      <NavigationContainer independent={true}>
-
-        <Stack.Navigator defaultScreenOptions='SignInPage'>
-          {user ? (
-            <Stack.Screen name='Inside' component={InsideLayout} options={{ headerShown: false }} />
-          ) : (
-            <Stack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
-          )}
-
-          <Stack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} />
-          <Stack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />
-
-        </Stack.Navigator>
-
-
-
-      </NavigationContainer>
-    </SafeAreaView>
-
-  );
-
-}
-
 
 const styles = StyleSheet.create({
   text: {

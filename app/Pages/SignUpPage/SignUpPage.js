@@ -33,7 +33,7 @@ const SignUpPage = () => {
 
     if (email !== '' && password !== '') {
       createUserWithEmailAndPassword(auth, email, password)
-        .then(() => alert('Sucessfullt registered!!!'))
+        .then(() => Navigation.navigate("SignUpConfirmationPage"))
         .catch((err) => alert("Sign Up Error!!!", err.message));
     }
   };
@@ -64,7 +64,7 @@ const SignUpPage = () => {
           style={styles.input}
           required
           type="email"
-          placeholder="mail"
+          placeholder="Email"
           onChangeText={(text) => setEmail(text)}
           autoCapitalize="none">
         </TextInput>
@@ -96,7 +96,7 @@ const SignUpPage = () => {
           )}
 
         <CustomButton
-          title="Already have an account? Click here to Login"
+          text="Already have an account? Click here to Login"
           onPress={() => Navigation.navigate("SignInPage")} />
 
 
