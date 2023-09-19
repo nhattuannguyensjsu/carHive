@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, Image, StyleSheet, useWindowDimensions, Button } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import Profile from '../../../assets/icons/profile.png';
-import Helpcenter from '../../../assets/icons/helpcenter.png';
+import Edit from '../../../assets/icons/edit.png';
 import Listing from '../../../assets/icons/listing.png';
 import Fav from '../../../assets/icons/fav.png';
+import Lock from '../../../assets/icons/lock.png'
 
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { FlatList } from 'react-native-gesture-handler';
-import { collection, getDocs } from 'firebase/firestore';
+import { doc, collection, getDoc, updateDoc } from 'firebase/firestore';
 
 const ProfilePage = () => {
 
@@ -20,26 +21,43 @@ const ProfilePage = () => {
 
     const [userInfo, setUserInfo] = useState(null);
 
-    const getUsersInfo = async () => {
+    const getUserInfo = async () => {
         try {
-            const usersInfoCol = collection(FIREBASE_DATABASE, 'usersInfo');
-            const usersSnapshot = await getDocs(usersInfoCol);
+            const user = FIREBASE_AUTH.currentUser;
 
-            const usersList = usersSnapshot.docs.map(doc => doc.data());
+            if (user) {
+                const userDocRef = doc(FIREBASE_DATABASE, 'users', user.email);
+                const userDocSnapshot = await getDoc(userDocRef);
 
-            if (usersList.length > 0) {
-                setUserInfo(usersList[0]); // Assuming you want the first user's data
+                if (userDocSnapshot.exists()) {
+                    setUserInfo(userDocSnapshot.data());
+                }
             }
-        }
-        catch (error) {
+        } catch (error) {
             console.error('Error fetching user data:', error);
         }
-
     }
 
+
+    const updateName = async () => {
+
+        // Set user data in Firestore
+        updateDoc(doc(FIREBASE_DATABASE, "users", user.email), {
+            name: userInfo.name,
+        })
+            .then(() => {
+                console.log('Data submitted');
+                Navigation.navigate("SignUpConfirmationPage");
+            })
+            .catch((error) => {
+                console.error("Error writing document: ", error);
+            });
+    }
+
+
     useEffect(() => {
-        // Call getUsersInfo when the component mounts
-        getUsersInfo();
+        // Call getUserInfo when the component mounts
+        getUserInfo();
     }, []);
 
     return (
@@ -62,12 +80,21 @@ const ProfilePage = () => {
                     </View>
 
                     <View >
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.text_sub}>  Name:   {userInfo ? userInfo.name : ''}</Text>
+                            <Image source={Edit} style={[styles.subicon, { height: height * 0.1 }]}
+                                resizeMode="contain"
+                                onPress={updateName}
+                            />
 
-                        <Text style={styles.text_sub}>  Name:   {userInfo ? userInfo.name : ''}</Text>
-
+                        </View>
                         <Text style={styles.text_sub}>  Email:  {userInfo ? userInfo.email : ''}   </Text>
+                        <View style={{ flexDirection: 'row' }}>
 
-                        <Text style={styles.text_sub}>  Password:   {userInfo ? userInfo.password : ''} </Text>
+                            <Text style={styles.text_sub}>  Password:   {userInfo ? userInfo.password : ''} </Text>
+                            <Image source={Lock} style={[styles.subicon, { height: height * 0.1 }]}
+                                resizeMode="contain" />
+                        </View>
                     </View>
 
                     {/* <View style={{ flexDirection: 'row' }}>
@@ -105,7 +132,8 @@ const ProfilePage = () => {
             </ScrollView>
         </SafeAreaView>
     );
-};
+}
+
 
 const styles = StyleSheet.create({
     root: {
@@ -149,6 +177,11 @@ const styles = StyleSheet.create({
         marginLeft: 25,
         maxHeight: 30,
         maxWidth: 30
+    },
+    subicon: {
+        marginTop: 22,
+        maxHeight: 20,
+        maxWidth: 20
     }
 
 });

@@ -3,7 +3,6 @@ import { ScrollView, View, Text, Image, StyleSheet, useWindowDimensions } from '
 import Logo from '../../../assets/images/logo.png';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
-import Navigation from '../../navigation/navigation';
 
 const SignUpConfirmationPage = () => {
 

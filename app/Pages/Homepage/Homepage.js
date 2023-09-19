@@ -5,7 +5,6 @@ import Location from '../../../assets/icons/location.png';
 import Swap from '../../../assets/icons/swap.png';
 import Filter from '../../../assets/icons/filter.png';
 import Search from '../../../assets/icons/search.png';
-import Tabs from '../../navigation/Tabs';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';

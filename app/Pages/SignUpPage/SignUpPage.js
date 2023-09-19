@@ -13,13 +13,15 @@ import Logo from "../../../assets/images/logo.png";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import { FIREBASE_APP, FIREBASE_AUTH } from "../../../firebaseConfig";
+import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DATABASE } from "../../../firebaseConfig";
 import { ActivityIndicator } from 'react-native-web';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from "firebase/firestore";
 
 
 const SignUpPage = () => {
 
+  const Navigation = useNavigation();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,14 +29,52 @@ const SignUpPage = () => {
 
   const auth = FIREBASE_AUTH;
 
-  const Navigation = useNavigation();
+
+  // const SignUp = async () => {
+  //   setDoc(doc(FIREBASE_DATABASE, "users", "usersInfo"), {
+  //     name: name,
+  //     email: email,
+  //     password: password,
+  //   }).then(() => {
+  //     console.log('Data submitted');
+  //   }).catch((error) => {
+  //     console.log(error);
+  //   })
+
+  //   if (email !== '' && password !== '') {
+  //     createUserWithEmailAndPassword(auth, email, password)
+  //       .then(() => Navigation.navigate("SignUpConfirmationPage"))
+  //       .catch((err) => alert("Sign Up Error!!!", err.message));
+  //   }
+  // };
 
   const SignUp = async () => {
-
     if (email !== '' && password !== '') {
       createUserWithEmailAndPassword(auth, email, password)
-        .then(() => Navigation.navigate("SignUpConfirmationPage"))
-        .catch((err) => alert("Sign Up Error!!!", err.message));
+        .then((userCredential) => {
+          const user = userCredential.user;
+          // Use the user's email as the document ID
+          const userDocRef = doc(FIREBASE_DATABASE, "users", user.email);
+
+          // Set user data in Firestore
+          setDoc(userDocRef, {
+            name: name,
+            email: email,
+            password: password,
+            // You may not want to store the password in Firestore for security reasons
+            // Instead, you can store other user-related data here
+          })
+            .then(() => {
+              console.log('Data submitted');
+              Navigation.navigate("SignUpConfirmationPage");
+            })
+            .catch((error) => {
+              console.error("Error writing document: ", error);
+            });
+        })
+        .catch((err) => {
+          console.error("Sign Up Error: ", err.message);
+        });
     }
   };
 

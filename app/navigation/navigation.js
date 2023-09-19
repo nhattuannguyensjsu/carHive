@@ -10,9 +10,11 @@ import WelcomePage from "../Pages/WelcomePage/WelcomePage";
 import SignUpConfirmationPage from "../Pages/SignUpConfirmationPage/SignUpConfirmationPage";
 import ProfilePage from "../Pages/ProfilePage/ProfilePage";
 import Homepage from "../Pages/Homepage/Homepage";
+import UploadIDPage from "../Pages/UploadIDPage/UploadIDPage";
+
 const Stack = createNativeStackNavigator();
 
-export default function Navigation() {
+export default function AppNavigation() {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -24,6 +26,8 @@ export default function Navigation() {
         <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} />
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
         <Stack.Screen name="Homepage" component={Homepage} />
+        <Stack.Screen name="UploadIDPage" component={UploadIDPage} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

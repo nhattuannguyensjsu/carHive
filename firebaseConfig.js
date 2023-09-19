@@ -5,6 +5,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,6 +19,7 @@ const firebaseConfig = {
     messagingSenderId: "269589515695",
     appId: "1:269589515695:web:74e38aa014240833b6735a"
 };
+
 
 
 // Initialize Firebase

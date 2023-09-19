@@ -36,6 +36,17 @@ const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+function Welcome() {
+  return (
+    <SafeAreaView style={styles.text}>
+      <InsideStack.Navigator initialRouteName="WelcomePage">
+        <InsideStack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
+        <InsideStack.Screen name="SignInPage" component={SignInPage} options={{ headerShown: false }} />
+        <InsideStack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
+      </InsideStack.Navigator>
+    </SafeAreaView>
+  )
+}
 
 function InsideLayout() {
   return (
@@ -66,12 +77,12 @@ export default function Home() {
           {user ? (
             <Stack.Screen name='Inside' component={InsideLayout} options={{ headerShown: false }} />
           ) : (
-            <Stack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
+            <Stack.Screen name='Welcome' component={Welcome} options={{ headerShown: false }} />
           )}
-
+          <Stack.Screen name="SignInPage" component={SignInPage} options={{ headerShown: false }} />
+          <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
           <Stack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />
-          <Stack.Screen name='SignUpConfirmationPage' component={SignUpConfirmationPage} options={{ headerShown: false }} />
 
         </Stack.Navigator>
 
@@ -220,5 +231,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
-
 

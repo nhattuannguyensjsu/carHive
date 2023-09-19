@@ -8,6 +8,8 @@ import { FIREBASE_AUTH } from "../../../firebaseConfig";
 import { ActivityIndicator } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
+
+
 const SignInPage = () => {
 
     const [email, setEmail] = useState('');
