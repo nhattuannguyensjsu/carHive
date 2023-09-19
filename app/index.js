@@ -30,6 +30,7 @@ import { useState } from "react";
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from "react";
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from "../firebaseConfig";
+import UploadIDPage from "./Pages/UploadIDPage/UploadIDPage";
 
 
 const Stack = createNativeStackNavigator();
@@ -72,14 +73,14 @@ export default function Home() {
     <SafeAreaView style={styles.text}>
       <NavigationContainer independent={true}>
 
-        <Stack.Navigator initialRouteName='WelcomePage'>
+        <Stack.Navigator initialRouteName='SignInPage'>
 
           {user ? (
             <Stack.Screen name='Inside' component={InsideLayout} options={{ headerShown: false }} />
           ) : (
-            <Stack.Screen name='Welcome' component={Welcome} options={{ headerShown: false }} />
+            <Stack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
           )}
-          <Stack.Screen name="SignInPage" component={SignInPage} options={{ headerShown: false }} />
+          <Stack.Screen name="UploadIDPage" component={UploadIDPage} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
           <Stack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />
@@ -87,6 +88,7 @@ export default function Home() {
         </Stack.Navigator>
 
       </NavigationContainer>
+
     </SafeAreaView>
 
   );

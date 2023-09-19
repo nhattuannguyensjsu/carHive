@@ -3,6 +3,7 @@ import { ScrollView, View, Text, Image, StyleSheet, useWindowDimensions, Touchab
 
 import Logo from '../../../assets/images/logo.png';
 import IDCard from '../../../assets/images/id-card.png';
+import Goback from '../../../assets/icons/goback.png';
 
 import { FlatList } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -26,6 +27,7 @@ const UploadIDPage = () => {
     const [progress, setProgress] = useState(0);
     const [files, setFiles] = useState([]);
     const { height } = useWindowDimensions();
+    const Navigation = useNavigation();
 
     // async function pickImage() {
     //     let result = await ImagePicker.launchImageLibraryAsync({
@@ -140,7 +142,12 @@ const UploadIDPage = () => {
             <View>
 
                 <View style={{ flexDirection: 'row' }}>
-
+                    <TouchableOpacity onPress={() => Navigation.navigate("ProfilePage")}>
+                        <Image source={Goback}
+                            style={[styles.goback, { height: height * 0.05 }]}
+                            resizeMode="contain"
+                        />
+                    </TouchableOpacity>
                     <Image source={Logo}
                         style={[styles.logo, { height: height * 0.1 }]}
                         resizeMode="contain"
@@ -213,7 +220,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        marginTop: 15,
+        marginTop: 20,
         color: "#FAC503",
     },
     image: {
@@ -249,6 +256,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         borderRadius: 25,
     },
+    goback: {
+        width: 30,
+        height: 30,
+        marginTop: 20,
+        marginLeft: 20,
+        marginRight: -10
+    }
 
 
 });

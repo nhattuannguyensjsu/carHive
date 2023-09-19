@@ -106,6 +106,7 @@ const ProfilePage = () => {
 
                     </View> */}
 
+
                     <View style={{ flexDirection: 'row' }}>
 
                         <Image source={Listing} style={styles.icon}
@@ -124,6 +125,11 @@ const ProfilePage = () => {
 
                     </View>
 
+
+
+                    <View style={styles.custom}>
+                        <CustomButton text='ID Verification' onPress={() => Navigation.navigate('UploadIDPage')} />
+                    </View>
                     <View style={styles.custom}>
                         <CustomButton text="LOGOUT" onPress={() => FIREBASE_AUTH.signOut()} />
                     </View>
@@ -146,6 +152,7 @@ const styles = StyleSheet.create({
 
     custom: {
         alignItems: 'center',
+        marginTop: -20
     },
 
     logo: {

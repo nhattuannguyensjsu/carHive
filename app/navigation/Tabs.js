@@ -7,6 +7,7 @@ import InboxPage from "../Pages/InboxPage/InboxPage";
 import MyListingPage from "../Pages/MyListingPage/MyListingPage";
 import PostPage from "../Pages/PostPage/PostPage";
 import ProfilePage from "../Pages/ProfilePage/ProfilePage";
+import UploadIDPage from "../Pages/UploadIDPage/UploadIDPage";
 
 const Tab = createBottomTabNavigator();
 
@@ -42,6 +43,7 @@ const Tabs = () => {
         },
       }}
     >
+
       <Tab.Screen
         name="InboxPage"
         component={InboxPage}
