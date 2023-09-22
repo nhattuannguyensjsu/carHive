@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        marginTop: 15,
+        marginTop: 25,
         color: "#FAC503",
     },
     icon: {

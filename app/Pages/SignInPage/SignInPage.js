@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, TextInput, Button, Image, StyleSheet, useWindowDimensions } from 'react-native';
+import {View, Text, TextInput, Button, Image, StyleSheet, useWindowDimensions, SafeAreaView } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
-import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { FIREBASE_AUTH } from "../../../firebaseConfig";
 import { ActivityIndicator } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-
-
 
 const SignInPage = () => {
 
@@ -38,14 +35,12 @@ const SignInPage = () => {
         Navigation.navigate('SignUpPage');
     }
 
-
     const onForgotPasswordPressed = () => {
         Navigation.navigate('ForgotPasswordPage');
     }
 
-
     return (
-        <ScrollView showVerticalScrollIndicator={false}>
+        <SafeAreaView style={styles.safe}>
             <View style={styles.root}>
                 <Image source={Logo}
                     style={[styles.logo, { height: height * 0.3 }]}
@@ -93,7 +88,7 @@ const SignInPage = () => {
                     onPress={onSignUpPage} />
 
             </View>
-        </ScrollView>
+        </SafeAreaView>
 
     );
 };
@@ -102,6 +97,10 @@ const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
         padding: 20,
+    },
+    safe:{
+        flex: 1,
+        backgroundColor: 'white'
     },
     logo: {
         width: '60%',
@@ -126,15 +125,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginVertical: 10,
     },
-    button: {
-        backgroundColor: "#FFD43C",
-        width: "95%",
-        padding: 15,
-        marginVertical: 10,
-        alignItems: "center",
-        borderRadius: 20,
-    }
-
 
 });
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
+import {View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 
 import Logo from '../../../assets/images/logo.png';
 import IDCard from '../../../assets/images/id-card.png';
@@ -22,27 +22,11 @@ import Modal from 'react-native-modal'; // Import the modal component
 const UploadIDPage = () => {
 
     const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false); // State for success modal
-    const [pickedImage, setPickedImage] = useState(""); // Store the picked image URL
-    // const [image, setImage] = useState("");
+    const [pickedImage, setPickedImage] = useState("");
     const [progress, setProgress] = useState(0);
     const [files, setFiles] = useState([]);
     const { height } = useWindowDimensions();
     const Navigation = useNavigation();
-
-    // async function pickImage() {
-    //     let result = await ImagePicker.launchImageLibraryAsync({
-    //         mediaTypes: ImagePicker.MediaTypeOptions.Images, // here it is where we specify the allow format
-    //         allowsEditing: true,
-    //         aspect: [3, 4],
-    //         quality: 1,
-    //     });
-
-    //     if (!result.canceled) {
-    //         setImage(result.assets[0].uri);
-    //         // to upload image see the next function
-    //         await uploadImage(result.assets[0].uri, "image");
-    //     }
-    // }
 
     async function pickImage() {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -138,7 +122,7 @@ const UploadIDPage = () => {
     }, []);
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style = {styles.safe}>
             <View>
 
                 <View style={{ flexDirection: 'row' }}>
@@ -204,23 +188,23 @@ const UploadIDPage = () => {
     );
 };
 
-
-
 const styles = StyleSheet.create({
+    safe: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
     text: {
         fontSize: 25,
         textAlign: 'center',
         marginTop: 50
-
     },
     logo: {
         marginLeft: 20,
         width: '20%',
-
     },
     title: {
         fontSize: 30,
-        marginTop: 20,
+        marginTop: 25,
         color: "#FAC503",
     },
     image: {
@@ -259,12 +243,10 @@ const styles = StyleSheet.create({
     goback: {
         width: 30,
         height: 30,
-        marginTop: 20,
+        marginTop: 25,
         marginLeft: 20,
         marginRight: -10
     }
-
-
 });
 
 export default UploadIDPage;

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   Button,
+  SafeAreaView,
 } from "react-native";
 import Logo from "../../../assets/images/logo.png";
 import CustomInput from "../../components/CustomInput/CustomInput";
@@ -29,6 +30,9 @@ const SignUpPage = () => {
 
   const auth = FIREBASE_AUTH;
 
+  const onForgotPasswordPressed = () => {
+    Navigation.navigate('ForgotPasswordPage');
+}
 
   // const SignUp = async () => {
   //   setDoc(doc(FIREBASE_DATABASE, "users", "usersInfo"), {
@@ -81,7 +85,8 @@ const SignUpPage = () => {
 
 
   return (
-    <ScrollView showVerticalScrollIndicator={false}>
+    <SafeAreaView style = { styles.safe}> 
+    {/* <ScrollView showVerticalScrollIndicator={false}> */}
       <View style={styles.root}>
         <Image source={Logo} style={[styles.logo]} resizeMode="contain" />
         <Text style={styles.text}> Welcome to CarHive! </Text>
@@ -123,10 +128,8 @@ const SignUpPage = () => {
         {loading ? <ActivityIndicator size="large" color="#0000ff" />
           : (
             <>
-              <Text style={{
-                marginVertical: 10, color: "blue",
-                textDecorationLine: "underline"
-              }} > Forgot Password </Text>
+              <Text style={{ marginVertical: 10, color: "blue", textDecorationLine: "underline" }}
+                                    onPress={onForgotPasswordPressed}> Forgot Password </Text>
 
               <CustomButton
                 text="Sign Up" onPress={() => SignUp()} />
@@ -141,7 +144,8 @@ const SignUpPage = () => {
 
 
       </View>
-    </ScrollView>
+    {/* </ScrollView> */}
+    </SafeAreaView>
   );
 }
 
@@ -151,6 +155,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+  safe:{
+    flex: 1,
+    backgroundColor: 'white'
+},
   input: {
     backgroundColor: 'lightgrey',
     width: '90%',

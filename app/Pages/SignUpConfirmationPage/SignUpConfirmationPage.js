@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
+import {View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
 
 const SignUpConfirmationPage = () => {
-
     const Navigation = useNavigation();
     const { height } = useWindowDimensions();
 
-    // const onBackSignInPressed = () => {
-    //     Navigation.navigate('SignInPage');
-    // }
-
-
     return (
 
-        <ScrollView showVerticalScrollIndicator={false}>
             <View style={styles.root}>
                 <Image source={Logo}
                     style={[styles.logo, { height: height * 0.3 }]}
@@ -27,7 +20,6 @@ const SignUpConfirmationPage = () => {
                     onPress={() => Navigation.navigate("SignInPage")} text="Back To Sign In" />
 
             </View>
-        </ScrollView>
     );
 };
 
@@ -46,7 +38,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginTop: 20,
     },
-
 });
 
 export default SignUpConfirmationPage;
