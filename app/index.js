@@ -110,11 +110,11 @@ const screenOptions = {
   headerShown: false,
   tabBarStyle: {
     position: "absolute",
-    bottom: 0,
+    bottom: -30,
     right: 0,
     left: 0,
-    elevation: 0,
-    height: 60,
+    elevation: 10,
+    height: 100,
     background: "#FFD43C"
   }
 }
@@ -148,7 +148,8 @@ function HomepageNavi() {
           component={MyListingPage}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View style={{ alignItems: "center", justifyContent: "center" }}>
+              <View style={{ alignItems: "center", justifyContent: "center",
+              }}>
                 <Image
                   source={require("../assets/icons/list.png")}
                   resizeMode="contain"

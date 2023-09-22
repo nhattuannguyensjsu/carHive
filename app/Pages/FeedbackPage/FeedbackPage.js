@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, useWindowDimensions, Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import {useWindowDimensions, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-gesture-handler';
 import Logo from '../../../assets/images/logo.png';
-import CustomButton from '../../components/CustomButton';
 
 const FeedbackPage = () => {
     const [defaultRating, setDefaultRating] = useState(0);
@@ -66,8 +65,7 @@ const FeedbackPage = () => {
 
     return (
         <SafeAreaView style={styles.safe}>
-            <ScrollView showVerticalScrollIndicator={false}>
-                <View>
+                <View > 
                     <View style={{ flexDirection: 'row' }}>
 
                         <Image source={Logo}
@@ -77,13 +75,11 @@ const FeedbackPage = () => {
                         <Text style={styles.title}> CarHive </Text>
 
                     </View>
-                    <Text style={styles.text}> Your feedback makes us better !!! {"\n"}
+                    <Text style={styles.text}>
                         Thank you for using our application</Text>
                     <Text style={styles.text}> Give us some reviews about the buyer / seller</Text>
                     <CustomRating />
-                    {/* <Text style={styles.text}>
-                {defaultRating + '/' + maxRating.length}
-            </Text> */}
+                
                     <TextInput multiline style={styles.input} type="text" placeholder="Write some reviews"
                     />
 
@@ -101,7 +97,6 @@ const FeedbackPage = () => {
                     </TouchableOpacity>
 
                 </View>
-            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -156,7 +151,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        marginTop: 15,
+        marginTop: 25,
         color: "#FAC503",
     },
 })

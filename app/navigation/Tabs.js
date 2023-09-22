@@ -69,7 +69,7 @@ const Tabs = () => {
         component={MyListingPage}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "center"}}>
               <Image
                 source={require("../../assets/icons/list.png")}
                 resizeMode="contain"

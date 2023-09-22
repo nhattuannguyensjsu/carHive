@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, Image, StyleSheet, useWindowDimensions, Button } from 'react-native';
+import {View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import Profile from '../../../assets/icons/profile.png';
 import Edit from '../../../assets/icons/edit.png';
@@ -11,11 +11,9 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import { FlatList } from 'react-native-gesture-handler';
 import { doc, collection, getDoc, updateDoc } from 'firebase/firestore';
 
 const ProfilePage = () => {
-
     const { height } = useWindowDimensions();
     const Navigation = useNavigation();
 
@@ -38,9 +36,7 @@ const ProfilePage = () => {
         }
     }
 
-
     const updateName = async () => {
-
         // Set user data in Firestore
         updateDoc(doc(FIREBASE_DATABASE, "users", user.email), {
             name: userInfo.name,
@@ -62,7 +58,6 @@ const ProfilePage = () => {
 
     return (
         <SafeAreaView style={styles.safe}>
-            <ScrollView showVerticalScrollIndicator={false}>
                 <View>
                     <View style={{ flexDirection: 'row' }}>
 
@@ -97,16 +92,6 @@ const ProfilePage = () => {
                         </View>
                     </View>
 
-                    {/* <View style={{ flexDirection: 'row' }}>
-
-                        <Image source={Helpcenter} style={styles.icon}
-                            resizeMode="contain"
-                        />
-                        <Text style={styles.text_sub}> Help Center </Text>
-
-                    </View> */}
-
-
                     <View style={{ flexDirection: 'row' }}>
 
                         <Image source={Listing} style={styles.icon}
@@ -125,21 +110,16 @@ const ProfilePage = () => {
 
                     </View>
 
-
-
                     <View style={styles.custom}>
                         <CustomButton text='ID Verification' onPress={() => Navigation.navigate('UploadIDPage')} />
                     </View>
                     <View style={styles.custom}>
                         <CustomButton text="LOGOUT" onPress={() => FIREBASE_AUTH.signOut()} />
                     </View>
-
                 </View>
-            </ScrollView>
         </SafeAreaView>
     );
 }
-
 
 const styles = StyleSheet.create({
     root: {
@@ -149,22 +129,18 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white",
     },
-
     custom: {
         alignItems: 'center',
         marginTop: -20
     },
-
     logo: {
         marginLeft: 20,
         width: '20%',
-
     },
     profile: {
         width: '20%',
         alignItems: 'center',
         marginTop: 20
-
     },
     text: {
         fontSize: 25,
@@ -176,7 +152,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        marginTop: 15,
+        marginTop: 25,
         color: "#FAC503",
     },
     icon: {
@@ -190,7 +166,6 @@ const styles = StyleSheet.create({
         maxHeight: 20,
         maxWidth: 20
     }
-
 });
 
 export default ProfilePage;
