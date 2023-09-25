@@ -128,10 +128,11 @@ const styles = StyleSheet.create({
     safe: {
         flex: 1,
         backgroundColor: "white",
+        marginTop: "-10%"
     },
     custom: {
         alignItems: 'center',
-        marginTop: -20
+        marginTop: -10
     },
     logo: {
         marginLeft: 20,
