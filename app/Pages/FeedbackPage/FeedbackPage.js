@@ -105,6 +105,8 @@ const styles = StyleSheet.create({
     safe: {
         flex: 1,
         backgroundColor: "white",
+        marginTop: "-10%"
+
     },
     text: {
         textAlign: 'center',
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     input: {
-        paddingTop: 5,
+        paddingTop: 20,
         backgroundColor: 'lightgrey',
         width: '90%',
         height: 100,

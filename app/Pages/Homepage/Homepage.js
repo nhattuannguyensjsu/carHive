@@ -79,9 +79,9 @@ const Homepage = () => {
 
                     </View>
 
-                    <Text style={{
+                    {/* <Text style={{
                         fontSize: 30, textAlign: 'left', marginLeft: 35
-                    }}> Vehicle </Text>
+                    }}> Vehicle </Text> */}
 
                     <View style={{ flexDirection: 'row' }}>
 
@@ -109,8 +109,8 @@ const Homepage = () => {
                             fontSize: 15,
                             marginTop: 10,
                             paddingLeft: 20,
-                            width: "83%",
-                            marginLeft: 10
+                            width: "80%",
+                            marginLeft: 25
 
                         }}
                             placeholder='Search by Year, Model or Make'
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     safe: {
         flex: 1,
         backgroundColor: "white",
+        marginTop: "-10%"
     },
     icons: {
         marginTop: 10,
@@ -159,13 +160,13 @@ const styles = StyleSheet.create({
         marginTop: 10,
         maxHeight: 30,
         maxWidth: 30,
-        marginLeft: 330
+        marginLeft: "82%"
     },
     icon_sub1: {
         marginTop: 10,
         maxHeight: 30,
         maxWidth: 30,
-        marginLeft: 5
+        marginLeft: "1%"
     },
     custom: {
         alignItems: 'flex-end',

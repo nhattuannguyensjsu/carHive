@@ -15,7 +15,6 @@ import { BlurView, VibrancyView } from "@react-native-community/blur"
 import * as ImagePicker from "expo-image-picker";
 import { addDoc, collection, onSnapshot } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { Uploading } from "../../components/Uploading"
 import Modal from 'react-native-modal'; // Import the modal component
 
 
@@ -191,7 +190,9 @@ const UploadIDPage = () => {
 const styles = StyleSheet.create({
     safe: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        marginTop: "-10%"
+
     },
     text: {
         fontSize: 25,

@@ -5,6 +5,7 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
+import { color } from 'react-native-reanimated';
 
 const WelcomePage = () => {
 
@@ -36,19 +37,17 @@ const WelcomePage = () => {
 const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
-    resizeMode: 'cover',
+    resizeMode: 'cover'   ,
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "#49330F",
-
+    backgroundColor: "white",
+    width: "100%",
+    height: "100%"
   },
   logo: {
     width: '100%',
     maxWidth: 400,
     maxHeight: 300,
-    backgroundColor: "#49330F",
-
-
   },
   text: {
     fontSize: 60,
