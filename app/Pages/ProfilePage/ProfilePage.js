@@ -86,7 +86,7 @@ const ProfilePage = () => {
                         <Text style={styles.text_sub}>  Email:  {userInfo ? userInfo.email : ''}   </Text>
                         <View style={{ flexDirection: 'row' }}>
 
-                            <Text style={styles.text_sub}>  Password:   {userInfo ? userInfo.password : ''} </Text>
+                            <Text style={styles.text_sub}>  Password:   **********  </Text>
                             <Image source={Lock} style={[styles.subicon, { height: height * 0.1 }]}
                                 resizeMode="contain" />
                         </View>

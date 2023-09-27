@@ -13,15 +13,34 @@ import {
   query,
   onSnapshot
 } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIREBASE_DATABASE } from "../../../firebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 
 
-export default function InboxPage() {
+export default function Chat() {
 
   const [messages, setMessages] = useState([]);
-  const Navigation = useNavigation();
+  const navigation = useNavigation();
+
+const onSignOut = () => {
+    FIREBASE_AUTH.signOut().catch(error => console.log('Error logging out: ', error));
+  };
+
+  useLayoutEffect(() => {
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            style={{
+              marginRight: 10
+            }}
+            onPress={onSignOut}
+          >
+            <AntDesign name="logout" size={24} color={colors.gray} style={{marginRight: 10}}/>
+          </TouchableOpacity>
+        )
+      });
+    }, [navigation]);
 
   useLayoutEffect(() => {
 
@@ -76,7 +95,6 @@ export default function InboxPage() {
         }}
         user={{
           _id: FIREBASE_AUTH?.currentUser?.email,
-          avatar: 'https://i.pravatar.cc/300'
         }}
       />
     );

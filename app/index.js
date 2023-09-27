@@ -11,8 +11,6 @@ import SignInPage from "./Pages/SignInPage/SignInPage";
 import SignUpPage from "./Pages/SignUpPage/SignUpPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage/ForgotPasswordPage";
 import NewPasswordPage from "./Pages/NewPasswordPage/NewPasswordPage";
-import Navigation from "./navigation/navigation";
-import Tabs from "./navigation/Tabs";
 import SignUpConfirmationPage from "./Pages/SignUpConfirmationPage/SignUpConfirmationPage";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import WelcomePage from "./Pages/WelcomePage/WelcomePage";
@@ -21,6 +19,7 @@ import InboxPage from "./Pages/InboxPage/InboxPage";
 import MyListingPage from "./Pages/MyListingPage/MyListingPage";
 import PostPage from "./Pages/PostPage/PostPage";
 import FeedbackPage from "./Pages/FeedbackPage";
+import AppNavigation from "./navigation/navigation";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -36,28 +35,7 @@ import UploadIDPage from "./Pages/UploadIDPage/UploadIDPage";
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-function Welcome() {
-  return (
-    <SafeAreaView style={styles.text}>
-      <InsideStack.Navigator initialRouteName="WelcomePage">
-        <InsideStack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
-        <InsideStack.Screen name="SignInPage" component={SignInPage} options={{ headerShown: false }} />
-        <InsideStack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
-      </InsideStack.Navigator>
-    </SafeAreaView>
-  )
-}
-
-function InsideLayout() {
-  return (
-    <SafeAreaView style={styles.text}>
-      <InsideStack.Navigator>
-        <InsideStack.Screen name="HomepageNavi" component={HomepageNavi} options={{ headerShown: false }} />
-      </InsideStack.Navigator>
-    </SafeAreaView>
-  )
-}
+const OutsideStack = createNativeStackNavigator();
 
 export default function Home() {
 
@@ -68,6 +46,31 @@ export default function Home() {
       setUser(user);
     });
   }, []);
+  function InsideLayout() {
+    return (
+      <SafeAreaView style={styles.text}>
+        <InsideStack.Navigator>
+          <InsideStack.Screen name="HomepageNavi" component={HomepageNavi} options={{ headerShown: false }} />
+          
+        </InsideStack.Navigator>
+      </SafeAreaView>
+    )
+  }
+
+// function Welcome() {
+//   return (
+//     <SafeAreaView style={styles.text}>
+//       <OutsideStack.Navigator initialRouteName="WelcomePage">
+//       <OutsideStack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
+//         <OutsideStack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
+//         {/* <OutsideStack.Screen name="UploadIDPage" component={UploadIDPage} options={{ headerShown: false }} /> */}
+//         <OutsideStack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
+//         {/* <OutsideStack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} /> */}
+//         {/* <OutsideStack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />   */}
+//       </OutsideStack.Navigator>
+//     </SafeAreaView>
+//   )
+// }
 
   return (
     <SafeAreaView style={styles.text}>
@@ -80,14 +83,15 @@ export default function Home() {
           ) : (
             <Stack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
           )}
+
+          <Stack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
           <Stack.Screen name="UploadIDPage" component={UploadIDPage} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
           <Stack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />
-
         </Stack.Navigator>
-
       </NavigationContainer>
+
 
     </SafeAreaView>
 
