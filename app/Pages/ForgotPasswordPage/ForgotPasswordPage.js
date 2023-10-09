@@ -17,6 +17,11 @@ const ForgotPasswordPage = () => {
     const onBackSignInPressed = () => {
         Navigation.navigate('SignInPage');
     }
+    
+    const onNewPassword = () => {
+        Navigation.navigate('NewPasswordPage');
+    }
+
 
     return (
         <SafeAreaView style = {styles.safe}>
@@ -35,7 +40,8 @@ const ForgotPasswordPage = () => {
                     setValue={setEmail}
                 />
 
-                <CustomButton text="SEND CODE" onPress={onSendPressed} />
+                <CustomButton text="Send Code" onPress={onSendPressed} />
+                <CustomButton text="Change New Password" onPress={onNewPassword} />
 
                 <Text style={{ color: "blue", textDecorationLine: "underline" }}
                     onPress={onBackSignInPressed}> Back To Sign In

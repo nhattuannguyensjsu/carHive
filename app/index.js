@@ -90,6 +90,7 @@ export default function Home() {
           <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
           <Stack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />
+          <Stack.Screen name='NewPasswordPage' component={NewPasswordPage} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
 

@@ -4,6 +4,8 @@ import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { TextInput } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 const ForgotPasswordPage = () => {
 
@@ -14,6 +16,8 @@ const ForgotPasswordPage = () => {
     const { height } = useWindowDimensions();
     const { code, setCode } = useState('');
     const { newPassword, setNewPassword } = useState('');
+
+    const Navigation = useNavigation();
 
     const onRegisterPressed = () => {
         console.warn("Register");
@@ -28,7 +32,7 @@ const ForgotPasswordPage = () => {
     }
 
     const onBackSignInPressed = () => {
-        console.warn("Back to Sign in");
+    Navigation.navigate("SignInPage")
     }
 
     const onSubmitPressed = () => {
@@ -48,21 +52,21 @@ const ForgotPasswordPage = () => {
                 <Text style={styles.text}> Reset Your Password </Text>
 
                 <Text style={styles.text_sub}> Confirmation Code </Text>
-                <CustomInput
+                <TextInput style={styles.input}
                     placeholder="Confirmation Code"
                     value={code}
                     setValue={setCode}
                 />
 
                 <Text style={styles.text_sub}> New Password </Text>
-                <CustomInput
+                <TextInput style={styles.input}
                     placeholder="Enter Your New Password"
                     value={newPassword}
                     setValue={setNewPassword}
                 />
 
                 <Text style={styles.text_sub}> Re-enter New Password </Text>
-                <CustomInput
+                <TextInput style={styles.input}
                     placeholder="Re-Enter Your New Password"
                     value={newPassword}
                     setValue={setNewPassword}
@@ -71,8 +75,9 @@ const ForgotPasswordPage = () => {
 
                 <CustomButton text="SUBMIT" onPress={onSubmitPressed} />
 
-                <CustomButton text="Back To Sign In" onPress={onBackSignInPressed}
-                    type="tertiary" />
+                <Text style={{ marginVertical: 10, color: "blue", textDecorationLine: "underline" }}
+                onPress={onBackSignInPressed}
+                    type="tertiary"> Back To Sign In </Text>
             </View>
         </ScrollView>
     );
@@ -80,13 +85,24 @@ const ForgotPasswordPage = () => {
 
 const styles = StyleSheet.create({
     root: {
+        flex: 1,
         alignItems: 'center',
-        padding: 20,
+        padding: 10,
     },
     logo: {
         width: '60%',
         maxWidth: 300,
         maxHeight: 200,
+    },
+    input: {
+        backgroundColor: 'lightgrey',
+        width: '90%',
+        height: 40,
+        borderColor: 'white',
+        borderWidth: 1,
+        borderRadius: 20,
+        paddingHorizontal: 20,
+        marginVertical: 5,
     },
     text: {
         fontSize: 25,
