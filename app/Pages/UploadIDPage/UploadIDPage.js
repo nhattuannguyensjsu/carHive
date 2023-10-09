@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 
 import Logo from '../../../assets/images/logo.png';
 import IDCard from '../../../assets/images/id-card.png';
@@ -11,7 +11,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE, FIREBASE_STORAGE } from '../../../firebaseConfig';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
-import { BlurView, VibrancyView } from "@react-native-community/blur"
 import * as ImagePicker from "expo-image-picker";
 import { addDoc, collection, onSnapshot } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -77,10 +76,10 @@ const UploadIDPage = () => {
 
     async function saveRecord(fileType, url, createdAt) {
         const user = FIREBASE_AUTH.currentUser;
-        const userDocRef = doc(FIREBASE_DATABASE, "photoID", user.email);
-
+        const userDocRef = doc(FIREBASE_DATABASE, "users", user.email);
+        const photoIDCollectionRef = collection(userDocRef, "PhotoID");
         try {
-            await setDoc(userDocRef, {
+            await addDoc(photoIDCollectionRef, {
                 fileType: fileType,
                 url,
                 createdAt,
@@ -104,7 +103,7 @@ const UploadIDPage = () => {
 
     useEffect(() => {
 
-        const unsubscribe = onSnapshot(collection(FIREBASE_DATABASE, "photoID"), (snapshot) => {
+        const unsubscribe = onSnapshot(collection(FIREBASE_DATABASE, "users"), (snapshot) => {
             // listen to changes in the collection in firestore
             snapshot.docChanges().forEach((change) => {
                 if (change.type === "added") {
@@ -121,7 +120,7 @@ const UploadIDPage = () => {
     }, []);
 
     return (
-        <SafeAreaView style = {styles.safe}>
+        <SafeAreaView style={styles.safe}>
             <View>
 
                 <View style={{ flexDirection: 'row' }}>

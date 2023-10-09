@@ -20,6 +20,7 @@ import MyListingPage from "./Pages/MyListingPage/MyListingPage";
 import PostPage from "./Pages/PostPage/PostPage";
 import FeedbackPage from "./Pages/FeedbackPage";
 import AppNavigation from "./navigation/navigation";
+import ListingPage from "./Pages/ListingPage";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -51,26 +52,26 @@ export default function Home() {
       <SafeAreaView style={styles.text}>
         <InsideStack.Navigator>
           <InsideStack.Screen name="HomepageNavi" component={HomepageNavi} options={{ headerShown: false }} />
-          
+
         </InsideStack.Navigator>
       </SafeAreaView>
     )
   }
 
-// function Welcome() {
-//   return (
-//     <SafeAreaView style={styles.text}>
-//       <OutsideStack.Navigator initialRouteName="WelcomePage">
-//       <OutsideStack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
-//         <OutsideStack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
-//         {/* <OutsideStack.Screen name="UploadIDPage" component={UploadIDPage} options={{ headerShown: false }} /> */}
-//         <OutsideStack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
-//         {/* <OutsideStack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} /> */}
-//         {/* <OutsideStack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />   */}
-//       </OutsideStack.Navigator>
-//     </SafeAreaView>
-//   )
-// }
+  // function Welcome() {
+  //   return (
+  //     <SafeAreaView style={styles.text}>
+  //       <OutsideStack.Navigator initialRouteName="WelcomePage">
+  //       <OutsideStack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
+  //         <OutsideStack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
+  //         {/* <OutsideStack.Screen name="UploadIDPage" component={UploadIDPage} options={{ headerShown: false }} /> */}
+  //         <OutsideStack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
+  //         {/* <OutsideStack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} /> */}
+  //         {/* <OutsideStack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />   */}
+  //       </OutsideStack.Navigator>
+  //     </SafeAreaView>
+  //   )
+  // }
 
   return (
     <SafeAreaView style={styles.text}>
@@ -148,11 +149,12 @@ function HomepageNavi() {
         />
 
         <Tab.Screen
-          name="MyListingPage"
-          component={MyListingPage}
+          name="ListingPage"
+          component={ListingPage}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View style={{ alignItems: "center", justifyContent: "center",
+              <View style={{
+                alignItems: "center", justifyContent: "center",
               }}>
                 <Image
                   source={require("../assets/icons/list.png")}

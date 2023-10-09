@@ -11,6 +11,7 @@ import SignUpConfirmationPage from "../Pages/SignUpConfirmationPage/SignUpConfir
 import ProfilePage from "../Pages/ProfilePage/ProfilePage";
 import Homepage from "../Pages/Homepage/Homepage";
 import UploadIDPage from "../Pages/UploadIDPage/UploadIDPage";
+import ListingPage from "../Pages/ListingPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,7 @@ export default function AppNavigation() {
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
         <Stack.Screen name="Homepage" component={Homepage} />
         <Stack.Screen name="UploadIDPage" component={UploadIDPage} />
+        <Stack.Screen name="ListingPage" component={ListingPage} />
 
       </Stack.Navigator>
     </NavigationContainer>

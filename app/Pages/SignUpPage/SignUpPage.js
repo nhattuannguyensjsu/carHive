@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DATABASE } from "../../../firebaseConfig";
 import { ActivityIndicator } from 'react-native-web';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
 
 
 const SignUpPage = () => {
@@ -32,25 +32,7 @@ const SignUpPage = () => {
 
   const onForgotPasswordPressed = () => {
     Navigation.navigate('ForgotPasswordPage');
-}
-
-  // const SignUp = async () => {
-  //   setDoc(doc(FIREBASE_DATABASE, "users", "usersInfo"), {
-  //     name: name,
-  //     email: email,
-  //     password: password,
-  //   }).then(() => {
-  //     console.log('Data submitted');
-  //   }).catch((error) => {
-  //     console.log(error);
-  //   })
-
-  //   if (email !== '' && password !== '') {
-  //     createUserWithEmailAndPassword(auth, email, password)
-  //       .then(() => Navigation.navigate("SignUpConfirmationPage"))
-  //       .catch((err) => alert("Sign Up Error!!!", err.message));
-  //   }
-  // };
+  }
 
   const SignUp = async () => {
     if (email !== '' && password !== '') {
@@ -58,8 +40,8 @@ const SignUpPage = () => {
         .then((userCredential) => {
           const user = userCredential.user;
           // Use the user's email as the document ID
-          const userDocRef = doc(FIREBASE_DATABASE, "users", user.email);
-
+          const userDocRef = doc(FIREBASE_DATABASE, "usersInfo", user.email);
+          // const signUpCollectionRef = collection(userDocRef, "UserInfo");
           // Set user data in Firestore
           setDoc(userDocRef, {
             name: name,
@@ -85,8 +67,8 @@ const SignUpPage = () => {
 
 
   return (
-    <SafeAreaView style = { styles.safe}> 
-    {/* <ScrollView showVerticalScrollIndicator={false}> */}
+    <SafeAreaView style={styles.safe}>
+      {/* <ScrollView showVerticalScrollIndicator={false}> */}
       <View style={styles.root}>
         <Image source={Logo} style={[styles.logo]} resizeMode="contain" />
         <Text style={styles.text}> Welcome to CarHive! </Text>
@@ -129,7 +111,7 @@ const SignUpPage = () => {
           : (
             <>
               <Text style={{ marginVertical: 10, color: "blue", textDecorationLine: "underline" }}
-                                    onPress={onForgotPasswordPressed}> Forgot Password </Text>
+                onPress={onForgotPasswordPressed}> Forgot Password </Text>
 
               <CustomButton
                 text="Sign Up" onPress={() => SignUp()} />
@@ -144,7 +126,7 @@ const SignUpPage = () => {
 
 
       </View>
-    {/* </ScrollView> */}
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 }
@@ -155,10 +137,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-  safe:{
+  safe: {
     flex: 1,
     backgroundColor: 'white'
-},
+  },
   input: {
     backgroundColor: 'lightgrey',
     width: '90%',

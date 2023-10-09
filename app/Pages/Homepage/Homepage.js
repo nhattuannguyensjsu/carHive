@@ -16,12 +16,47 @@ import * as Location from 'expo-location';
 import { StatusBar } from 'expo-status-bar';
 import { Button, TouchableOpacity } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
+import { doc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
+import { FlatList } from 'react-native';
 const Homepage = () => {
 
     const [location, setLocation] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
+    const [listingInfo, setListingInfo] = useState([]);
+
+    const getListingInfo = async () => {
+        try {
+            const user = FIREBASE_AUTH.currentUser;
+
+            if (user) {
+                const listingsCollection = collection(FIREBASE_DATABASE, 'usersListing');
+
+                // Initialize an array to hold the listing data
+                const listingsData = [];
+
+                // Set up a real-time listener for the listings
+                const unsubscribe = onSnapshot(listingsCollection, (querySnapshot) => {
+                    listingsData.length = 0; // Clear the previous data
+
+                    querySnapshot.forEach((doc) => {
+                        listingsData.push(doc.data());
+                    });
+
+                    // Update listingInfo with the updated data
+                    setListingInfo(listingsData);
+                });
+
+
+                return () => {
+                    unsubscribe();
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching user listings:', error);
+        }
+    };
 
 
     Location.setGoogleApiKey("AIzaSyBSNJstpPFJMX-Z08gITore8Xwpl3Awg9Y");
@@ -40,6 +75,9 @@ const Homepage = () => {
             console.log(currentLocation);
         };
         getPermissions();
+
+        getListingInfo();
+
 
     }, []);
 
@@ -64,79 +102,104 @@ const Homepage = () => {
         Navigation.navigate('SignInPage')
     }
 
+
+
     return (
         <SafeAreaView style={styles.safe}>
-            <ScrollView showVerticalScrollIndicator={false}>
-                <View>
+            <View style={{ flex: 1 }}>
 
-                    <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row' }}>
 
-                        <Image source={Logo}
-                            style={[styles.logo, { height: height * 0.1 }]}
-                            resizeMode="contain"
-                        />
-                        <Text style={styles.title}> CarHive </Text>
+                    <Image source={Logo}
+                        style={[styles.logo, { height: height * 0.1 }]}
+                        resizeMode="contain"
+                    />
+                    <Text style={styles.title}> CarHive </Text>
 
-                    </View>
+                </View>
 
-                    {/* <Text style={{
+                {/* <Text style={{
                         fontSize: 30, textAlign: 'left', marginLeft: 35
                     }}> Vehicle </Text> */}
 
-                    <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row' }}>
 
-                        <TouchableOpacity onPress={reverseGeocode}>
-                            {/* Wrap the Image in TouchableOpacity */}
-                            <Image
-                                source={Loc}
-                                style={[styles.icons, { height: height * 0.05 }]}
-                                resizeMode="contain"
-                            />
-
-                        </TouchableOpacity>
-                        {city && (
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ marginLeft: 10, marginTop: 15, fontSize: 18 }}>{city}</Text>
-                            </View>
-                        )}
-                    </View>
-
-                    <View style={{ flexDirection: 'row' }}>
-                        <TextInput style={{
-                            backgroundColor: "lightgrey",
-                            padding: 10,
-                            borderRadius: 20,
-                            fontSize: 15,
-                            marginTop: 10,
-                            paddingLeft: 20,
-                            width: "80%",
-                            marginLeft: 25
-
-                        }}
-                            placeholder='Search by Year, Model or Make'
-                            placeholderTextColor="black" />
-                        <Image source={require('../../../assets/icons/search.png')}
-                            resizeMode='contain'
-                            style={{
-                                width: 40, height: 40,
-                                marginTop: 15,
-                                marginLeft: 10,
-                            }} />
-                    </View>
-
-                    <View style={{ flexDirection: 'row' }}>
-                        <Image source={Swap} style={[styles.icon_sub, { height: height * 0.3 }]}
+                    <TouchableOpacity onPress={reverseGeocode}>
+                        {/* Wrap the Image in TouchableOpacity */}
+                        <Image
+                            source={Loc}
+                            style={[styles.icons, { height: height * 0.05 }]}
                             resizeMode="contain"
                         />
-                        <Image source={Filter} style={[styles.icon_sub1, { height: height * 0.3 }]}
-                            resizeMode="contain"
-                        />
-                    </View>
 
-
-
+                    </TouchableOpacity>
+                    {city && (
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ marginLeft: 10, marginTop: 15, fontSize: 18 }}>{city}</Text>
+                        </View>
+                    )}
                 </View>
-            </ScrollView>
+
+                <View style={{ flexDirection: 'row' }}>
+                    <TextInput style={{
+                        backgroundColor: "lightgrey",
+                        padding: 10,
+                        borderRadius: 20,
+                        fontSize: 15,
+                        marginTop: 10,
+                        paddingLeft: 20,
+                        width: "80%",
+                        marginLeft: 25
+
+                    }}
+                        placeholder='Search by Year, Model or Make'
+                        placeholderTextColor="black" />
+                    <Image source={require('../../../assets/icons/search.png')}
+                        resizeMode='contain'
+                        style={{
+                            width: 40, height: 40,
+                            marginTop: 15,
+                            marginLeft: 10,
+                        }} />
+                </View>
+
+                <View style={{ flexDirection: 'row' }}>
+                    <Image source={Swap} style={[styles.icon_sub, { height: height * 0.3 }]}
+                        resizeMode="contain"
+                    />
+                    <Image source={Filter} style={[styles.icon_sub1, { height: height * 0.3 }]}
+                        resizeMode="contain"
+                    />
+                </View>
+
+                <FlatList
+                    data={listingInfo}
+                    keyExtractor={(item, index) => `${item.id}-${index}`}
+                    numColumns={2} // Set the number of columns to 2
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={styles.listingContainer}
+                            onPress={() => {
+                                // Navigate to the "ListingPage" when an item is pressed
+                                Navigation.navigate('ListingPage', { listingData: item });
+                            }}>
+                            <View style={styles.listingPair}>
+
+                                <Image
+                                    source={{ uri: item.imageURL }}
+                                    style={styles.listingImage}
+                                    resizeMode="cover"
+                                />
+                                <Text style={styles.listingTitle}>{item.Title}</Text>
+
+
+                            </View>
+                        </TouchableOpacity>
+
+                    )}
+                />
+
+            </View>
         </SafeAreaView>
     );
 };
@@ -148,7 +211,9 @@ const styles = StyleSheet.create({
     safe: {
         flex: 1,
         backgroundColor: "white",
-        marginTop: "-10%"
+        marginTop: "-10%",
+        marginBottom: "15%"
+
     },
     icons: {
         marginTop: 10,
@@ -201,7 +266,40 @@ const styles = StyleSheet.create({
         marginLeft: 25,
         maxHeight: 30,
         maxWidth: 30
-    }
+    },
+    listingContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        flex: 1,
+        marginHorizontal: 10,
+        marginTop: 10,
+    },
+    listingPair: {
+        flex: 1,
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    listingImage: {
+        width: '100%',
+        height: 100,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        resizeMode: 'cover',
+    },
+    listingTitle: {
+        padding: 10,
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 
 });
 

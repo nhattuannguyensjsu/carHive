@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, Button, Image, StyleSheet, useWindowDimensions, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, Button, Image, StyleSheet, useWindowDimensions, SafeAreaView } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
-import { FIREBASE_AUTH } from "../../../firebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_APP } from "../../../firebaseConfig";
 import { ActivityIndicator } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
     },
-    safe:{
+    safe: {
         flex: 1,
         backgroundColor: 'white'
     },
