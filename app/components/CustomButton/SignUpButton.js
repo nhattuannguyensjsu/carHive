@@ -11,6 +11,7 @@ const CustomButton = ({ onPress, text, type }) => {
       <Text style={[styles.text, styles[`text_${type}`]]}> {text} </Text>
     </Pressable>
   );
+
 };
 
 const styles = StyleSheet.create({
