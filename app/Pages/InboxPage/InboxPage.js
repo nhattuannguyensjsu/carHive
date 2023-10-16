@@ -1,101 +1,67 @@
-import React, {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useCallback
-} from 'react';
-import { TouchableOpacity, Text } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
-import {
-  collection,
-  addDoc,
-  orderBy,
-  query,
-  onSnapshot
-} from 'firebase/firestore';
-import { FIREBASE_AUTH, FIREBASE_DATABASE } from '../../../firebaseConfig';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIREBASE_DATABASE } from '../../../firebaseConfig';
 
+export default function InboxPage() {
+  const [userList, setUserList] = useState([]);
+  const Navigation = useNavigation();
 
-export default function Chat() {
-
-  const [messages, setMessages] = useState([]);
-  const navigation = useNavigation();
-
-const onSignOut = () => {
-    FIREBASE_AUTH.signOut().catch(error => console.log('Error logging out: ', error));
-  };
-
-  useLayoutEffect(() => {
-      navigation.setOptions({
-        headerRight: () => (
-          <TouchableOpacity
-            style={{
-              marginRight: 10
-            }}
-            onPress={onSignOut}
-          >
-            <AntDesign name="logout" size={24} color={colors.gray} style={{marginRight: 10}}/>
-          </TouchableOpacity>
-        )
-      });
-    }, [navigation]);
-
-  useLayoutEffect(() => {
-
-      const collectionRef = collection(FIREBASE_DATABASE, 'chats');
-      const q = query(collectionRef, orderBy('createdAt', 'desc'));
-
-  const unsubscribe = onSnapshot(q, querySnapshot => {
-      console.log('querySnapshot unsusbscribe');
-        setMessages(
-          querySnapshot.docs.map(doc => ({
-            _id: doc.data()._id,
-            createdAt: doc.data().createdAt.toDate(),
-            text: doc.data().text,
-            user: doc.data().user
-          }))
-        );
-      });
-  return unsubscribe;
-    }, []);
-
-  const onSend = useCallback((messages = []) => {
-      setMessages(previousMessages =>
-        GiftedChat.append(previousMessages, messages)
-      );
-      // setMessages([...messages, ...messages]);
-      const { _id, createdAt, text, user } = messages[0];    
-      addDoc(collection(FIREBASE_DATABASE, 'chats'), {
-        _id,
-        createdAt,
-        text,
-        user
-      });
-    }, []);
-
-    return (
-      // <>
-      //   {messages.map(message => (
-      //     <Text key={message._id}>{message.text}</Text>
-      //   ))}
-      // </>
-      <GiftedChat
-        messages={messages}
-        showAvatarForEveryMessage={false}
-        showUserAvatar={false}
-        onSend={messages => onSend(messages)}
-        messagesContainerStyle={{
-          backgroundColor: '#fff'
-        }}
-        textInputStyle={{
-          backgroundColor: '#fff',
-          borderRadius: 20,
-        }}
-        user={{
-          _id: FIREBASE_AUTH?.currentUser?.email,
-        }}
-      />
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(
+        collection(FIREBASE_DATABASE, 'chats'),
+        where('recipient', '==', FIREBASE_AUTH?.currentUser?.email)
+      ),
+      (querySnapshot) => {
+        const users = new Set();
+        querySnapshot.forEach((doc) => {
+          const docData = doc.data();
+          if (docData.user !== FIREBASE_AUTH?.currentUser?.email) {
+            users.add(docData.user);
+          }
+        });
+        setUserList(Array.from(users));
+      }
     );
+
+    return unsubscribe;
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Inbox</Text>
+      <FlatList
+        data={userList}
+        keyExtractor={(item) => item}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.userItem}
+            onPress={() => Navigation.navigate('ChatPage', { recipient: item })}
+          >
+            <Text>{item}</Text>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 10,
+  },
+  userItem: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
+  },
+});

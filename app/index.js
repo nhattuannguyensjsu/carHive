@@ -20,7 +20,8 @@ import MyListingPage from "./Pages/MyListingPage/MyListingPage";
 import PostPage from "./Pages/PostPage/PostPage";
 import FeedbackPage from "./Pages/FeedbackPage";
 import AppNavigation from "./navigation/navigation";
-import ListingPage from "./Pages/ListingPage";
+import ListingPage from "./Pages/ListingPage/ListingPage";
+import ChatPage from "./Pages/ChatPage/ChatPage";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -84,7 +85,9 @@ export default function Home() {
           ) : (
             <Stack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
           )}
-
+          <Stack.Screen name="ChatPage" component={ChatPage} options={{ headerShown: false }} />
+          <Stack.Screen name="InboxPage" component={InboxPage} options={{ headerShown: false }} />
+          <Stack.Screen name="ListingPage" component={ListingPage} options={{ headerShown: false }} />
           <Stack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
           <Stack.Screen name="UploadIDPage" component={UploadIDPage} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
@@ -130,8 +133,8 @@ function HomepageNavi() {
     <SafeAreaView style={styles.text}>
       <Tab.Navigator initialRouteName="Homepage" screenOptions={screenOptions} >
         <Tab.Screen
-          name="FeedbackPage"
-          component={FeedbackPage}
+          name="InboxPage"
+          component={InboxPage}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -150,8 +153,8 @@ function HomepageNavi() {
         />
 
         <Tab.Screen
-          name="ListingPage"
-          component={ListingPage}
+          name="MyListingPage"
+          component={MyListingPage}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={{

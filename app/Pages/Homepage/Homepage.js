@@ -9,13 +9,8 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RollInRight } from 'react-native-reanimated';
-import { SearchBar } from 'react-native-screens';
-import SearchBox from '../../components/SearchBox/SearchBox';
 import * as Location from 'expo-location';
-import { StatusBar } from 'expo-status-bar';
 import { Button, TouchableOpacity } from 'react-native';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { doc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { FlatList } from 'react-native';
@@ -28,72 +23,85 @@ const Homepage = () => {
 
     const getListingInfo = async () => {
         try {
-            const user = FIREBASE_AUTH.currentUser;
-
-            if (user) {
-                const listingsCollection = collection(FIREBASE_DATABASE, 'usersListing');
-
-                // Initialize an array to hold the listing data
-                const listingsData = [];
-
-                // Set up a real-time listener for the listings
-                const unsubscribe = onSnapshot(listingsCollection, (querySnapshot) => {
-                    listingsData.length = 0; // Clear the previous data
-
-                    querySnapshot.forEach((doc) => {
-                        listingsData.push(doc.data());
-                    });
-
-                    // Update listingInfo with the updated data
-                    setListingInfo(listingsData);
-                });
-
-
-                return () => {
-                    unsubscribe();
-                }
-            }
+            // Fetch listings from Firebase Firestore
+            const listingsCollection = collection(FIREBASE_DATABASE, 'usersListing');
+            onSnapshot(listingsCollection, (querySnapshot) => {
+                const updatedListings = querySnapshot.docs.map(doc => doc.data());
+                setListingInfo(updatedListings);
+            });
         } catch (error) {
             console.error('Error fetching user listings:', error);
         }
     };
 
+    // const getListingInfo = async () => {
+    //     try {
+    //         const user = FIREBASE_AUTH.currentUser;
 
-    Location.setGoogleApiKey("AIzaSyBSNJstpPFJMX-Z08gITore8Xwpl3Awg9Y");
+    //         if (user) {
+    //             const listingsCollection = collection(FIREBASE_DATABASE, 'usersListing');
+
+    //             // Initialize an array to hold the listing data
+    //             const listingsData = [];
+
+    //             // Set up a real-time listener for the listings
+    //             const unsubscribe = onSnapshot(listingsCollection, (querySnapshot) => {
+    //                 listingsData.length = 0; // Clear the previous data
+
+    //                 querySnapshot.forEach((doc) => {
+    //                     listingsData.push(doc.data());
+    //                 });
+
+    //                 // Update listingInfo with the updated data
+    //                 setListingInfo(listingsData);
+    //             });
+
+
+    //             return () => {
+    //                 unsubscribe();
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching user listings:', error);
+    //     }
+    
+
+
+    // Location.setGoogleApiKey("AIzaSyBSNJstpPFJMX-Z08gITore8Xwpl3Awg9Y");
 
     useEffect(() => {
-        const getPermissions = async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                console.log("Please grant location permissions");
-                return;
-            }
+        // const getPermissions = async () => {
+        //     let { status } = await Location.requestForegroundPermissionsAsync();
+        //     if (status !== 'granted') {
+        //         console.log("Please grant location permissions");
+        //         return;
+        //     }
 
-            let currentLocation = await Location.getCurrentPositionAsync({});
-            setLocation(currentLocation);
-            console.log("Location: ");
-            console.log(currentLocation);
-        };
-        getPermissions();
+        //     let currentLocation = await Location.getCurrentPositionAsync({});
+        //     setLocation(currentLocation);
+        //     console.log("Location: ");
+        //     console.log(currentLocation);
+        // };
+        // getPermissions();
 
-        getListingInfo();
+         getListingInfo();
 
-
+      
     }, []);
 
 
-    const reverseGeocode = async () => {
-        const reverseGeocodedAddress = await Location.reverseGeocodeAsync({
-            longitude: location.coords.longitude,
-            latitude: location.coords.latitude
-        });
+    // const reverseGeocode = async () => {
+    //     const reverseGeocodedAddress = await Location.reverseGeocodeAsync({
+    //         longitude: location.coords.longitude,
+    //         latitude: location.coords.latitude
+    //     });
 
-        if (reverseGeocodedAddress.length > 0) {
-            setCity(reverseGeocodedAddress[0].city || '');
-        }
-        console.log("Location: ");
-        console.log(reverseGeocodedAddress);
-    };
+    //     if (reverseGeocodedAddress.length > 0) {
+    //         setCity(reverseGeocodedAddress[0].city || '');
+    //     }
+    //     console.log("Location: ");
+    //     console.log(reverseGeocodedAddress);
+    // };
 
     const { height } = useWindowDimensions();
     const Navigation = useNavigation();
@@ -117,15 +125,10 @@ const Homepage = () => {
                     <Text style={styles.title}> CarHive </Text>
 
                 </View>
-
-                {/* <Text style={{
-                        fontSize: 30, textAlign: 'left', marginLeft: 35
-                    }}> Vehicle </Text> */}
-
+{/* 
                 <View style={{ flexDirection: 'row' }}>
 
                     <TouchableOpacity onPress={reverseGeocode}>
-                        {/* Wrap the Image in TouchableOpacity */}
                         <Image
                             source={Loc}
                             style={[styles.icons, { height: height * 0.05 }]}
@@ -138,7 +141,7 @@ const Homepage = () => {
                             <Text style={{ marginLeft: 10, marginTop: 15, fontSize: 18 }}>{city}</Text>
                         </View>
                     )}
-                </View>
+                </View> */}
 
                 <View style={{ flexDirection: 'row' }}>
                     <TextInput style={{
@@ -213,7 +216,6 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         marginTop: "-10%",
         marginBottom: "15%"
-
     },
     icons: {
         marginTop: 10,

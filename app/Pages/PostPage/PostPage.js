@@ -36,7 +36,7 @@ const PostPage = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [16, 9],
-      quality: 1,
+      quality: 0.5,
     });
 
     if (!result.canceled) {
@@ -127,22 +127,19 @@ const PostPage = () => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
           // if a new file is added, add it to the state
-          console.log("New file", change.doc.data());
+          // console.log("New file", change.doc.data());
           setFiles((prevFiles) => [...prevFiles, change.doc.data()]);
         }
       });
     });
     return () => unsubscribe();
-    // It is a good practice to unsubscribe to the listener when unmounting.
-    // Because if you don't, you will have a memory leak.
+   
   }, []);
-
-
 
   return (
     <SafeAreaView style={styles.safe}>
-      <ScrollView showVerticalScrollIndicator={false}>
-        <View>
+      <ScrollView> 
+            <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row' }}>
 
             <Image source={Logo}
@@ -158,7 +155,7 @@ const PostPage = () => {
             {pickedImage ? ( // Render the picked image if it exists
               <Image
                 source={{ uri: pickedImage }}
-                style={{ width: "100%", height: 200, marginTop: 20 }}
+                style={{ width: 300, height: 100, marginTop: 20 }}
                 resizeMode="contain"
               />
             ) : (
@@ -170,12 +167,6 @@ const PostPage = () => {
               </TouchableOpacity>
             )}
 
-            {/* <TouchableOpacity
-              style={[styles.button]}
-              onPress={pickImage}
-            >
-              <Text style={{ color: 'black', textAlign: 'center' }}> Choose Image </Text>
-            </TouchableOpacity> */}
             <Text style={styles.subheading}> Title </Text>
             <TextInput style={styles.input}
               placeholder="Title"
@@ -236,15 +227,13 @@ const PostPage = () => {
               text="Post"
               onPress={() => handleUpload()} />
 
-            {/* Success Modal */}
             <Modal isVisible={isSuccessModalVisible}>
               <View style={styles.modalContainer}>
                 <Text style={styles.modalText}>Upload Successfully!</Text>
                 <TouchableOpacity
                   style={styles.modalButton}
                   onPress={() => {
-                    setIsSuccessModalVisible(false); // Hide the success modal
-                    // Add navigation logic to go back to the home page here
+                    setIsSuccessModalVisible(false);
                   }}
                 >
                   <Text style={{ color: 'white', textAlign: 'center' }}>OK</Text>
@@ -255,9 +244,7 @@ const PostPage = () => {
 
         </View>
 
-
-
-      </ScrollView>
+        </ScrollView>
     </SafeAreaView>
   )
 }
@@ -267,7 +254,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     marginTop: "-10%",
-  },
+    marginBottom: "15%"
+},
   logo: {
     marginLeft: 20,
     width: '20%',
@@ -293,8 +281,8 @@ const styles = StyleSheet.create({
   },
   image: {
     marginTop: 20,
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 100,
     alignSelf: 'center'
   },
   input: {
