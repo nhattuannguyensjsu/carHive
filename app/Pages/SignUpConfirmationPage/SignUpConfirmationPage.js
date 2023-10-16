@@ -1,34 +1,26 @@
-import React, {useState} from 'react';
-import {ScrollView, View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
+import React, { useState } from 'react';
+import {View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import { useNavigation } from '@react-navigation/native';
-
+import CustomButton from '../../components/CustomButton';
 
 const SignUpConfirmationPage = () => {
-
     const Navigation = useNavigation();
-    const {height} = useWindowDimensions();
+    const { height } = useWindowDimensions();
 
-    const onBackSignInPressed = () => {
-        Navigation.navigate('SignInPage');
-    }
+    return (
 
+            <View style={styles.root}>
+                <Image source={Logo}
+                    style={[styles.logo, { height: height * 0.3 }]}
+                    resizeMode="contain"
+                />
+                <Text style={styles.text}>Thank You for the Registration! </Text>
+                <CustomButton
+                    onPress={() => Navigation.navigate("SignInPage")} text="Back To Sign In" />
 
-  return (
-
-<ScrollView showVerticalScrollIndicator={false}>
-        <View style={styles.root}>
-            <Image source={Logo} 
-            style={[styles.logo, {height: height*0.3}]} 
-            resizeMode="contain" 
-            />      
-            <Text style={styles.text}>Thank You for the Registration! </Text>
-            <Text style={{color:"blue", textDecorationLine: "underline", fontWeight: "bold"}} 
-            onPress={onBackSignInPressed}> Back To Sign In 
-            </Text>
-        </View>
-</ScrollView>
-  );
+            </View>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -37,21 +29,16 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     logo: {
+        marginTop: 100,
         width: '60%',
         maxWidth: 300,
         maxHeight: 200,
     },
-    text: { 
-        fontSize: 25,
-        margin: 10,
-        fontWeight: 'bold'
-    },
-    text_sub: {
+    text: {
         fontSize: 20,
-        margin: 10,
-        fontWeight: 'bold'
-    }
-    
+        marginTop: 20,
+    },
 });
 
 export default SignUpConfirmationPage;
+

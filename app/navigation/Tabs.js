@@ -7,6 +7,7 @@ import InboxPage from "../Pages/InboxPage/InboxPage";
 import MyListingPage from "../Pages/MyListingPage/MyListingPage";
 import PostPage from "../Pages/PostPage/PostPage";
 import ProfilePage from "../Pages/ProfilePage/ProfilePage";
+import UploadIDPage from "../Pages/UploadIDPage/UploadIDPage";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +30,7 @@ const CustomTabBarButton = ({ children, onPress }) => (
 
 const Tabs = () => {
   return (
-    <Tab.Navigator
+    <Tab.Navigator initialRouteName="Homepage"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -42,6 +43,7 @@ const Tabs = () => {
         },
       }}
     >
+
       <Tab.Screen
         name="InboxPage"
         component={InboxPage}
@@ -67,7 +69,7 @@ const Tabs = () => {
         component={MyListingPage}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "center"}}>
               <Image
                 source={require("../../assets/icons/list.png")}
                 resizeMode="contain"
@@ -126,7 +128,7 @@ const Tabs = () => {
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center" }}>
               <Image
-                source={require("../../assets/icons/resume.png")}
+                source={require("../../assets/icons/profile.png")}
                 resizeMode="contain"
                 style={{
                   width: 30,

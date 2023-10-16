@@ -1,16 +1,14 @@
-import React, {useState} from 'react';
-import {ScrollView, View, Text, Image, StyleSheet, useWindowDimensions} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, useWindowDimensions, SafeAreaView } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
-import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import { TextInput } from 'react-native-gesture-handler';
 
 const ForgotPasswordPage = () => {
-
     const [email, setEmail] = useState('');
-    const {height} = useWindowDimensions();
+    const { height } = useWindowDimensions();
     const Navigation = useNavigation();
-
 
     const onSendPressed = () => {
         console.warn("Send Email");
@@ -19,32 +17,37 @@ const ForgotPasswordPage = () => {
     const onBackSignInPressed = () => {
         Navigation.navigate('SignInPage');
     }
+    
+    const onNewPassword = () => {
+        Navigation.navigate('NewPasswordPage');
+    }
+
 
     return (
-        <ScrollView showVerticalScrollIndicator={false}>
-        <View style={styles.root}>
-            <Image source={Logo} 
-            style={[styles.logo, {height: height*0.3}]} 
-            resizeMode="contain" 
-            />
-       
-            <Text style={styles.text}> Reset Your Password </Text>
-          
-            <Text style={styles.text_sub}> Email </Text>
-            <CustomInput 
-                placeholder="Email" 
-                value={email} 
-                setValue={setEmail} 
-            />
-            
-            <CustomButton text="SEND CODE" onPress={onSendPressed} />
+        <SafeAreaView style = {styles.safe}>
+            <View style={styles.root}>
+                <Image source={Logo}
+                    style={[styles.logo, { height: height * 0.3 }]}
+                    resizeMode="contain"
+                />
 
-            <Text style={{color:"blue", textDecorationLine: "underline", fontWeight: "bold"}} 
-            onPress={onBackSignInPressed}> Back To Sign In 
-            </Text>
-     
-        </View>
-        </ScrollView>
+                <Text style={styles.text}> Reset Your Password </Text>
+
+                <Text style={styles.text_sub}> Email </Text>
+                <TextInput style={styles.input}
+                    placeholder="Email"
+                    value={email}
+                    setValue={setEmail}
+                />
+
+                <CustomButton text="Send Code" onPress={onSendPressed} />
+                <CustomButton text="Change New Password" onPress={onNewPassword} />
+
+                <Text style={{ color: "blue", textDecorationLine: "underline" }}
+                    onPress={onBackSignInPressed}> Back To Sign In
+                </Text>
+            </View>
+        </SafeAreaView>
     );
 };
 
@@ -53,22 +56,33 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
     },
+    safe:{
+        flex: 1,
+        backgroundColor: 'white'
+    },
     logo: {
         width: '60%',
         maxWidth: 300,
         maxHeight: 200,
     },
-    text: { 
+    input: {
+        backgroundColor: 'lightgrey',
+        width: '90%',
+        height: 40,
+        borderColor: 'white',
+        borderWidth: 1,
+        borderRadius: 20,
+        paddingHorizontal: 20,
+        marginVertical: 10,
+      },
+    text: {
         fontSize: 25,
         margin: 10,
-        fontWeight: 'bold'
     },
     text_sub: {
         fontSize: 20,
         margin: 10,
-        
     }
-    
 });
 
 export default ForgotPasswordPage;

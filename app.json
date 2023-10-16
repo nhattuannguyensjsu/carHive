@@ -5,6 +5,14 @@
       "bundler": "metro"
     },
     "name": "CARHIVE",
-    "slug": "CARHIVE"
+    "slug": "CARHIVE",
+    "android": {
+      "package": "com.nhattuannguyen.CARHIVE"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bd9c7a6b-b55c-4010-92e9-3c1159197891"
+      }
+    }
   }
 }

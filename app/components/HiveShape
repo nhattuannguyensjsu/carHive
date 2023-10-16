@@ -1,0 +1,38 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+const HiveListItem = ({ item }) => {
+    return (
+        <View style={styles.hiveContainer}>
+            <View style={styles.hive}>
+                <Text style={styles.listingTitle}>{item.Title}</Text>
+            </View>
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    hiveContainer: {
+        width: '50%', // Each item takes 50% of the row's width for a two-column layout
+        aspectRatio: 1, // Ensure a 1:1 aspect ratio
+        paddingHorizontal: 10, // Adjust as needed for spacing
+    },
+    hive: {
+        width: '100%',
+        paddingBottom: '100%', // This creates the hexagonal shape (equal height and width)
+        backgroundColor: 'transparent',
+        position: 'relative',
+        overflow: 'hidden',
+    },
+    listingTitle: {
+        position: 'absolute',
+        top: '40%', // Adjust text positioning within the hexagon
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+});
+
+export default HiveListItem;

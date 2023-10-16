@@ -10,22 +10,27 @@ import WelcomePage from "../Pages/WelcomePage/WelcomePage";
 import SignUpConfirmationPage from "../Pages/SignUpConfirmationPage/SignUpConfirmationPage";
 import ProfilePage from "../Pages/ProfilePage/ProfilePage";
 import Homepage from "../Pages/Homepage/Homepage";
+import UploadIDPage from "../Pages/UploadIDPage/UploadIDPage";
+import ListingPage from "../Pages/ListingPage";
+
 const Stack = createNativeStackNavigator();
 
-export default function Navigation() {
+export default function AppNavigation() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="WelcomePage" component={WelcomePage} />
-      <Stack.Screen name="SignInPage" component={SignInPage} />
-      <Stack.Screen name="SignUpPage" component={SignUpPage} />
-      <Stack.Screen name="ForgotPasswordPage" component={ForgotPasswordPage} />
-      <Stack.Screen name="NewPasswordPage" component={NewPasswordPage} />
-      <Stack.Screen
-        name="SignUpConfirmationPage"
-        component={SignUpConfirmationPage}
-      />
-      <Stack.Screen name="ProfilePage" component={ProfilePage} />
-      <Stack.Screen name="Homepage" component={Homepage} />
-    </Stack.Navigator>
+    <NavigationContainer independent={true}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="WelcomePage" component={WelcomePage} />
+        <Stack.Screen name="SignInPage" component={SignInPage} />
+        <Stack.Screen name="SignUpPage" component={SignUpPage} />
+        <Stack.Screen name="ForgotPasswordPage" component={ForgotPasswordPage} />
+        <Stack.Screen name="NewPasswordPage" component={NewPasswordPage} />
+        <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} />
+        <Stack.Screen name="ProfilePage" component={ProfilePage} />
+        <Stack.Screen name="Homepage" component={Homepage} />
+        <Stack.Screen name="UploadIDPage" component={UploadIDPage} />
+        <Stack.Screen name="ListingPage" component={ListingPage} />
+
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

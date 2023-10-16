@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ca4d7798-a4b3-422f-84a5-1afc18aef7d9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.pnp.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/.pnp.cjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/@0no-co-graphql.web-npm-1.0.4-1ab330dd54-d415fb2f06.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/@expo-config-npm-8.2.1-a9978e8385-4f607d4170.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/@expo-config-plugins-npm-7.3.1-c771181074-b3f3e8dc95.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/@expo-config-types-npm-49.0.0-2dd0869377-5ce8e67849.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/@expo-prebuild-config-npm-6.3.0-0a4fc31ce7-21ebec6cc7.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/@expo-spawn-async-npm-1.7.2-80f6d615d0-d99e5ff6d3.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/@types-node-npm-20.4.8-f8f2d8d349-86a3963c0c.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/@urql-core-npm-4.1.1-cdf256bfc0-1dcca5c12e.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/bplist-creator-npm-0.1.1-46ec2e397c-b0d40d1d16.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/cacache-npm-17.1.3-f75f768a29-385756781e.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/commander-npm-2.14.1-c6046110cb-26bd49febe.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/electron-to-chromium-npm-1.4.485-155dd2e3f6-6f9efc92c1.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/expo-splash-screen-npm-0.21.1-496244e7c4-e2754dde8a.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/flow-parser-npm-0.214.0-eeba535167-c7aab94b25.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/fs-minipass-npm-3.0.2-a27ef235f5-e9cc0e1f2d.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/fsevents-npm-2.3.2-a881d6ac9f-97ade64e75.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/glob-npm-10.3.3-2d9abea8c7-29190d3291.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/glob-npm-7.2.3-2d866d17a5-29452e97b3.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/is-core-module-npm-2.13.0-e444c50225-053ab101fb.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/jackspeak-npm-2.2.2-374ca454fe-7b1468dd91.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/lru-cache-npm-10.0.0-256d74bb20-18f101675f.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/minipass-fetch-npm-3.0.3-2c4966d142-af5ab2552a.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/minipass-npm-3.3.6-b8d93a945b-a30d083c80.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/minipass-npm-7.0.2-baa42a5a34-46776de732.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/qs-npm-6.11.2-b118bc1c6f-e812f3c590.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/regenerator-transform-npm-0.15.2-109e57a69f-20b6f9377d.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/resolve-npm-1.22.4-faa4f32bdd-23f25174c2.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/resolve-patch-efbbaf0edd-c45f2545fd.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/semver-npm-7.5.3-275095dbf3-9d58db1652.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/simple-plist-npm-1.4.0-e7f7c6ecb2-fa8086f6b7.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/ssri-npm-10.0.4-f583dafaf3-fb14da9f8a.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/string_decoder-npm-1.3.0-2422117fd0-8417646695.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/uglify-es-npm-3.3.10-f41c73ead2-22b028b645.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/wonka-npm-6.3.4-b7f4737821-6bb57955cb.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/cache/xml2js-npm-0.6.0-78de489f80-437f353fd6.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.yarn/install-state.gz" beforeDir="false" afterPath="$PROJECT_DIR$/.yarn/install-state.gz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Pages/Homepage/Homepage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/Pages/Homepage/Homepage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Pages/InboxPage/InboxPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/Pages/InboxPage/InboxPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Pages/ProfilePage/ProfilePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/Pages/ProfilePage/ProfilePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Pages/SignInPage/SignInPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/Pages/SignInPage/SignInPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Pages/SignUpPage/SignUpPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/Pages/SignUpPage/SignUpPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Pages/WelcomePage/WelcomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/Pages/WelcomePage/WelcomePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/CustomButton/CustomButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/CustomButton/CustomButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/CustomInput/CustomInput.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/CustomInput/CustomInput.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/navigation/Tabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/navigation/Tabs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/navigation/navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/navigation/navigation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/chat.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/icons/chat.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/home1.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/icons/home1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/list.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/icons/list.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/profile.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/icons/profile.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/resume.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/upload.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/icons/upload.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/posts.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/posts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2VNaJp7DQG7q7C5HVntnpcnv4OE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;AndroidSdkUpdater&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ca4d7798-a4b3-422f-84a5-1afc18aef7d9" name="Changes" comment="" />
+      <created>1694678923670</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1694678923670</updated>
+    </task>
+    <servers />
+  </component>
+</project>
