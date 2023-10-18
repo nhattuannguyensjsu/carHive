@@ -7,7 +7,7 @@ import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DATABASE, FIREBASE_STORAGE } from
 import CustomButton from '../../components/CustomButton';
 import { doc, documentId, setDoc } from "firebase/firestore";
 import { addDoc, collection, onSnapshot } from "firebase/firestore";
-import Modal from 'react-native-modal'; // Import the modal component
+import Modal from 'react-native-modal';
 import { useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import AddPhoto from '../../../assets/images/addphoto.png';
@@ -53,7 +53,7 @@ const PostPage = () => {
 
     const response = await fetch(uri);
     const blob = await response.blob();
-    const storageRef = ref(FIREBASE_STORAGE, "ListingPhoto/" + new Date().getTime());
+    const storageRef = ref(FIREBASE_STORAGE, "ChatImage/" + new Date().getTime());
 
     const uploadTask = uploadBytesResumable(storageRef, blob);
 
@@ -83,7 +83,6 @@ const PostPage = () => {
   async function saveRecord(imageURL) {
     const user = FIREBASE_AUTH.currentUser;
     const userDocRef = collection(FIREBASE_DATABASE, "usersListing");
-    // const listingsCollectionRef = collection(userDocRef);
 
     try {
       await addDoc(userDocRef, {
@@ -133,13 +132,13 @@ const PostPage = () => {
       });
     });
     return () => unsubscribe();
-   
+
   }, []);
 
   return (
     <SafeAreaView style={styles.safe}>
-      <ScrollView> 
-            <View style={{ flex: 1 }}>
+      <ScrollView>
+        <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row' }}>
 
             <Image source={Logo}
@@ -244,7 +243,7 @@ const PostPage = () => {
 
         </View>
 
-        </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -255,7 +254,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: "-10%",
     marginBottom: "15%"
-},
+  },
   logo: {
     marginLeft: 20,
     width: '20%',
