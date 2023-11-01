@@ -57,7 +57,6 @@ export default function InboxPage() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <Text style={styles.header}>Inbox</Text>
         <FlatList
@@ -73,7 +72,6 @@ export default function InboxPage() {
           )}
         />
       </View>
-    </SafeAreaView>
   );
 }
 

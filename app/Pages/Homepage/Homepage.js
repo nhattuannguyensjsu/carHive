@@ -238,7 +238,7 @@ const Homepage = () => {
                         marginTop: 10,
                         paddingLeft: 20,
                         width: "80%",
-                        marginLeft: 25
+                        marginLeft: 10
 
                     }}
                         placeholder='Search by Year, Model or Make'

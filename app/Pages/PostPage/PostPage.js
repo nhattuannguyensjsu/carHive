@@ -33,7 +33,7 @@ const PostPage = () => {
 
   const [pickedImage, setPickedImage] = useState("");
 
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false); // State for success modal
 
   async function pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({

@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, Image, Text, useWindowDimensions, View } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { StyleSheet, TouchableOpacity, Image, Text, useWindowDimensions } from 'react-native';
+import { GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import { collection, addDoc, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import Goback from '../../../assets/icons/goback.png';
 import addImage from '../../../assets/icons/add-image.png';
-
 import profileImage from '../../../assets/icons/profile.png';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
   const route = useRoute();
   const { height } = useWindowDimensions();
-  const [pickedImage, setPickedImage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState('');
+  const [pickedImage, setPickedImage] = useState(null);
 
   const recipient = route.params.recipient;
   const currentUserEmail = FIREBASE_AUTH.currentUser.email;
@@ -28,11 +27,21 @@ export default function ChatPage() {
       aspect: [16, 9],
       quality: 0.5,
     });
-
+  
     if (!result.canceled) {
-      setPickedImage(result.assets[0].uri);
+      const selectedAsset = result.assets[0];
+      setPickedImage({
+        _id: new Date().getTime(),
+        image: selectedAsset.uri,
+        createdAt: new Date(),
+        user: {
+          _id: currentUserEmail,
+          avatar: profileImage,
+        },
+      });
     }
   }
+  
 
   useEffect(() => {
     const loadChatHistory = async () => {
@@ -55,7 +64,6 @@ export default function ChatPage() {
               createdAt: docData.createdAt.toDate(),
               user: {
                 _id: docData.user,
-                avatar: profileImage,
               },
             };
             chatMessages.push(message);
@@ -91,38 +99,39 @@ export default function ChatPage() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <React.Fragment>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Homepage')}
-          style={{ padding: 5, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center' }}
-        >
-          <Image
-            source={Goback}
-            style={[styles.goback, { height: height * 0.05 }]}
-            resizeMode="contain"
-          />
-          <Text style={styles.userEmail}>{recipient}</Text>
-        </TouchableOpacity>
-
-        <GiftedChat
-          messages={messages}
-          onSend={onSend}
-          renderActions={() => (
-            <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton}>
-              <Image
-                source={addImage}
-                style={[styles.addImage, { height: height * 0.05 }]}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          )}
-          user={{
-            _id: currentUserEmail,
-          }}
+    <React.Fragment>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Homepage')}
+        style={{ padding: 5, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center' }}
+      >
+        <Image
+          source={Goback}
+          style={[styles.goback, { height: height * 0.05 }]}
+          resizeMode="contain"
         />
-      </React.Fragment>
-    </SafeAreaView>
+        <Text style={styles.userEmail}>{recipient}</Text>
+      </TouchableOpacity>
+
+      <GiftedChat
+        messages={messages}
+        onSend={onSend}
+        renderActions={() => (
+          <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton}>
+            <Image
+              source={addImage}
+              style={[styles.addImage, { height: height * 0.05 }]}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        )}
+        user={{
+          _id: currentUserEmail,
+        }}
+      />
+      {pickedImage && (
+        <Image source={{ uri: pickedImage.image }} style={styles.pickedImage} resizeMode="contain" />
+      )}
+    </React.Fragment>
   );
 }
 
@@ -133,14 +142,28 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginRight: 10,
   },
+  inputContainer: {
+    borderColor: 'transparent',
+  },
+  userEmail: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   addImage: {
     width: 30,
     height: 30,
     marginTop: 5,
     marginLeft: 10,
   },
-  userEmail: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  pickedImage: {
+    width: 100,
+    height: 100,
+    marginLeft: 20
   },
+  sendButtonText: {
+    fontWeight: 'bold',
+    marginRight: 20,
+    marginTop: -30,
+    color: 'blue'
+  }
 });
