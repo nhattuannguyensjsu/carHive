@@ -14,11 +14,9 @@ import { Button, TouchableOpacity } from 'react-native';
 import { doc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { FlatList } from 'react-native';
+
 const Homepage = () => {
 
-    const [location, setLocation] = useState('');
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
     const [listingInfo, setListingInfo] = useState([]);
 
     const [searchInput, setSearchInput] = useState('');
@@ -28,11 +26,11 @@ const Homepage = () => {
     const [sortByPrice, setSortByPrice] = useState(null);
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
+    const [minMileage, setMinMileage] = useState('');
+    const [maxMileage, setMaxMileage] = useState('');
     const [sortOptionsVisible, setSortOptionsVisible] = useState(false);
-    const [locationInput, setLocationInput] = useState('');
-
-    const [miles, setMiles] = useState('');
     const [userZipcode, setUserZipcode] = useState('');
+
 
     const sortListingsByPrice = () => {
         let sortedListings = [...(filteredListingInfo || listingInfo)];
@@ -46,59 +44,30 @@ const Homepage = () => {
         setFilteredListingInfo(sortedListings);
     };
 
-    const filterListingsByPriceRange = () => {
+    const filterListings = () => {
         const filteredList = listingInfo.filter((item) => {
             const price = parseFloat(item.Price);
             const min = minPrice ? parseFloat(minPrice) : Number.MIN_SAFE_INTEGER;
             const max = maxPrice ? parseFloat(maxPrice) : Number.MAX_SAFE_INTEGER;
-
             return price >= min && price <= max;
 
+            const miles = parseFloat(item.Price);
+            const minMiles = minMileage ? parseFloat(minMileage) : Number.MIN_SAFE_INTEGER;
+            const maxMiles = maxMileage ? parseFloat(maxMileage) : Number.MAX_SAFE_INTEGER;
+            return miles >= minMiles && miles <= maxMiles;
+
         });
         setFilteredListingInfo(filteredList);
     };
 
-    const filterListingsByPriceAndDistance = (minPrice, maxPrice, userZipcode, miles, userCoordinates) => {
-        // Convert user-provided miles to meters (geolib uses meters)
-        const meters = parseFloat(miles) * 1609.34; // 1 mile = 1609.34 meters
-    
-        // Calculate the minimum and maximum distances (in meters) for the filtering
-        const minDistance = userCoordinates ? meters : 0; // Filter by distance only if userCoordinates are available
-        const maxDistance = meters + minDistance;
-    
-        // Filter listings by both price range and distance range
-        const filteredList = listingInfo.filter((item) => {
-            const price = parseFloat(item.Price);
-    
-            // Check if the item's price is within the specified price range
-            const isPriceInRange = price >= minPrice && price <= maxPrice;
-    
-            if (item.latitude && item.longitude) {
-                // Calculate the distance between the user and the item
-                const distance = geolib.getDistance(userCoordinates, {
-                    latitude: item.latitude,
-                    longitude: item.longitude,
-                });
-    
-                // Check if the item's distance is within the specified distance range
-                const isDistanceInRange = distance >= minDistance && distance <= maxDistance;
-    
-                // Return true if the item meets both price and distance criteria
-                return isPriceInRange && isDistanceInRange;
-            } else {
-                return isPriceInRange; // Skip items without location coordinates
-            }
-        });
-    
-        setFilteredListingInfo(filteredList);
-    };
-    
     const handleFiltering = () => {
         setfilterByPrice(!filterByPrice);
-        if (!filteredListingInfo) {
-            sortListingsByPrice();
+        if (!filterByPrice) {
+            setMinPrice('');
+            setMaxPrice('');
         }
     };
+
     const handleSorting = () => {
         setSortOptionsVisible(!sortOptionsVisible);
 
@@ -130,38 +99,6 @@ const Homepage = () => {
         setFilteredListingInfo(filteredList);
     };
 
-    const searchListingsByDistance = () => {
-        if (!userZipcode || !miles) {
-          // Ensure both zipcode and miles are provided
-          return;
-        }
-      
-        // Convert user-provided miles to meters (geolib uses meters)
-        const meters = parseFloat(miles) * 1609.34; // 1 mile = 1609.34 meters
-      
-        // Calculate the user's latitude and longitude based on their zipcode
-        // You'll need to use a geocoding service like Google Geocoding API
-        // to get the coordinates for the provided zipcode
-        // Replace the following code with an actual geocoding service call
-        const userCoordinates = { latitude: YOUR_LATITUDE, longitude: YOUR_LONGITUDE };
-      
-        // Filter listings within the specified distance from the user's location
-        const filteredList = listingInfo.filter((item) => {
-          if (item.latitude && item.longitude) {
-            const distance = geolib.getDistance(userCoordinates, {
-              latitude: item.latitude,
-              longitude: item.longitude,
-            });
-      
-            return distance <= meters;
-          } else {
-            return false; // Skip items without location coordinates
-          }
-        });
-      
-        setFilteredListingInfo(filteredList);
-      };      
-
     const handleSearchInputChange = (text) => {
         setSearchInput(text);
     };
@@ -173,16 +110,6 @@ const Homepage = () => {
             setFilteredListingInfo(null); // Clear the filtered results
         }
     };
-
-    // useEffect(() => {
-    //     // If search input is empty, show all listings; otherwise, filter based on the search input
-    //     if (searchInput === '') {
-    //         setFilteredListingInfo(listingInfo);
-    //         getListingInfo();
-    //     } else {
-    //         searchListings();
-    //     }
-    // }, [searchInput, listingInfo]);
 
     const getListingInfo = async () => {
         try {
@@ -197,74 +124,9 @@ const Homepage = () => {
         }
     };
 
-    // const getListingInfo = async () => {
-    //     try {
-    //         const user = FIREBASE_AUTH.currentUser;
-
-    //         if (user) {
-    //             const listingsCollection = collection(FIREBASE_DATABASE, 'usersListing');
-
-    //             // Initialize an array to hold the listing data
-    //             const listingsData = [];
-
-    //             // Set up a real-time listener for the listings
-    //             const unsubscribe = onSnapshot(listingsCollection, (querySnapshot) => {
-    //                 listingsData.length = 0; // Clear the previous data
-
-    //                 querySnapshot.forEach((doc) => {
-    //                     listingsData.push(doc.data());
-    //                 });
-
-    //                 // Update listingInfo with the updated data
-    //                 setListingInfo(listingsData);
-    //             });
-
-
-    //             return () => {
-    //                 unsubscribe();
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching user listings:', error);
-    //     }
-
-
-
-    // Location.setGoogleApiKey("AIzaSyBSNJstpPFJMX-Z08gITore8Xwpl3Awg9Y");
-
     useEffect(() => {
-        // const getPermissions = async () => {
-        //     let { status } = await Location.requestForegroundPermissionsAsync();
-        //     if (status !== 'granted') {
-        //         console.log("Please grant location permissions");
-        //         return;
-        //     }
-
-        //     let currentLocation = await Location.getCurrentPositionAsync({});
-        //     setLocation(currentLocation);
-        //     console.log("Location: ");
-        //     console.log(currentLocation);
-        // };
-        // getPermissions();
-
         getListingInfo();
-
-
     }, []);
-
-
-    // const reverseGeocode = async () => {
-    //     const reverseGeocodedAddress = await Location.reverseGeocodeAsync({
-    //         longitude: location.coords.longitude,
-    //         latitude: location.coords.latitude
-    //     });
-
-    //     if (reverseGeocodedAddress.length > 0) {
-    //         setCity(reverseGeocodedAddress[0].city || '');
-    //     }
-    //     console.log("Location: ");
-    //     console.log(reverseGeocodedAddress);
-    // };
 
     const { height } = useWindowDimensions();
     const Navigation = useNavigation();
@@ -282,23 +144,6 @@ const Homepage = () => {
                     <Text style={styles.title}> CarHive </Text>
 
                 </View>
-                {/* 
-                <View style={{ flexDirection: 'row' }}>
-
-                    <TouchableOpacity onPress={reverseGeocode}>
-                        <Image
-                            source={Loc}
-                            style={[styles.icons, { height: height * 0.05 }]}
-                            resizeMode="contain"
-                        />
-
-                    </TouchableOpacity>
-                    {city && (
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ marginLeft: 10, marginTop: 15, fontSize: 18 }}>{city}</Text>
-                        </View>
-                    )}
-                </View> */}
 
                 <View style={{ flexDirection: 'row' }}>
                     <TextInput style={{
@@ -331,14 +176,6 @@ const Homepage = () => {
                     </TouchableOpacity>
                 </View>
 
-                {/* <View style={{ flexDirection: 'row' }}>
-                    <Image source={Sorting} style={[styles.icon_sub, { height: height * 0.3 }]}
-                        resizeMode="contain"
-                    />
-                    <Image source={Filter} style={[styles.icon_sub1, { height: height * 0.3 }]}
-                        resizeMode="contain"
-                    />
-                </View> */}
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
                         onPress={handleSorting}
@@ -403,36 +240,19 @@ const Homepage = () => {
                                 value={maxPrice}
                                 onChangeText={(text) => setMaxPrice(text)}
                             />
-                             <TextInput
-                                style={styles.filtering}
-                                placeholder='Enter Zipcode'
-                                placeholderTextColor="black"
-                                value={userZipcode}
-                                onChangeText={(text) => setUserZipcode(text)}
-                            />
-                            <TextInput
-                                    style={styles.filtering}
-                                placeholder='Miles'
-                                placeholderTextColor="black"
-                                value={miles}
-                                onChangeText={(text) => setMiles(text)}
-                            />
 
                             <TouchableOpacity
                                 onPress={() => {
-                                    filterListingsByPriceRange(parseFloat(minPrice), parseFloat(maxPrice), locationInput);
+                                    filterListings();
                                 }}
                             >
                                 <Text style={styles.button}> Search</Text>
-                            </TouchableOpacity>              
+                            </TouchableOpacity>
                         </View>
-                        
+
                     )}
 
-
                 </View>
-
-                
 
                 <FlatList
                     data={filteredListingInfo || listingInfo}
@@ -531,10 +351,10 @@ const styles = StyleSheet.create({
     listingContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 10,
+        marginBottom: 5,
         flex: 1,
         marginHorizontal: 10,
-        marginTop: 10,
+        marginTop: 5,
     },
     listingPair: {
         flex: 1,
@@ -547,7 +367,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
+        elevation: 10,
     },
     listingImage: {
         width: '100%',
@@ -590,12 +410,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFD43C",
         width: "100%",
         height: 30,
-        padding: 8,
+        padding: 5,
         marginLeft: 30,
         marginBottom: 5,
         borderRadius: 20,
         textAlign: 'center'
-        }
+    }
 
 });
 
