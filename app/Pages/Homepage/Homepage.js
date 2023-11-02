@@ -31,6 +31,9 @@ const Homepage = () => {
     const [sortOptionsVisible, setSortOptionsVisible] = useState(false);
     const [locationInput, setLocationInput] = useState('');
 
+    const [miles, setMiles] = useState('');
+    const [userZipcode, setUserZipcode] = useState('');
+
     const sortListingsByPrice = () => {
         let sortedListings = [...(filteredListingInfo || listingInfo)];
 
@@ -54,6 +57,42 @@ const Homepage = () => {
         });
         setFilteredListingInfo(filteredList);
     };
+
+    const filterListingsByPriceAndDistance = (minPrice, maxPrice, userZipcode, miles, userCoordinates) => {
+        // Convert user-provided miles to meters (geolib uses meters)
+        const meters = parseFloat(miles) * 1609.34; // 1 mile = 1609.34 meters
+    
+        // Calculate the minimum and maximum distances (in meters) for the filtering
+        const minDistance = userCoordinates ? meters : 0; // Filter by distance only if userCoordinates are available
+        const maxDistance = meters + minDistance;
+    
+        // Filter listings by both price range and distance range
+        const filteredList = listingInfo.filter((item) => {
+            const price = parseFloat(item.Price);
+    
+            // Check if the item's price is within the specified price range
+            const isPriceInRange = price >= minPrice && price <= maxPrice;
+    
+            if (item.latitude && item.longitude) {
+                // Calculate the distance between the user and the item
+                const distance = geolib.getDistance(userCoordinates, {
+                    latitude: item.latitude,
+                    longitude: item.longitude,
+                });
+    
+                // Check if the item's distance is within the specified distance range
+                const isDistanceInRange = distance >= minDistance && distance <= maxDistance;
+    
+                // Return true if the item meets both price and distance criteria
+                return isPriceInRange && isDistanceInRange;
+            } else {
+                return isPriceInRange; // Skip items without location coordinates
+            }
+        });
+    
+        setFilteredListingInfo(filteredList);
+    };
+    
     const handleFiltering = () => {
         setfilterByPrice(!filterByPrice);
         if (!filteredListingInfo) {
@@ -90,6 +129,38 @@ const Homepage = () => {
         });
         setFilteredListingInfo(filteredList);
     };
+
+    const searchListingsByDistance = () => {
+        if (!userZipcode || !miles) {
+          // Ensure both zipcode and miles are provided
+          return;
+        }
+      
+        // Convert user-provided miles to meters (geolib uses meters)
+        const meters = parseFloat(miles) * 1609.34; // 1 mile = 1609.34 meters
+      
+        // Calculate the user's latitude and longitude based on their zipcode
+        // You'll need to use a geocoding service like Google Geocoding API
+        // to get the coordinates for the provided zipcode
+        // Replace the following code with an actual geocoding service call
+        const userCoordinates = { latitude: YOUR_LATITUDE, longitude: YOUR_LONGITUDE };
+      
+        // Filter listings within the specified distance from the user's location
+        const filteredList = listingInfo.filter((item) => {
+          if (item.latitude && item.longitude) {
+            const distance = geolib.getDistance(userCoordinates, {
+              latitude: item.latitude,
+              longitude: item.longitude,
+            });
+      
+            return distance <= meters;
+          } else {
+            return false; // Skip items without location coordinates
+          }
+        });
+      
+        setFilteredListingInfo(filteredList);
+      };      
 
     const handleSearchInputChange = (text) => {
         setSearchInput(text);
@@ -332,17 +403,36 @@ const Homepage = () => {
                                 value={maxPrice}
                                 onChangeText={(text) => setMaxPrice(text)}
                             />
+                             <TextInput
+                                style={styles.filtering}
+                                placeholder='Enter Zipcode'
+                                placeholderTextColor="black"
+                                value={userZipcode}
+                                onChangeText={(text) => setUserZipcode(text)}
+                            />
+                            <TextInput
+                                    style={styles.filtering}
+                                placeholder='Miles'
+                                placeholderTextColor="black"
+                                value={miles}
+                                onChangeText={(text) => setMiles(text)}
+                            />
 
                             <TouchableOpacity
                                 onPress={() => {
                                     filterListingsByPriceRange(parseFloat(minPrice), parseFloat(maxPrice), locationInput);
                                 }}
                             >
-                                <Text style={styles.button}> Search </Text>
-                            </TouchableOpacity>
+                                <Text style={styles.button}> Search</Text>
+                            </TouchableOpacity>              
                         </View>
+                        
                     )}
+
+
                 </View>
+
+                
 
                 <FlatList
                     data={filteredListingInfo || listingInfo}
@@ -485,25 +575,27 @@ const styles = StyleSheet.create({
     },
     sortOption: {
         backgroundColor: 'lightgrey',
-        width: '80%',
+        width: '85%',
         height: 30,
         borderColor: 'white',
         borderWidth: 1,
         borderRadius: 15,
-        paddingHorizontal: 15,
-        marginLeft: 30,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        marginLeft: 20,
         textAlign: 'center'
     },
 
     button: {
         backgroundColor: "#FFD43C",
         width: "100%",
+        height: 30,
         padding: 8,
-        borderRadius: 20,
-        textAlign: 'center',
         marginLeft: 30,
-
-    }
+        marginBottom: 5,
+        borderRadius: 20,
+        textAlign: 'center'
+        }
 
 });
 
