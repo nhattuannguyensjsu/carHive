@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, Image, Text, useWindowDimensions } from 'react-native';
 import { GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import { collection, addDoc, query, where, orderBy, onSnapshot } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIREBASE_DATABASE } from '../../../firebaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DATABASE, FIREBASE_STORAGE } from '../../../firebaseConfig';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import Goback from '../../../assets/icons/goback.png';
 import addImage from '../../../assets/icons/add-image.png';
 import profileImage from '../../../assets/icons/profile.png';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import InboxPage from '../InboxPage/InboxPage';
 
 export default function ChatPage() {
   const navigation = useNavigation();
@@ -24,24 +26,18 @@ export default function ChatPage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [16, 9],
-      quality: 0.5,
+      quality: 1,
     });
-  
+
     if (!result.canceled) {
-      const selectedAsset = result.assets[0];
-      setPickedImage({
-        _id: new Date().getTime(),
-        image: selectedAsset.uri,
-        createdAt: new Date(),
-        user: {
-          _id: currentUserEmail,
-          avatar: profileImage,
-        },
-      });
+      if (result.assets && result.assets.length > 0) {
+        const selectedAsset = result.assets[0];
+        setPickedImage(selectedAsset.uri); // Set the URI directly
+      }
     }
   }
-  
+
+
 
   useEffect(() => {
     const loadChatHistory = async () => {
@@ -64,7 +60,10 @@ export default function ChatPage() {
               createdAt: docData.createdAt.toDate(),
               user: {
                 _id: docData.user,
+                avatar: profileImage,
               },
+              // If the message includes an image, add it to the message object
+              ...(docData.image && { image: docData.image }),
             };
             chatMessages.push(message);
           });
@@ -80,28 +79,65 @@ export default function ChatPage() {
     loadChatHistory();
   }, [recipient, currentUserEmail]);
 
-  const onSend = async (newMessages = []) => {
+  async function onSend(newMessages = []) {
     try {
       const newMessage = newMessages[0];
-      if (!newMessage || !newMessage.text) {
+      if (!newMessage) {
         return;
       }
 
-      const docRef = await addDoc(collection(FIREBASE_DATABASE, 'chats'), {
-        text: newMessage.text,
-        user: newMessage.user._id,
-        createdAt: newMessage.createdAt,
-        recipient: recipient,
-      });
+      if (newMessage.text) {
+        // Send text message
+        await addDoc(collection(FIREBASE_DATABASE, 'chats'), {
+          text: newMessage.text,
+          user: newMessage.user._id,
+          createdAt: newMessage.createdAt,
+          recipient: recipient,
+        });
+      }
+
+      if (pickedImage) {
+        // Send image message
+        const imageURI = pickedImage;
+        const storageRef = ref(FIREBASE_STORAGE, `ChatImages/${new Date().getTime()}`);
+        const imageBlob = await fetch(imageURI).then((response) => response.blob());
+        const uploadTask = uploadBytesResumable(storageRef, imageBlob);
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+          },
+          (error) => {
+            console.error('Error uploading image:', error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+              console.log("File available at", downloadURL);
+              // Save the image URL in the database
+              await addDoc(collection(FIREBASE_DATABASE, 'chats'), {
+                image: downloadURL,
+                user: newMessage.user._id,
+                createdAt: newMessage.createdAt,
+                recipient: recipient,
+              });
+            });
+          }
+        );
+
+        setPickedImage(null); // Reset pickedImage after sending
+      }
     } catch (error) {
       console.error('Error sending message:', error);
     }
-  };
+  }
+
 
   return (
     <React.Fragment>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Homepage')}
+        onPress={() => navigation.goBack()}
         style={{ padding: 5, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center' }}
       >
         <Image
@@ -129,7 +165,7 @@ export default function ChatPage() {
         }}
       />
       {pickedImage && (
-        <Image source={{ uri: pickedImage.image }} style={styles.pickedImage} resizeMode="contain" />
+        <Image source={{ uri: pickedImage }} style={styles.pickedImage} resizeMode="contain" />
       )}
     </React.Fragment>
   );

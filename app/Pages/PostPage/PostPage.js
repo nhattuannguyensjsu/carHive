@@ -33,18 +33,18 @@ const PostPage = () => {
 
   const [pickedImage, setPickedImage] = useState("");
 
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false); // State for success modal
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
 
   async function pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [16, 9],
       quality: 0.5,
+      multiple: true
     });
 
     if (!result.canceled) {
-      setPickedImage(result.assets[0].uri); // Set the picked image URL
+      setPickedImage(result.assets[0].uri);
     }
   }
 
@@ -251,9 +251,12 @@ const PostPage = () => {
               onChangeText={(text) => setVIN(text)}>
             </TextInput>
 
-            <CustomButton
-              text="Post"
-              onPress={() => handleUpload()} />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleUpload()}>
+              <Text style={{ color: 'black', textAlign: 'center' }}> Post</Text>
+
+            </TouchableOpacity>
 
             <Modal isVisible={isSuccessModalVisible}>
               <View style={styles.modalContainer}>
@@ -364,6 +367,15 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingHorizontal: 30,
     borderRadius: 25,
+  },
+  button: {
+    backgroundColor: "#FFD43C",
+    width: "30%",
+    padding: 10,
+    marginVertical: 10,
+    alignItems: 'center',
+    borderRadius: 20,
+    alignSelf: 'center',
   },
 });
 

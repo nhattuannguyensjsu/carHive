@@ -18,66 +18,93 @@ import { FlatList } from 'react-native';
 const Homepage = () => {
 
     const [listingInfo, setListingInfo] = useState([]);
-
     const [searchInput, setSearchInput] = useState('');
     const [filteredListingInfo, setFilteredListingInfo] = useState(null);
-
     const [filterByPrice, setfilterByPrice] = useState(false);
-    const [sortByPrice, setSortByPrice] = useState(null);
+    // const [sortByPrice, setSortByPrice] = useState(null);
+    // const [sortByYear, setSortByYear] = useState(null);
+    // const [sortByMiles, setSortByMiles] = useState(null);
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
-    const [minMileage, setMinMileage] = useState('');
-    const [maxMileage, setMaxMileage] = useState('');
     const [sortOptionsVisible, setSortOptionsVisible] = useState(false);
-    const [userZipcode, setUserZipcode] = useState('');
+    const [selectedColor, setSelectedColor] = useState(''); // New state for color filtering
+    const [selectedLocation, setSelectedLocation] = useState('');
 
 
-    const sortListingsByPrice = () => {
+    const sortListingsByLowToHighPrices = () => {
         let sortedListings = [...(filteredListingInfo || listingInfo)];
-
-        if (sortByPrice === 'lowToHigh') {
-            sortedListings.sort((a, b) => parseFloat(a.Price) - parseFloat(b.Price));
-        } else if (sortByPrice === 'highToLow') {
-            sortedListings.sort((a, b) => parseFloat(b.Price) - parseFloat(a.Price));
-        }
-
+        sortedListings.sort((a, b) => parseFloat(a.Price) - parseFloat(b.Price));
         setFilteredListingInfo(sortedListings);
     };
+
+    const sortListingsByHighToLowPrices = () => {
+        let sortedListings = [...(filteredListingInfo || listingInfo)];
+        sortedListings.sort((a, b) => parseFloat(b.Price) - parseFloat(a.Price));
+        setFilteredListingInfo(sortedListings);
+    };
+
+    const sortListingsByLowToHighYear = () => {
+        let sortedListings = [...(filteredListingInfo || listingInfo)];
+        sortedListings.sort((a, b) => parseFloat(a.Year) - parseFloat(b.Year));
+        setFilteredListingInfo(sortedListings);
+    };
+
+    const sortListingsByHighToLowYear = () => {
+        let sortedListings = [...(filteredListingInfo || listingInfo)];
+        sortedListings.sort((a, b) => parseFloat(b.Year) - parseFloat(a.Year));
+        setFilteredListingInfo(sortedListings);
+    };
+
+    const sortListingsByLowToHighMiles = () => {
+        let sortedListings = [...(filteredListingInfo || listingInfo)];
+        sortedListings.sort((a, b) => parseFloat(a.Mileage) - parseFloat(b.Mileage));
+        setFilteredListingInfo(sortedListings);
+    };
+
+    const sortListingsByHighToLowMiles = () => {
+        let sortedListings = [...(filteredListingInfo || listingInfo)];
+        sortedListings.sort((a, b) => parseFloat(b.Mileage) - parseFloat(a.Mileage));
+        setFilteredListingInfo(sortedListings);
+    };
+
 
     const filterListings = () => {
         const filteredList = listingInfo.filter((item) => {
             const price = parseFloat(item.Price);
             const min = minPrice ? parseFloat(minPrice) : Number.MIN_SAFE_INTEGER;
             const max = maxPrice ? parseFloat(maxPrice) : Number.MAX_SAFE_INTEGER;
-            return price >= min && price <= max;
 
-            const miles = parseFloat(item.Price);
-            const minMiles = minMileage ? parseFloat(minMileage) : Number.MIN_SAFE_INTEGER;
-            const maxMiles = maxMileage ? parseFloat(maxMileage) : Number.MAX_SAFE_INTEGER;
-            return miles >= minMiles && miles <= maxMiles;
+            const colorCondition = !selectedColor || item.Color.toLowerCase().includes(selectedColor.toLowerCase());
+            const locationCondition = !selectedLocation || item.Location.toLowerCase().includes(selectedLocation.toLowerCase());
 
+            return price >= min && price <= max && colorCondition && locationCondition;
         });
+
         setFilteredListingInfo(filteredList);
     };
 
+
     const handleFiltering = () => {
         setfilterByPrice(!filterByPrice);
-        if (!filterByPrice) {
-            setMinPrice('');
-            setMaxPrice('');
+
+        if (sortOptionsVisible) {
+            setSortOptionsVisible(false);
         }
     };
 
     const handleSorting = () => {
         setSortOptionsVisible(!sortOptionsVisible);
 
+        if (filterByPrice) {
+            setfilterByPrice(false);
+        }
     };
 
-    const handleSortingOption = (option) => {
-        setSortByPrice(option);
-        sortListingsByPrice(option);
+    // const handleSortingOption = (option) => {
+    //     setSortByPrice(option);
+    //     sortListingsByPrice(option);
 
-    };
+    // };
     const searchListings = () => {
         const keywords = searchInput.toLowerCase().split(' ');
 
@@ -105,15 +132,14 @@ const Homepage = () => {
 
     const handleSearchButtonClick = () => {
         if (searchInput) {
-            searchListings(); // Filter listings based on the search input
+            searchListings();
         } else {
-            setFilteredListingInfo(null); // Clear the filtered results
+            setFilteredListingInfo(null);
         }
     };
 
     const getListingInfo = async () => {
         try {
-            // Fetch listings from Firebase Firestore
             const listingsCollection = collection(FIREBASE_DATABASE, 'usersListing');
             onSnapshot(listingsCollection, (querySnapshot) => {
                 const updatedListings = querySnapshot.docs.map(doc => doc.data());
@@ -186,6 +212,8 @@ const Homepage = () => {
                             marginLeft: 10,
                             marginRight: 15,
                             marginBottom: 5,
+                            opacity: sortOptionsVisible ? 0.5 : 1,
+
                         }}
                     >
                         <Image source={Sorting} style={[styles.icon_sub, { height: height * 0.3 }]}
@@ -200,6 +228,8 @@ const Homepage = () => {
                             width: 20,
                             height: 20,
                             marginTop: 5,
+                            opacity: filterByPrice ? 0.5 : 1,
+
                         }}
                     >
                         <Image source={Filter} style={[styles.icon_sub, { height: height * 0.3 }]}
@@ -211,35 +241,81 @@ const Homepage = () => {
                 <View style={{ flexDirection: 'row' }}>
 
                     {sortOptionsVisible && (
-                        <View style={styles.sortOptionsContainer}>
-                            <TouchableOpacity
-                                onPress={() => handleSortingOption('lowToHigh')}
-                                style={styles.sortOption}
-                            >
-                                <Text>Low to High</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => handleSortingOption('highToLow')}
-                                style={styles.sortOption}
-                            >
-                                <Text>High to Low</Text>
-                            </TouchableOpacity>
+                        <View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity
+                                    onPress={sortListingsByLowToHighPrices}
+                                    style={styles.sortOption}
+                                >
+                                    <Text>Price: ⬆</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={sortListingsByHighToLowPrices}
+                                    style={styles.sortOption1}
+                                >
+                                    <Text>Price: ⬇</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity
+                                    onPress={sortListingsByLowToHighYear}
+                                    style={styles.sortOption}
+                                >
+                                    <Text>Year: ⬆</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={sortListingsByHighToLowYear}
+                                    style={styles.sortOption1}
+                                >
+                                    <Text>Year: ⬇</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity
+                                    onPress={sortListingsByLowToHighMiles}
+                                    style={styles.sortOption}
+                                >
+                                    <Text>Mileage: ⬆</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={sortListingsByHighToLowMiles}
+                                    style={styles.sortOption1}
+                                >
+                                    <Text>Mileage: ⬇</Text>
+                                </TouchableOpacity>
+                            </View>
+
                         </View>
                     )}
                     {filterByPrice && (
-                        <View style={styles.priceRangeContainer}>
-                            <TextInput style={styles.filtering}
-                                placeholder="Min Price"
-                                keyboardType="numeric"
-                                value={minPrice}
-                                onChangeText={(text) => setMinPrice(text)}
-                            />
-                            <TextInput style={styles.filtering}
-                                placeholder="Max Price"
-                                keyboardType="numeric"
-                                value={maxPrice}
-                                onChangeText={(text) => setMaxPrice(text)}
-                            />
+                        <View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TextInput style={styles.filtering}
+                                    placeholder="Min Price"
+                                    keyboardType="numeric"
+                                    value={minPrice}
+                                    onChangeText={(text) => setMinPrice(text)}
+                                />
+                                <TextInput style={styles.filtering1}
+                                    placeholder="Color"
+                                    value={selectedColor}
+                                    onChangeText={(text) => setSelectedColor(text)}
+                                />
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+
+                                <TextInput style={styles.filtering}
+                                    placeholder="Max Price"
+                                    keyboardType="numeric"
+                                    value={maxPrice}
+                                    onChangeText={(text) => setMaxPrice(text)}
+                                />
+                                <TextInput style={styles.filtering1}
+                                    placeholder="Location"
+                                    value={selectedLocation}
+                                    onChangeText={(text) => setSelectedLocation(text)}
+                                />
+                            </View>
 
                             <TouchableOpacity
                                 onPress={() => {
@@ -383,19 +459,28 @@ const styles = StyleSheet.create({
     },
     filtering: {
         backgroundColor: 'lightgrey',
-        width: "100%",
+        width: "35%",
         height: 30,
         borderColor: 'white',
         borderWidth: 1,
         borderRadius: 15,
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
         textAlign: 'center',
-        marginLeft: 30,
-
+        marginLeft: 20
+    },
+    filtering1: {
+        backgroundColor: 'lightgrey',
+        width: "35%",
+        height: 30,
+        borderColor: 'white',
+        borderWidth: 1,
+        borderRadius: 15,
+        paddingHorizontal: 10,
+        textAlign: 'center',
     },
     sortOption: {
         backgroundColor: 'lightgrey',
-        width: '85%',
+        width: '33%',
         height: 30,
         borderColor: 'white',
         borderWidth: 1,
@@ -403,18 +488,29 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 5,
         marginLeft: 20,
-        textAlign: 'center'
+        alignItems: 'center'
+    },
+    sortOption1: {
+        backgroundColor: 'lightgrey',
+        width: '33%',
+        height: 30,
+        borderColor: 'white',
+        borderWidth: 1,
+        borderRadius: 15,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        alignItems: 'center'
     },
 
     button: {
         backgroundColor: "#FFD43C",
-        width: "100%",
+        width: "35%",
         height: 30,
         padding: 5,
-        marginLeft: 30,
         marginBottom: 5,
         borderRadius: 20,
-        textAlign: 'center'
+        textAlign: 'center',
+        marginHorizontal: 20
     }
 
 });

@@ -14,12 +14,12 @@ import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import * as ImagePicker from "expo-image-picker";
 import { addDoc, collection, onSnapshot } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import Modal from 'react-native-modal'; // Import the modal component
+import Modal from 'react-native-modal';
 
 
 const UploadIDPage = () => {
 
-    const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false); // State for success modal
+    const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
     const [pickedImage, setPickedImage] = useState("");
     const [progress, setProgress] = useState(0);
     const [files, setFiles] = useState([]);
@@ -30,19 +30,16 @@ const UploadIDPage = () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [3, 4],
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
-            setPickedImage(result.assets[0].uri); // Set the picked image URL
-            // await uploadImage(result.assets[0].uri, "image");
+            setPickedImage(result.assets[0].uri);
         }
     }
 
     async function uploadImage(uri, fileType) {
         if (!pickedImage) {
-            // Handle error if no image is picked
             return;
         }
 
@@ -52,7 +49,6 @@ const UploadIDPage = () => {
 
         const uploadTask = uploadBytesResumable(storageRef, blob);
 
-        // listen for events
         uploadTask.on(
             "state_changed",
             (snapshot) => {
@@ -61,7 +57,6 @@ const UploadIDPage = () => {
                 setProgress(progress.toFixed());
             },
             (error) => {
-                // handle error
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
@@ -93,21 +88,17 @@ const UploadIDPage = () => {
     async function handleUpload() {
         if (pickedImage) {
             await uploadImage(pickedImage, "image");
-            setIsSuccessModalVisible(true); // Show success modal when upload is complete
-
+            setIsSuccessModalVisible(true);
         } else {
             console.log("No image is picked")
-            // Handle the case where no image is picked
         }
     }
 
     useEffect(() => {
 
         const unsubscribe = onSnapshot(collection(FIREBASE_DATABASE, "users"), (snapshot) => {
-            // listen to changes in the collection in firestore
             snapshot.docChanges().forEach((change) => {
                 if (change.type === "added") {
-                    // if a new file is added, add it to the state
                     console.log("New file", change.doc.data());
                     setFiles((prevFiles) => [...prevFiles, change.doc.data()]);
                 }
@@ -115,8 +106,7 @@ const UploadIDPage = () => {
         });
 
         return () => unsubscribe();
-        // It is a good practice to unsubscribe to the listener when unmounting.
-        // Because if you don't, you will have a memory leak.
+
     }, []);
 
     return (
@@ -141,7 +131,7 @@ const UploadIDPage = () => {
                     <Text style={styles.text}> Upload ID for Verification </Text>
                 </View>
 
-                {pickedImage ? ( // Render the picked image if it exists
+                {pickedImage ? (
                     <Image
                         source={{ uri: pickedImage }}
                         style={{ width: "100%", height: 200, marginTop: 20 }}
@@ -173,8 +163,7 @@ const UploadIDPage = () => {
                         <TouchableOpacity
                             style={styles.modalButton}
                             onPress={() => {
-                                setIsSuccessModalVisible(false); // Hide the success modal
-                                // Add navigation logic to go back to the home page here
+                                setIsSuccessModalVisible(false);
                             }}
                         >
                             <Text style={{ color: 'white', textAlign: 'center' }}>OK</Text>
