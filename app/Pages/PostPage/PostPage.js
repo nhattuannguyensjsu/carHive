@@ -7,7 +7,7 @@ import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DATABASE, FIREBASE_STORAGE } from
 import CustomButton from '../../components/CustomButton';
 import { doc, documentId, setDoc } from "firebase/firestore";
 import { addDoc, collection, onSnapshot } from "firebase/firestore";
-import Modal from 'react-native-modal'; // Import the modal component
+import Modal from 'react-native-modal';
 import { useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import AddPhoto from '../../../assets/images/addphoto.png';
@@ -23,31 +23,33 @@ const PostPage = () => {
   const [location, setLocation] = useState('');
   const [zipcode, setZipcode] = useState('');
   const [VIN, setVIN] = useState('');
+  const [year, setYear] = useState('');
+  const [color, setColor] = useState('');
+  const [mileage, setMileage] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [files, setFiles] = useState([]);
 
   const [pickedImage, setPickedImage] = useState("");
 
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false); // State for success modal
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
 
   async function pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [16, 9],
       quality: 0.5,
+      multiple: true
     });
 
     if (!result.canceled) {
-      setPickedImage(result.assets[0].uri); // Set the picked image URL
-      // await uploadImage(result.assets[0].uri, "image");
+      setPickedImage(result.assets[0].uri);
     }
   }
 
   async function uploadImage(uri) {
     if (!pickedImage) {
-      // Handle error if no image is picked
       return;
     }
 
@@ -66,7 +68,6 @@ const PostPage = () => {
         setProgress(progress.toFixed());
       },
       (error) => {
-        // handle error
       },
       async () => {
         try {
@@ -83,7 +84,6 @@ const PostPage = () => {
   async function saveRecord(imageURL) {
     const user = FIREBASE_AUTH.currentUser;
     const userDocRef = collection(FIREBASE_DATABASE, "usersListing");
-    // const listingsCollectionRef = collection(userDocRef);
 
     try {
       await addDoc(userDocRef, {
@@ -94,6 +94,9 @@ const PostPage = () => {
         Location: location,
         Zipcode: zipcode,
         VIN: VIN,
+        Year: year,
+        Color: color,
+        Mileage: mileage,
         imageURL,
       });
       console.log("document saved correctly", userDocRef.id);
@@ -104,7 +107,7 @@ const PostPage = () => {
   }
 
   async function handleUpload() {
-    if (pickedImage && title && price && desc && Location && VIN) {
+    if (pickedImage && title && price && desc && Location && VIN && year && color && mileage) {
       await uploadImage(pickedImage, "image");
       setIsSuccessModalVisible(true);
       // Reset the input fields
@@ -114,6 +117,9 @@ const PostPage = () => {
       setVIN('');
       setLocation('');
       setZipcode('');
+      setMileage('');
+      setColor('');
+      setYear('');
       setPickedImage('');
 
     } else {
@@ -123,23 +129,20 @@ const PostPage = () => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(FIREBASE_DATABASE, "usersListing"), (snapshot) => {
-      // listen to changes in the collection in firestore
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
-          // if a new file is added, add it to the state
-          // console.log("New file", change.doc.data());
           setFiles((prevFiles) => [...prevFiles, change.doc.data()]);
         }
       });
     });
     return () => unsubscribe();
-   
+
   }, []);
 
   return (
     <SafeAreaView style={styles.safe}>
-      <ScrollView> 
-            <View style={{ flex: 1 }}>
+      <ScrollView>
+        <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row' }}>
 
             <Image source={Logo}
@@ -152,7 +155,7 @@ const PostPage = () => {
           <Text style={styles.heading}>Post Item</Text>
 
           <View style={styles.body} >
-            {pickedImage ? ( // Render the picked image if it exists
+            {pickedImage ? (
               <Image
                 source={{ uri: pickedImage }}
                 style={{ width: 300, height: 100, marginTop: 20 }}
@@ -167,7 +170,7 @@ const PostPage = () => {
               </TouchableOpacity>
             )}
 
-            <Text style={styles.subheading}> Title </Text>
+            {/* <Text style={styles.subheading}> Title </Text> */}
             <TextInput style={styles.input}
               placeholder="Title"
               autoCapitalize="none"
@@ -176,19 +179,44 @@ const PostPage = () => {
             </TextInput>
 
 
-            <Text style={styles.subheading}> Price </Text>
-            <TextInput style={styles.input}
-              placeholder="Price"
-              keyboardType="numeric"
-              autoCapitalize="none"
-              value={price}
-              onChangeText={(text) => setPrice(text)}>
-            </TextInput>
+
+            {/* <Text style={styles.subheading}> Price </Text> */}
+            <View style={{ flexDirection: 'row' }}>
+              <TextInput style={styles.input2}
+                placeholder="Price"
+                keyboardType="numeric"
+                autoCapitalize="none"
+                value={price}
+                onChangeText={(text) => setPrice(text)}>
+              </TextInput>
+              <TextInput style={styles.input2}
+                placeholder="Year"
+                autoCapitalize="none"
+                value={year}
+                onChangeText={(text) => setYear(text)}>
+              </TextInput>
+            </View>
 
             <View style={{ flexDirection: 'row' }}>
+              <TextInput style={styles.input2}
+                placeholder="Color"
+                autoCapitalize="none"
+                value={color}
+                onChangeText={(text) => setColor(text)}>
+              </TextInput>
+              <TextInput style={styles.input2}
+                placeholder="Mileage"
+                keyboardType="numeric"
+                autoCapitalize="none"
+                value={mileage}
+                onChangeText={(text) => setMileage(text)}>
+              </TextInput>
+            </View>
+
+            {/* <View style={{ flexDirection: 'row' }}>
               <Text style={styles.subheading1}> Location </Text>
               <Text style={styles.subheading}> Zip Code </Text>
-            </View>
+            </View> */}
 
             <View style={{ flexDirection: 'row' }}>
               <TextInput style={styles.input2}
@@ -206,7 +234,7 @@ const PostPage = () => {
               </TextInput>
             </View>
 
-            <Text style={styles.subheading}> Description </Text>
+            {/* <Text style={styles.subheading}> Description </Text> */}
             <TextInput style={styles.input1}
               placeholder="Description"
               autoCapitalize="none"
@@ -215,7 +243,7 @@ const PostPage = () => {
               onChangeText={(text) => setDesc(text)}>
             </TextInput>
 
-            <Text style={styles.subheading} > Vehicle VIN </Text>
+            {/* <Text style={styles.subheading} > Vehicle VIN </Text> */}
             <TextInput style={styles.input}
               placeholder="VIN"
               autoCapitalize="none"
@@ -223,9 +251,12 @@ const PostPage = () => {
               onChangeText={(text) => setVIN(text)}>
             </TextInput>
 
-            <CustomButton
-              text="Post"
-              onPress={() => handleUpload()} />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleUpload()}>
+              <Text style={{ color: 'black', textAlign: 'center' }}> Post</Text>
+
+            </TouchableOpacity>
 
             <Modal isVisible={isSuccessModalVisible}>
               <View style={styles.modalContainer}>
@@ -244,7 +275,7 @@ const PostPage = () => {
 
         </View>
 
-        </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -255,7 +286,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: "-10%",
     marginBottom: "15%"
-},
+  },
   logo: {
     marginLeft: 20,
     width: '20%',
@@ -298,11 +329,12 @@ const styles = StyleSheet.create({
   input1: {
     backgroundColor: 'lightgrey',
     width: '90%',
-    height: 80,
+    height: 150,
     borderColor: 'white',
     borderWidth: 1,
     borderRadius: 20,
     paddingHorizontal: 20,
+    paddingVertical: 10,
     marginVertical: 10,
   },
   input2: {
@@ -335,6 +367,15 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingHorizontal: 30,
     borderRadius: 25,
+  },
+  button: {
+    backgroundColor: "#FFD43C",
+    width: "30%",
+    padding: 10,
+    marginVertical: 10,
+    alignItems: 'center',
+    borderRadius: 20,
+    alignSelf: 'center',
   },
 });
 

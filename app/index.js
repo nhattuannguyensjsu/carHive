@@ -32,6 +32,7 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from "react";
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from "../firebaseConfig";
 import UploadIDPage from "./Pages/UploadIDPage/UploadIDPage";
+import { getFocusedRouteNameFromRoute } from '@react-navigation/core';
 
 
 const Stack = createNativeStackNavigator();
@@ -58,21 +59,6 @@ export default function Home() {
       </SafeAreaView>
     )
   }
-
-  // function Welcome() {
-  //   return (
-  //     <SafeAreaView style={styles.text}>
-  //       <OutsideStack.Navigator initialRouteName="WelcomePage">
-  //       <OutsideStack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
-  //         <OutsideStack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
-  //         {/* <OutsideStack.Screen name="UploadIDPage" component={UploadIDPage} options={{ headerShown: false }} /> */}
-  //         <OutsideStack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
-  //         {/* <OutsideStack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} /> */}
-  //         {/* <OutsideStack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />   */}
-  //       </OutsideStack.Navigator>
-  //     </SafeAreaView>
-  //   )
-  // }
 
   return (
     <SafeAreaView style={styles.text}>
@@ -128,7 +114,9 @@ const screenOptions = {
   }
 }
 
-function HomepageNavi() {
+function HomepageNavi({ route }) {
+  const routeName = getFocusedRouteNameFromRoute(route);
+
   return (
     <SafeAreaView style={styles.text}>
       <Tab.Navigator initialRouteName="Homepage" screenOptions={screenOptions} >
@@ -144,6 +132,8 @@ function HomepageNavi() {
                   style={{
                     width: 30,
                     height: 30,
+                    tintColor: routeName === 'InboxPage' ? '#F3D66C' : '#F9AC06',
+
                   }}
                 />
                 {/* <Text style={{ fontFamily: "bold" }}> Inbox </Text> */}
@@ -166,6 +156,8 @@ function HomepageNavi() {
                   style={{
                     width: 30,
                     height: 30,
+                    tintColor: routeName === 'MyListingPage' ? '#F3D66C' : '#F9AC06',
+
                   }}
                 />
                 {/* <Text style={{ fontFamily: "bold" }}> Listings </Text> */}
@@ -183,7 +175,9 @@ function HomepageNavi() {
                 <Image
                   source={require("../assets/icons/bee-hive.png")}
                   resizeMode="contain"
-                  style={{ width: 60, height: 60 }}
+                  style={{
+                    width: 60, height: 60, tintColor: routeName === 'Homepage' ? '#F3D66C' : '#F9AC06',
+                  }}
                 />
               </View>
             ),
@@ -203,6 +197,8 @@ function HomepageNavi() {
                   style={{
                     width: 30,
                     height: 30,
+                    tintColor: routeName === 'PostPage' ? '#F3D66C' : '#F9AC06',
+
                   }}
                 />
                 {/* <Text style={{ fontFamily: "bold" }}> Post </Text> */}
@@ -223,6 +219,8 @@ function HomepageNavi() {
                   style={{
                     width: 30,
                     height: 30,
+                    tintColor: routeName === 'ProfilePage' ? '#F3D66C' : '#F9AC06',
+
                   }}
                 />
                 {/* <Text style={{ fontFamily: "bold" }}> Profile </Text> */}

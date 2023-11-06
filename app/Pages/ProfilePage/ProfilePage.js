@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import Profile from '../../../assets/icons/profile.png';
 import Edit from '../../../assets/icons/edit.png';
@@ -26,7 +26,6 @@ const ProfilePage = () => {
 
             if (user) {
                 const querySnapshot = await getDocs(collection(FIREBASE_DATABASE, "usersInfo"));
-                // Initialize an array to hold the data
                 const userData = [];
                 querySnapshot.forEach((doc) => {
                     userData.push(doc.data());
@@ -44,66 +43,25 @@ const ProfilePage = () => {
             console.error('Error fetching user data:', error);
         }
     }
-    //         const docRef = doc(FIREBASE_DATABASE, "users", user.email, 'UserInfo', 'rfW1UKtk3256fgNQ2kni');
-    //         const docSnap = await getDoc(docRef);
-
-    //         if (docSnap.exists()) {
-    //             setUserInfo({
-    //                 name: docSnap.data().name,
-    //                 email: docSnap.data().email
-    //             })
-
-    //         }
-    //     }
-    // } catch (error) {
-    //     console.error('Error fetching user data:', error);
-    // }
-    //     }
-
-
-
-    // const updateName = async () => {
-    //     // Set user data in Firestore
-    //     updateDoc(doc(FIREBASE_DATABASE, "users", user.email, 'UserInfo'), {
-    //         name: UserInfo.name,
-    //     })
-    //         .then(() => {
-    //             console.log('Data submitted');
-    //             Navigation.navigate("SignUpConfirmationPage");
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error writing document: ", error);
-    //         });
-    // }
-
 
     useEffect(() => {
-        // Call getUserInfo when the component mounts
         getUserInfo();
 
-        // Create a reference to the Firestore collection you want to listen to
         const collectionRef = collection(FIREBASE_DATABASE, "users");
 
-        // Subscribe to changes in the collection using onSnapshot
         const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
-            // Initialize an array to hold the updated data
             const updatedData = [];
 
-            // Loop through the document changes
             snapshot.docChanges().forEach((change) => {
                 if (change.type === "added" || change.type === "modified") {
-                    // If a new document is added or an existing one is modified, add it to the array
                     updatedData.push(change.doc.data());
                 } else if (change.type === "removed") {
-                    // If a document is removed, you can handle it here if needed
                 }
             });
 
-            // Update your component state with the updated data
             setFiles(updatedData);
         });
 
-        // Return a cleanup function to unsubscribe when the component unmounts
         return () => unsubscribe();
     }, []);
     return (
@@ -129,7 +87,6 @@ const ProfilePage = () => {
                         <Text style={styles.text_sub}>  Name:   {userInfo ? userInfo.name : ''}</Text>
                         <Image source={Edit} style={[styles.subicon, { height: height * 0.1 }]}
                             resizeMode="contain"
-                        // onPress={updateName}
                         />
 
                     </View>
@@ -161,10 +118,21 @@ const ProfilePage = () => {
                 </View>
 
                 <View style={styles.custom}>
-                    <CustomButton text='ID Verification' onPress={() => Navigation.navigate('UploadIDPage')} />
+                    <TouchableOpacity
+                        style={[styles.button]}
+                        activeOpacity={0.7}
+                        onPress={() => Navigation.navigate('UploadIDPage')}>
+                        <Text style={{ color: 'black', textAlign: 'center' }}> Upload ID Verification </Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.custom}>
-                    <CustomButton text="LOGOUT" onPress={() => FIREBASE_AUTH.signOut()} />
+                    <TouchableOpacity
+                        style={[styles.button]}
+                        activeOpacity={0.7}
+                        onPress={() => FIREBASE_AUTH.signOut()}>
+                        <Text style={{ color: 'black', textAlign: 'center' }}> Logout</Text>
+
+                    </TouchableOpacity>
                 </View>
             </View>
         </SafeAreaView>
@@ -216,7 +184,16 @@ const styles = StyleSheet.create({
         marginTop: 22,
         maxHeight: 20,
         maxWidth: 20
-    }
+    },
+    button: {
+        backgroundColor: "#FFD43C",
+        width: "60%",
+        padding: 15,
+        marginVertical: 10,
+        alignItems: 'center',
+        borderRadius: 20,
+        alignSelf: 'center',
+    },
 });
 
 export default ProfilePage;

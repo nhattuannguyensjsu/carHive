@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native
 import { useNavigation } from '@react-navigation/native';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_DATABASE } from '../../../firebaseConfig';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function InboxPage() {
   const [userList, setUserList] = useState([]);
@@ -12,14 +13,14 @@ export default function InboxPage() {
     const unsubscribe = onSnapshot(
       query(
         collection(FIREBASE_DATABASE, 'chats'),
-        where('recipient', '==', FIREBASE_AUTH?.currentUser?.email)
+        where('user', '==', FIREBASE_AUTH?.currentUser?.email)
       ),
       (querySnapshot) => {
         const users = new Set();
         querySnapshot.forEach((doc) => {
           const docData = doc.data();
-          if (docData.user !== FIREBASE_AUTH?.currentUser?.email) {
-            users.add(docData.user);
+          if (docData.recipient !== FIREBASE_AUTH?.currentUser?.email) {
+            users.add(docData.recipient);
           }
         });
         setUserList(Array.from(users));
@@ -29,22 +30,48 @@ export default function InboxPage() {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const unsubscribeReceived = onSnapshot(
+      query(
+        collection(FIREBASE_DATABASE, 'chats'),
+        where('recipient', '==', FIREBASE_AUTH?.currentUser?.email)
+      ),
+      (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const docData = doc.data();
+          if (docData.user !== FIREBASE_AUTH?.currentUser?.email) {
+            setUserList((userList) => {
+              if (!userList.includes(docData.user)) {
+                return [...userList, docData.user];
+              }
+              return userList;
+            });
+          }
+        });
+      }
+    );
+
+    return () => {
+      unsubscribeReceived();
+    };
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Inbox</Text>
-      <FlatList
-        data={userList}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.userItem}
-            onPress={() => Navigation.navigate('ChatPage', { recipient: item })}
-          >
-            <Text>{item}</Text>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+      <View style={styles.container}>
+        <Text style={styles.header}>Inbox</Text>
+        <FlatList
+          data={userList}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.userItem}
+              onPress={() => Navigation.navigate('ChatPage', { recipient: item })}
+            >
+              <Text>{item}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
   );
 }
 
