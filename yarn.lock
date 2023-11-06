@@ -5721,6 +5721,14 @@ metro-core@0.73.10:
     lodash.throttle "^4.1.1"
     metro-resolver "0.73.10"
 
+metro-core@^0.80.0:
+  version "0.80.0"
+  resolved "https://registry.yarnpkg.com/metro-core/-/metro-core-0.80.0.tgz#9ab9af682fb7789f0d4566ccd01b4c90da1aa90f"
+  integrity sha512-VADfL3+DN4fLwIESEBtYfITwBgxcm0b6sqL7YCKefrpDqVPTEERyUftu6WLCm1XfDBhBfEjMOzIt08sXbUwG5w==
+  dependencies:
+    lodash.throttle "^4.1.1"
+    metro-resolver "0.80.0"
+
 metro-file-map@0.73.10:
   version "0.73.10"
   resolved "https://registry.npmjs.org/metro-file-map/-/metro-file-map-0.73.10.tgz"
@@ -5872,7 +5880,24 @@ metro-react-native-babel-transformer@0.73.10:
     metro-source-map "0.73.10"
     nullthrows "^1.1.1"
 
-metro-resolver@^0.73.7:
+# <<<<<<< nhat_branch
+# metro-resolver@^0.73.7:
+# =======
+# metro-react-native-babel-transformer@0.73.9:
+#   version "0.73.9"
+#   resolved "https://registry.npmjs.org/metro-react-native-babel-transformer/-/metro-react-native-babel-transformer-0.73.9.tgz"
+#   integrity sha512-DSdrEHuQ22ixY7DyipyKkIcqhOJrt5s6h6X7BYJCP9AMUfXOwLe2biY3BcgJz5GOXv8/Akry4vTCvQscVS1otQ==
+#   dependencies:
+#     "@babel/core" "^7.20.0"
+#     babel-preset-fbjs "^3.4.0"
+#     hermes-parser "0.8.0"
+#     metro-babel-transformer "0.73.9"
+#     metro-react-native-babel-preset "0.73.9"
+#     metro-source-map "0.73.9"
+#     nullthrows "^1.1.1"
+
+# metro-resolver@0.73.10, metro-resolver@0.80.0, metro-resolver@^0.73.7:
+# >>>>>>> master
   version "0.73.10"
   resolved "https://registry.npmjs.org/metro-resolver/-/metro-resolver-0.73.10.tgz"
   integrity sha512-HeXbs+0wjakaaVQ5BI7eT7uqxlZTc9rnyw6cdBWWMgUWB++KpoI0Ge7Hi6eQAOoVAzXC3m26mPFYLejpzTWjng==

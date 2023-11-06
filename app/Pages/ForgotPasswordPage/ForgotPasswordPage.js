@@ -4,14 +4,35 @@ import Logo from '../../../assets/images/logo.png';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native-gesture-handler';
+import { firebase } from '/Users/somtochiezeh/Desktop/Carhiveproject/carHive-1/config.js';
+
+
+
+
+
+
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('');
     const { height } = useWindowDimensions();
     const Navigation = useNavigation();
 
+    //forgot password
+    const forgotpassword = () => {
+        firebase.auth().sendPasswordResetEmail(email)
+        .then(() => {
+            alert("Password reset email sent")
+        }
+        ).catch((error) => {
+            alert(error)
+        })
+    }
+    
+
+
+
     const onSendPressed = () => {
-        console.warn("Send Email");
+        forgotpassword();
     }
 
     const onBackSignInPressed = () => {
@@ -37,7 +58,7 @@ const ForgotPasswordPage = () => {
                 <TextInput style={styles.input}
                     placeholder="Email"
                     value={email}
-                    setValue={setEmail}
+                    onChangeText={setEmail}
                 />
 
                 <CustomButton text="Send Code" onPress={onSendPressed} />
