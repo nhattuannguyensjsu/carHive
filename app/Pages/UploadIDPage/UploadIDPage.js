@@ -25,6 +25,7 @@ const UploadIDPage = () => {
     const [files, setFiles] = useState([]);
     const { height } = useWindowDimensions();
     const Navigation = useNavigation();
+    const [loading, setLoading] = useState(false);
 
     async function pickImage() {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -71,10 +72,10 @@ const UploadIDPage = () => {
 
     async function saveRecord(fileType, url, createdAt) {
         const user = FIREBASE_AUTH.currentUser;
-        const userDocRef = doc(FIREBASE_DATABASE, "users", user.email);
-        const photoIDCollectionRef = collection(userDocRef, "PhotoID");
+        const userDocRef = doc(FIREBASE_DATABASE, "usersPhotoID", user.email);
+        // const photoIDCollectionRef = collection(userDocRef, "PhotoID");
         try {
-            await addDoc(photoIDCollectionRef, {
+            await setDoc(userDocRef, {
                 fileType: fileType,
                 url,
                 createdAt,
@@ -87,8 +88,14 @@ const UploadIDPage = () => {
 
     async function handleUpload() {
         if (pickedImage) {
+            console.log('Starting upload image...');
+            setLoading(true);
+            const startTime = performance.now();
             await uploadImage(pickedImage, "image");
             setIsSuccessModalVisible(true);
+            const endTime = performance.now();
+            const elapsedTime = endTime - startTime;
+            console.log(`upload image completed in ${elapsedTime} ms`);
         } else {
             console.log("No image is picked")
         }

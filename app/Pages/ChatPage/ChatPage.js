@@ -18,6 +18,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [pickedImage, setPickedImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const recipient = route.params.recipient;
   const currentUserEmail = FIREBASE_AUTH.currentUser.email;
@@ -88,15 +89,24 @@ export default function ChatPage() {
 
       if (newMessage.text) {
         // Send text message
+        console.log('Starting send text...');
+        setLoading(true);
+        const startTime = performance.now();
         await addDoc(collection(FIREBASE_DATABASE, 'chats'), {
           text: newMessage.text,
           user: newMessage.user._id,
           createdAt: newMessage.createdAt,
           recipient: recipient,
         });
+        const endTime = performance.now();
+        const elapsedTime = endTime - startTime;
+        console.log(`Send text completed in ${elapsedTime} ms`);
       }
 
       if (pickedImage) {
+        console.log('Starting send image...');
+        setLoading(true);
+        const startTime = performance.now();
         // Send image message
         const imageURI = pickedImage;
         const storageRef = ref(FIREBASE_STORAGE, `ChatImages/${new Date().getTime()}`);
@@ -122,6 +132,9 @@ export default function ChatPage() {
                 createdAt: newMessage.createdAt,
                 recipient: recipient,
               });
+              const endTime = performance.now();
+              const elapsedTime = endTime - startTime;
+              console.log(`Send image completed in ${elapsedTime} ms`);
             });
           }
         );

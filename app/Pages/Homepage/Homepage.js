@@ -14,39 +14,55 @@ import { Button, TouchableOpacity } from 'react-native';
 import { doc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { FlatList } from 'react-native';
-
 const Homepage = () => {
-
     const [listingInfo, setListingInfo] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [filteredListingInfo, setFilteredListingInfo] = useState(null);
     const [filterByPrice, setfilterByPrice] = useState(false);
-    // const [sortByPrice, setSortByPrice] = useState(null);
-    // const [sortByYear, setSortByYear] = useState(null);
-    // const [sortByMiles, setSortByMiles] = useState(null);
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [sortOptionsVisible, setSortOptionsVisible] = useState(false);
-    const [selectedColor, setSelectedColor] = useState(''); // New state for color filtering
+    const [selectedColor, setSelectedColor] = useState('');
     const [selectedLocation, setSelectedLocation] = useState('');
-
+    const [loading, setLoading] = useState(false);
 
     const sortListingsByLowToHighPrices = () => {
+        console.log('Starting sorting by low to high prices...');
+        setLoading(true);
+        const startTime = performance.now();
         let sortedListings = [...(filteredListingInfo || listingInfo)];
         sortedListings.sort((a, b) => parseFloat(a.Price) - parseFloat(b.Price));
         setFilteredListingInfo(sortedListings);
+        const endTime = performance.now();
+        const elapsedTime = endTime - startTime;
+        console.log(`Sorting completed in ${elapsedTime} ms`);
+        setLoading(false);
     };
 
     const sortListingsByHighToLowPrices = () => {
+        console.log('Starting sorting by high to low prices...');
+        setLoading(true);
+        const startTime = performance.now();
         let sortedListings = [...(filteredListingInfo || listingInfo)];
         sortedListings.sort((a, b) => parseFloat(b.Price) - parseFloat(a.Price));
         setFilteredListingInfo(sortedListings);
+        const endTime = performance.now();
+        const elapsedTime = endTime - startTime;
+        console.log(`Sorting completed in ${elapsedTime} ms`);
+        setLoading(false);
     };
 
     const sortListingsByLowToHighYear = () => {
+        console.log('Starting sorting by low to high year...');
+        setLoading(true);
+        const startTime = performance.now();
         let sortedListings = [...(filteredListingInfo || listingInfo)];
         sortedListings.sort((a, b) => parseFloat(a.Year) - parseFloat(b.Year));
         setFilteredListingInfo(sortedListings);
+        const endTime = performance.now();
+        const elapsedTime = endTime - startTime;
+        console.log(`Sorting completed in ${elapsedTime} ms`);
+        setLoading(false);
     };
 
     const sortListingsByHighToLowYear = () => {
@@ -69,6 +85,9 @@ const Homepage = () => {
 
 
     const filterListings = () => {
+        console.log('Starting filtering...');
+        setLoading(true);
+        const startTime = performance.now();
         const filteredList = listingInfo.filter((item) => {
             const price = parseFloat(item.Price);
             const min = minPrice ? parseFloat(minPrice) : Number.MIN_SAFE_INTEGER;
@@ -81,6 +100,10 @@ const Homepage = () => {
         });
 
         setFilteredListingInfo(filteredList);
+        const endTime = performance.now();
+        const elapsedTime = endTime - startTime;
+        console.log(`Filtering completed in ${elapsedTime} ms`);
+        setLoading(false);
     };
 
 
@@ -131,11 +154,18 @@ const Homepage = () => {
     };
 
     const handleSearchButtonClick = () => {
+        console.log('Starting search...');
+        setLoading(true);
+        const startTime = performance.now();
         if (searchInput) {
             searchListings();
         } else {
             setFilteredListingInfo(null);
         }
+        const endTime = performance.now();
+        const elapsedTime = endTime - startTime;
+        console.log(`Search completed in ${elapsedTime} ms`);
+        setLoading(false);
     };
 
     const getListingInfo = async () => {
@@ -152,13 +182,16 @@ const Homepage = () => {
 
     useEffect(() => {
         getListingInfo();
+
     }, []);
 
     const { height } = useWindowDimensions();
     const Navigation = useNavigation();
 
     return (
+
         <SafeAreaView style={styles.safe}>
+
             <View style={{ flex: 1 }}>
 
                 <View style={{ flexDirection: 'row' }}>
@@ -168,6 +201,8 @@ const Homepage = () => {
                         resizeMode="contain"
                     />
                     <Text style={styles.title}> CarHive </Text>
+
+
 
                 </View>
 
@@ -511,7 +546,20 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         textAlign: 'center',
         marginHorizontal: 20
-    }
+    },
+    voiceButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: 10,
+    },
+    voiceIcon: {
+        width: 30,
+        height: 30,
+        marginRight: 5,
+    },
+    voiceText: {
+        fontSize: 16,
+    },
 
 });
 

@@ -20,6 +20,8 @@ const SignInPage = () => {
 
     const SignIn = async () => {
         setLoading(true);
+        const startTime = performance.now(); // Record the start time
+
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
             console.log(response);
@@ -28,6 +30,10 @@ const SignInPage = () => {
             alert('Sign in failed: ' + error.message);
         } finally {
             setLoading(false);
+            const endTime = performance.now(); // Record the end time
+            const elapsedTime = endTime - startTime; // Calculate elapsed time in milliseconds
+            console.log(`Sign-in completed in ${elapsedTime} ms`);
+
         }
     }
 
