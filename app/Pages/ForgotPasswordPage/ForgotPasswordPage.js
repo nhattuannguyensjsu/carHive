@@ -4,12 +4,7 @@ import Logo from '../../../assets/images/logo.png';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native-gesture-handler';
-import { firebase } from '/Users/somtochiezeh/Desktop/Carhiveproject/carHive-1/config.js';
-
-
-
-
-
+import { firebase } from '../../../config.js';
 
 
 const ForgotPasswordPage = () => {
@@ -20,14 +15,14 @@ const ForgotPasswordPage = () => {
     //forgot password
     const forgotpassword = () => {
         firebase.auth().sendPasswordResetEmail(email)
-        .then(() => {
-            alert("Password reset email sent")
-        }
-        ).catch((error) => {
-            alert(error)
-        })
+            .then(() => {
+                alert("Password reset email sent")
+            }
+            ).catch((error) => {
+                alert(error)
+            })
     }
-    
+
 
 
 
@@ -38,14 +33,14 @@ const ForgotPasswordPage = () => {
     const onBackSignInPressed = () => {
         Navigation.navigate('SignInPage');
     }
-    
+
     const onNewPassword = () => {
         Navigation.navigate('NewPasswordPage');
     }
 
 
     return (
-        <SafeAreaView style = {styles.safe}>
+        <SafeAreaView style={styles.safe}>
             <View style={styles.root}>
                 <Image source={Logo}
                     style={[styles.logo, { height: height * 0.3 }]}
@@ -77,7 +72,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
     },
-    safe:{
+    safe: {
         flex: 1,
         backgroundColor: 'white'
     },
@@ -95,7 +90,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         paddingHorizontal: 20,
         marginVertical: 10,
-      },
+    },
     text: {
         fontSize: 25,
         margin: 10,
