@@ -108,6 +108,10 @@ const PostPage = () => {
 
   async function handleUpload() {
     if (pickedImage && title && price && desc && Location && VIN && year && color && mileage) {
+      console.log('Starting upload...');
+      setLoading(true);
+      const startTime = performance.now();
+
       await uploadImage(pickedImage, "image");
       setIsSuccessModalVisible(true);
       // Reset the input fields
@@ -121,6 +125,10 @@ const PostPage = () => {
       setColor('');
       setYear('');
       setPickedImage('');
+
+      const endTime = performance.now();
+      const elapsedTime = endTime - startTime;
+      console.log(`Upload completed in ${elapsedTime} ms`);
 
     } else {
       console.log("Please fill out all fields and select an image.");

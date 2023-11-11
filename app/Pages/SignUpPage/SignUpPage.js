@@ -36,6 +36,8 @@ const SignUpPage = () => {
 
   const SignUp = async () => {
     if (email !== '' && password !== '') {
+      console.log('Starting sign-up...');
+      const startTime = new Date().getTime();
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
@@ -51,6 +53,10 @@ const SignUpPage = () => {
             // Instead, you can store other user-related data here
           })
             .then(() => {
+              const endTime = new Date().getTime(); // Record the end time
+              const elapsedTime = endTime - startTime; // Calculate elapsed time in milliseconds
+              console.log(`Sign-up completed in ${elapsedTime} ms`);
+
               console.log('Data submitted');
               Navigation.navigate("SignUpConfirmationPage");
             })

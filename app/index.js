@@ -34,7 +34,6 @@ import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from "../firebaseConfi
 import UploadIDPage from "./Pages/UploadIDPage/UploadIDPage";
 import { getFocusedRouteNameFromRoute } from '@react-navigation/core';
 
-
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,6 +42,7 @@ const OutsideStack = createNativeStackNavigator();
 export default function Home() {
 
   const [user, setUser] = useState(null);
+
 
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -65,6 +65,7 @@ export default function Home() {
       <NavigationContainer independent={true}>
 
         <Stack.Navigator initialRouteName='SignInPage'>
+
 
           {user ? (
             <Stack.Screen name='Inside' component={InsideLayout} options={{ headerShown: false }} />
