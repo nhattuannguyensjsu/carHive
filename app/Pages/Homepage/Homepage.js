@@ -353,11 +353,12 @@ const Homepage = () => {
                             </View>
 
                             <TouchableOpacity
+                             style={styles.button}
                                 onPress={() => {
                                     filterListings();
                                 }}
                             >
-                                <Text style={styles.button}> Search</Text>
+                                <Text> Search</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -544,8 +545,9 @@ const styles = StyleSheet.create({
         padding: 5,
         marginBottom: 5,
         borderRadius: 20,
-        textAlign: 'center',
-        marginHorizontal: 20
+        alignItems: 'center',
+        marginHorizontal: 20,
+
     },
     voiceButton: {
         flexDirection: 'row',
