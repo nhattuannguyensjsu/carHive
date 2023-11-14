@@ -66,7 +66,6 @@ const ProfilePage = () => {
     }, []);
     return (
         <SafeAreaView style={styles.safe}>
-            <View>
                 <View style={{ flexDirection: 'row' }}>
 
                     <Image source={Logo}
@@ -108,14 +107,15 @@ const ProfilePage = () => {
 
                 </View>
 
-                <View style={{ flexDirection: 'row' }}>
-
+                <TouchableOpacity style={{ flexDirection: 'row' }}
+                onPress={() => Navigation.navigate('FavoritePage')}>
+                    
                     <Image source={Fav} style={styles.icon}
                         resizeMode="contain"
                     />
                     <Text style={styles.text_sub}> Favorites </Text>
 
-                </View>
+                </TouchableOpacity>
 
                 <View style={styles.custom}>
                     <TouchableOpacity
@@ -134,7 +134,6 @@ const ProfilePage = () => {
 
                     </TouchableOpacity>
                 </View>
-            </View>
         </SafeAreaView>
     );
 }

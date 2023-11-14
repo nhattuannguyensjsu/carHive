@@ -5,7 +5,7 @@ import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const InboxPage = ({ navigation, messageCount }) => {
+export default function InboxPage() {
   const [userList, setUserList] = useState([]);
   const Navigation = useNavigation();
 
@@ -57,23 +57,21 @@ const InboxPage = ({ navigation, messageCount }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Inbox</Text>
-      <FlatList
-        data={userList}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.userItem}
-            onPress={() => Navigation.navigate('ChatPage', { recipient: item })}
-          >
-            <Text>{item}</Text>
-            {messageCount > 0 && <Text style={{ position: 'absolute', top: 5, right: 5, backgroundColor: 'red', borderRadius: 10, color: 'white', paddingHorizontal: 5 }}>{messageCount}</Text>}
-
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+      <View style={styles.container}>
+        <Text style={styles.header}>Inbox</Text>
+        <FlatList
+          data={userList}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.userItem}
+              onPress={() => Navigation.navigate('ChatPage', { recipient: item })}
+            >
+              <Text>{item}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
   );
 }
 
@@ -94,5 +92,3 @@ const styles = StyleSheet.create({
     borderBottomColor: 'lightgray',
   },
 });
-
-export default InboxPage;

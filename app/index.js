@@ -22,6 +22,7 @@ import FeedbackPage from "./Pages/FeedbackPage";
 import AppNavigation from "./navigation/navigation";
 import ListingPage from "./Pages/ListingPage/ListingPage";
 import ChatPage from "./Pages/ChatPage/ChatPage";
+import FavoritePage from "./Pages/FavoritePage/FavoritePage";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -81,6 +82,8 @@ export default function Home() {
           <Stack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />
           <Stack.Screen name='NewPasswordPage' component={NewPasswordPage} options={{ headerShown: false }} />
+          <Stack.Screen name='FavoritePage' component={FavoritePage} options={{ headerShown: false }} />
+
         </Stack.Navigator>
       </NavigationContainer>
 

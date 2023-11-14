@@ -33,18 +33,18 @@ const PostPage = () => {
 
   const [pickedImage, setPickedImage] = useState("");
 
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false); // State for success modal
 
   async function pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
+      aspect: [16, 9],
       quality: 0.5,
-      multiple: true
     });
 
     if (!result.canceled) {
-      setPickedImage(result.assets[0].uri);
+      setPickedImage(result.assets[0].uri); // Set the picked image URL
     }
   }
 
@@ -108,10 +108,6 @@ const PostPage = () => {
 
   async function handleUpload() {
     if (pickedImage && title && price && desc && Location && VIN && year && color && mileage) {
-      console.log('Starting upload...');
-      setLoading(true);
-      const startTime = performance.now();
-
       await uploadImage(pickedImage, "image");
       setIsSuccessModalVisible(true);
       // Reset the input fields
@@ -125,10 +121,6 @@ const PostPage = () => {
       setColor('');
       setYear('');
       setPickedImage('');
-
-      const endTime = performance.now();
-      const elapsedTime = endTime - startTime;
-      console.log(`Upload completed in ${elapsedTime} ms`);
 
     } else {
       console.log("Please fill out all fields and select an image.");
@@ -259,12 +251,9 @@ const PostPage = () => {
               onChangeText={(text) => setVIN(text)}>
             </TextInput>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleUpload()}>
-              <Text style={{ color: 'black', textAlign: 'center' }}> Post</Text>
-
-            </TouchableOpacity>
+            <CustomButton
+              text="Post"
+              onPress={() => handleUpload()} />
 
             <Modal isVisible={isSuccessModalVisible}>
               <View style={styles.modalContainer}>
@@ -375,15 +364,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingHorizontal: 30,
     borderRadius: 25,
-  },
-  button: {
-    backgroundColor: "#FFD43C",
-    width: "30%",
-    padding: 10,
-    marginVertical: 10,
-    alignItems: 'center',
-    borderRadius: 20,
-    alignSelf: 'center',
   },
 });
 

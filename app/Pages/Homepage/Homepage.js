@@ -5,13 +5,14 @@ import Loc from '../../../assets/icons/location.png';
 import Sorting from '../../../assets/icons/swap.png';
 import Filter from '../../../assets/icons/filter.png';
 import Search from '../../../assets/icons/search.png';
+import Favorite from '../../../assets/icons/favorites.png'
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import { Button, TouchableOpacity } from 'react-native';
-import { doc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
+import { doc, addDoc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { FlatList } from 'react-native';
 const Homepage = () => {
@@ -24,6 +25,7 @@ const Homepage = () => {
     const [sortOptionsVisible, setSortOptionsVisible] = useState(false);
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedLocation, setSelectedLocation] = useState('');
+    const [selectedYear, setSelectedYear] = useState('');
     const [loading, setLoading] = useState(false);
 
     const sortListingsByLowToHighPrices = () => {
@@ -95,8 +97,8 @@ const Homepage = () => {
 
             const colorCondition = !selectedColor || item.Color.toLowerCase().includes(selectedColor.toLowerCase());
             const locationCondition = !selectedLocation || item.Location.toLowerCase().includes(selectedLocation.toLowerCase());
-
-            return price >= min && price <= max && colorCondition && locationCondition;
+            const yearCondition = !selectedYear || item.Year.toLowerCase().includes(selectedYear.toLowerCase());
+            return price >= min && price <= max && colorCondition && locationCondition && yearCondition;
         });
 
         setFilteredListingInfo(filteredList);
@@ -179,6 +181,32 @@ const Homepage = () => {
             console.error('Error fetching user listings:', error);
         }
     };
+    const handleSaveToFavorites = async (listing) => {
+        try {
+            const user = FIREBASE_AUTH.currentUser;
+            // Get the reference to the Favorites collection
+            const favoritesCollection = collection(FIREBASE_DATABASE, 'favorites', user.email, 'FavoriteListings');
+    
+            // Check if the listing already exists in the Favorites collection
+            const querySnapshot = await getDocs(favoritesCollection);
+            const isListingAlreadySaved = querySnapshot.docs.some((doc) => {
+                const favoriteListing = doc.data();
+                // Compare based on some unique identifier like VIN or a generated ID
+                return favoriteListing.VIN === listing.VIN;
+            });
+    
+            if (!isListingAlreadySaved) {
+                // Add the listing to the Favorites collection
+                await addDoc(favoritesCollection, listing);
+                console.log('Listing saved to Favorites successfully!');
+            } else {
+                console.log('Listing is already saved to Favorites.');
+            }
+        } catch (error) {
+            console.error('Error saving listing to Favorites:', error);
+        }
+    };
+    
 
     useEffect(() => {
         getListingInfo();
@@ -336,6 +364,11 @@ const Homepage = () => {
                                     value={selectedColor}
                                     onChangeText={(text) => setSelectedColor(text)}
                                 />
+                                <TextInput style={styles.filtering1}
+                                    placeholder="Year"
+                                    value={selectedYear}
+                                    onChangeText={(text) => setSelectedYear(text)}
+                                />
                             </View>
                             <View style={{ flexDirection: 'row' }}>
 
@@ -378,15 +411,24 @@ const Homepage = () => {
                             }}
                         >
                             <View style={styles.listingPair}>
-
                                 <Image
                                     source={{ uri: item.imageURL }}
                                     style={styles.listingImage}
                                     resizeMode="cover"
                                 />
-                                <Text style={styles.listingTitle}>{item.Title}</Text>
-
-
+                                <View style={styles.listingContent}>
+                                    <Text style={styles.listingTitle}>{item.Title}</Text>
+                                    <TouchableOpacity
+                                        style={styles.favoritesButton}
+                                        onPress={() => handleSaveToFavorites(item)}
+                                    >
+                                        <Image
+                                            source={Favorite}
+                                            style={styles.favoritesIcon}
+                                            resizeMode="contain"
+                                        />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </TouchableOpacity>
                     )}
@@ -495,7 +537,7 @@ const styles = StyleSheet.create({
     },
     filtering: {
         backgroundColor: 'lightgrey',
-        width: "35%",
+        width: "30%",
         height: 30,
         borderColor: 'white',
         borderWidth: 1,
@@ -506,7 +548,7 @@ const styles = StyleSheet.create({
     },
     filtering1: {
         backgroundColor: 'lightgrey',
-        width: "35%",
+        width: "30%",
         height: 30,
         borderColor: 'white',
         borderWidth: 1,
@@ -540,6 +582,16 @@ const styles = StyleSheet.create({
 
     button: {
         backgroundColor: "#FFD43C",
+        width: "30%",
+        height: 30,
+        padding: 5,
+        marginBottom: 5,
+        borderRadius: 20,
+        alignItems: 'center',
+        marginHorizontal: 20,
+
+    },
+    button1: {
         width: "35%",
         height: 30,
         padding: 5,
@@ -549,18 +601,28 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
 
     },
-    voiceButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 10,
+    button2: {
+        maxHeight: 30,
+        maxWidth: 30,
+        marginBottom: -280,
+        marginRight: 30   
+     },
+     listingContent: {
+        flex: 1,
+        padding: 5,
+        justifyContent: 'space-between',
     },
-    voiceIcon: {
-        width: 30,
-        height: 30,
-        marginRight: 5,
+    favoritesButton: {
+        position: 'absolute',
+        top: -100,
+        right: 5,
+        backgroundColor: 'transparent',
+        padding: 1,
+        zIndex: 1,
     },
-    voiceText: {
-        fontSize: 16,
+    favoritesIcon: {
+        maxHeight: 30,
+        maxWidth: 30,
     },
 
 });
