@@ -1,49 +1,139 @@
-import { View, Text, ScrollView, Image, StyleSheet, useWindowDimensions } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context';
-import React from 'react'
-import Logo from '../../../assets/images/logo.png';
+import React, {Component} from 'react';
+import {
+  ImageBackground,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  Text,
+  TextInput,
+} from 'react-native';
 
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
-const MyListingPage = () => {
-
-  const { height } = useWindowDimensions();
-
-  return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView showVerticalScrollIndicator={false}>
-        <View>
-          <View style={{ flexDirection: 'row' }}>
-
-            <Image source={Logo}
-              style={[styles.logo, { height: height * 0.1 }]}
-              resizeMode="contain"
+export default class Listing1 extends Component {
+  render() {
+    return (
+      <SafeAreaView
+        style={styles.container}
+        /* behavior="padding" */ behavior={
+          Platform.OS === 'ios' ? 'padding' : null
+        }>
+        <View style={styles.setWidth}>
+          <View style={styles.wrapImgLogo}>
+            <Image
+              source={require('../../assets/img/logoCar.png')}
+              resizeMode="center"
+              style={styles.innerImg}
             />
-            <Text style={styles.title}> CarHive </Text>
-
           </View>
-          <Text> My Listing Page</Text>
+          <Text style={styles.txtListing}>
+            Your feedback makes us better !!! {'\n'}Thank you for using our
+            application
+          </Text>
+          <Text style={styles.txtListing1}>
+            Give us some reviews about buyer
+          </Text>
+          <View style={styles.wrapImgStar}>
+            <Image
+              source={require('../../assets/img/halfStar.png')}
+              resizeMode="center"
+              style={styles.innerImg}
+            />
+          </View>
+          <TextInput style={styles.txtInp} multiline />
+          <Text style={styles.txtListing1}>
+            Give us some reviews about our application
+          </Text>
+          <View style={styles.wrapImgStar}>
+            <Image
+              source={require('../../assets/img/fullStar.png')}
+              resizeMode="center"
+              style={styles.innerImg}
+            />
+          </View>
+          <TextInput style={styles.txtInp} multiline />
+          <TouchableOpacity
+            style={styles.wrapSub}
+            onPress={() => this.props.navigation.navigate('Message')}>
+            <Text style={styles.txtSub}>Submit Reviews</Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-    </SafeAreaView>
-  )
+      </SafeAreaView>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-  safe: {
+const styles = new StyleSheet.create({
+  container: {
     flex: 1,
-    backgroundColor: "white",
-    marginTop: "-10%"
+    backgroundColor: 'white',
+  },
+  setWidth: {
+    width: wp('90%'),
+    alignSelf: 'center',
+    marginTop: hp('2%'),
+  },
+  wrapSub: {
+    backgroundColor: '#FFD43C',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: hp('3%'),
+    width: wp('40%'),
+    alignSelf: 'center',
+    height: hp('4%'),
+    borderRadius: 30,
+  },
+  txtSub: {
+    color: '#00000',
+    fontSize: 16,
+    fontWeight: '400',
+  },
+  txtInp: {
+    backgroundColor: '#D9D9D9',
+    alignSelf: 'center',
+    width: wp('70%'),
+    borderRadius: 10,
+    height: hp('16%'),
+  },
+  txtListing: {
+    color: '#00000',
+    fontSize: 18,
+    fontWeight: '500',
+    alignSelf: 'center',
+  },
+  txtListing1: {
+    color: '#00000',
+    fontSize: 16,
+    fontWeight: '400',
+    alignSelf: 'center',
+    marginTop: hp('3%'),
+  },
 
+  wrapImg: {
+    width: wp('30%'),
+    height: wp('30%'),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  logo: {
-    marginLeft: 20,
-    width: '20%',
+  wrapImgLogo: {
+    width: wp('60%'),
+    height: hp('8%'),
   },
-  title: {
-    fontSize: 30,
-    marginTop: 25,
-    color: "#FAC503",
+  wrapImgStar: {
+    width: wp('70%'),
+    height: hp('8%'),
+    alignSelf: 'center',
+  },
+  innerImg: {
+    width: '90%',
+    height: '90%',
   },
 });
 
-export default MyListingPage
+      
+
