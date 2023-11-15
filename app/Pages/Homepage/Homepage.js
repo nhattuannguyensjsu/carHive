@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { ScrollView, View, Text, TextInput, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import Loc from '../../../assets/icons/location.png';
@@ -6,6 +6,7 @@ import Sorting from '../../../assets/icons/swap.png';
 import Filter from '../../../assets/icons/filter.png';
 import Search from '../../../assets/icons/search.png';
 import Favorite from '../../../assets/icons/favorites.png'
+import voice from '../../../assets/icons/voice.png'
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -15,6 +16,8 @@ import { Button, TouchableOpacity } from 'react-native';
 import { doc, addDoc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { FlatList } from 'react-native';
+import Voice from '@react-native-community/voice';
+
 const Homepage = () => {
     const [listingInfo, setListingInfo] = useState([]);
     const [searchInput, setSearchInput] = useState('');
@@ -184,19 +187,15 @@ const Homepage = () => {
     const handleSaveToFavorites = async (listing) => {
         try {
             const user = FIREBASE_AUTH.currentUser;
-            // Get the reference to the Favorites collection
             const favoritesCollection = collection(FIREBASE_DATABASE, 'favorites', user.email, 'FavoriteListings');
-    
-            // Check if the listing already exists in the Favorites collection
+
             const querySnapshot = await getDocs(favoritesCollection);
             const isListingAlreadySaved = querySnapshot.docs.some((doc) => {
                 const favoriteListing = doc.data();
-                // Compare based on some unique identifier like VIN or a generated ID
                 return favoriteListing.VIN === listing.VIN;
             });
-    
+
             if (!isListingAlreadySaved) {
-                // Add the listing to the Favorites collection
                 await addDoc(favoritesCollection, listing);
                 console.log('Listing saved to Favorites successfully!');
             } else {
@@ -206,12 +205,13 @@ const Homepage = () => {
             console.error('Error saving listing to Favorites:', error);
         }
     };
-    
 
     useEffect(() => {
         getListingInfo();
 
     }, []);
+
+
 
     const { height } = useWindowDimensions();
     const Navigation = useNavigation();
@@ -242,7 +242,7 @@ const Homepage = () => {
                         fontSize: 15,
                         marginTop: 10,
                         paddingLeft: 20,
-                        width: "80%",
+                        width: "70%",
                         marginLeft: 10
 
                     }}
@@ -250,6 +250,18 @@ const Homepage = () => {
                         placeholderTextColor="black"
                         value={searchInput}
                         onChangeText={handleSearchInputChange} />
+
+                    {/* <TouchableOpacity onPress={startRecording}
+                    >
+                        <Image
+                            style={{
+                                width: 40,
+                                height: 40,
+                                marginTop: 15,
+                                marginLeft: 10,
+                            }}
+                            source={voice} resizeMode='contain' />
+                    </TouchableOpacity> */}
 
                     <TouchableOpacity
                         onPress={handleSearchButtonClick}
@@ -386,7 +398,7 @@ const Homepage = () => {
                             </View>
 
                             <TouchableOpacity
-                             style={styles.button}
+                                style={styles.button}
                                 onPress={() => {
                                     filterListings();
                                 }}
@@ -605,9 +617,9 @@ const styles = StyleSheet.create({
         maxHeight: 30,
         maxWidth: 30,
         marginBottom: -280,
-        marginRight: 30   
-     },
-     listingContent: {
+        marginRight: 30
+    },
+    listingContent: {
         flex: 1,
         padding: 5,
         justifyContent: 'space-between',

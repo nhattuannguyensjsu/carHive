@@ -14,7 +14,7 @@ import com.facebook.soloader.SoLoader;
 
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
-
+import com.wenkesj.voice.VoicePackage;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -73,4 +73,12 @@ public class MainApplication extends Application implements ReactApplication {
     super.onConfigurationChanged(newConfig);
     ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig);
   }
+
+   @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+        new MainReactPackage(),
+        new VoicePackage() // <------ Add this!
+        );
+    }
 }

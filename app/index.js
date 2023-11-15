@@ -62,11 +62,11 @@ export default function Home() {
   }
 
   return (
+
     <SafeAreaView style={styles.text}>
       <NavigationContainer independent={true}>
 
         <Stack.Navigator initialRouteName='SignInPage'>
-
 
           {user ? (
             <Stack.Screen name='Inside' component={InsideLayout} options={{ headerShown: false }} />

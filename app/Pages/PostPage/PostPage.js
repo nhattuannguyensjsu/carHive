@@ -251,9 +251,18 @@ const PostPage = () => {
               onChangeText={(text) => setVIN(text)}>
             </TextInput>
 
-            <CustomButton
+            <View style={styles.custom}>
+              <TouchableOpacity
+                style={[styles.button]}
+                activeOpacity={0.7}
+                onPress={() => handleUpload()}>
+                <Text style={{ color: 'black', textAlign: 'center' }}> Post </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* <CustomButton
               text="Post"
-              onPress={() => handleUpload()} />
+              onPress={() => handleUpload()} /> */}
 
             <Modal isVisible={isSuccessModalVisible}>
               <View style={styles.modalContainer}>
@@ -365,6 +374,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 25,
   },
+  custom: {
+    alignItems: 'center',
+    marginTop: -10
+  },
+  button: {
+    backgroundColor: "#FFD43C",
+    width: "80%",
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 20,
+    alignSelf: 'center',
+  },
+
 });
 
 
