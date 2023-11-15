@@ -242,7 +242,7 @@ const Homepage = () => {
                         fontSize: 15,
                         marginTop: 10,
                         paddingLeft: 20,
-                        width: "70%",
+                        width: "80%",
                         marginLeft: 10
 
                     }}
@@ -430,6 +430,7 @@ const Homepage = () => {
                                 />
                                 <View style={styles.listingContent}>
                                     <Text style={styles.listingTitle}>{item.Title}</Text>
+                                    <Text style={styles.listingPrice}>${item.Price}</Text>
                                     <TouchableOpacity
                                         style={styles.favoritesButton}
                                         onPress={() => handleSaveToFavorites(item)}
@@ -547,6 +548,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    listingPrice: {
+        padding: 10,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: -20,
+        textAlign: 'right'
+    },
     filtering: {
         backgroundColor: 'lightgrey',
         width: "30%",
@@ -621,7 +629,6 @@ const styles = StyleSheet.create({
     },
     listingContent: {
         flex: 1,
-        padding: 5,
         justifyContent: 'space-between',
     },
     favoritesButton: {

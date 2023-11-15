@@ -273,7 +273,7 @@ const PostPage = () => {
                     setIsSuccessModalVisible(false);
                   }}
                 >
-                  <Text style={{ color: 'white', textAlign: 'center' }}>OK</Text>
+                  <Text style={{ color: 'white', textAlign: 'center', marginBottom: 10 }}>OK</Text>
                 </TouchableOpacity>
               </View>
             </Modal>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { FIREBASE_AUTH, FIREBASE_DATABASE } from '../../../firebaseConfig';
-
+import { FlatList } from 'react-native-gesture-handler';
 import Logo from '../../../assets/images/logo.png';
 import Goback from '../../../assets/icons/goback.png';
 
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ListingPage = ({ route }) => {
     const { height } = useWindowDimensions();
@@ -33,6 +34,14 @@ const ListingPage = ({ route }) => {
         }
     };
 
+    const renderItem = ({ item }) => (
+        <View>
+            <Text selectable style={[styles.listingInfo, item.label === 'Description' && styles.description]}>
+                {item.label}: {item.value}
+            </Text>
+        </View>
+    );
+
     return (
         <SafeAreaView style={styles.safe}>
             <View>
@@ -47,19 +56,27 @@ const ListingPage = ({ route }) => {
                 {listingData && (
                     <View>
                         <Image source={{ uri: listingData.imageURL }} style={styles.listingImage} resizeMode="cover" />
-                        <View style={{ marginTop: 20 }}>
-                            <Text selectable style={{ fontSize: 25, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>{listingData.Email}</Text>
-                            <Text selectable style={{ fontSize: 25, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>{listingData.Title}</Text>
-                            <Text selectable style={{ fontSize: 20, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Price: {listingData.Price}</Text>
-                            <Text selectable style={{ fontSize: 20, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Year: {listingData.Year}</Text>
-                            <Text selectable style={{ fontSize: 20, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Color: {listingData.Color}</Text>
-                            <Text selectable style={{ fontSize: 20, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Mileage: {listingData.Mileage}</Text>
-                            <Text selectable style={{ fontSize: 20, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Location: {listingData.Location}</Text>
-                            <Text selectable style={{ fontSize: 20, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Zip Code: {listingData.Zipcode}</Text>
-                            <Text selectable style={{ fontSize: 20, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>VIN: {listingData.VIN}</Text>
-                            <Text selectable style={{ fontSize: 20, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Description: </Text>
-                            <Text selectable style={{ fontSize: 20, marginLeft: 30, marginBottom: 5 }}>{listingData.Description}</Text>
-                        </View>
+
+                        {/* Listing information displayed in a FlatList */}
+                        <FlatList
+                            data={[
+                                { label: 'Email', value: listingData.Email },
+                                { label: 'Title', value: listingData.Title },
+                                { label: 'Price', value: listingData.Price },
+                                { label: 'Year', value: listingData.Year },
+                                { label: 'Color', value: listingData.Color },
+                                { label: 'Mileage', value: listingData.Mileage },
+                                { label: 'Location', value: listingData.Location },
+                                { label: 'Zipcode', value: listingData.Zipcode },
+                                { label: 'VIN', value: listingData.VIN },
+                            ]}
+
+                            renderItem={renderItem}
+                            keyExtractor={(item) => item.label}
+                        />
+                        <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Description: </Text>
+                        <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5 }}>{listingData.Description}</Text>
+
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity style={styles.button1} onPress={handleChatOrMyListing}>
                                 <Text style={{ color: 'black', textAlign: 'center' }}>
@@ -145,11 +162,24 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 200,
         resizeMode: 'cover',
+        marginBottom: 10
     },
     listingTitle: {
         padding: 10,
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    listingInfo: {
+        fontSize: 15,
+        marginLeft: 30,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+
+    description: {
+        marginLeft: 30,
+        fontWeight: 'normal',
+        fontSize: 15,
     },
 });
 
