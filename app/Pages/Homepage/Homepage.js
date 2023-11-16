@@ -6,7 +6,6 @@ import Sorting from '../../../assets/icons/swap.png';
 import Filter from '../../../assets/icons/filter.png';
 import Search from '../../../assets/icons/search.png';
 import Favorite from '../../../assets/icons/favorites.png'
-import voice from '../../../assets/icons/voice.png'
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -16,7 +15,6 @@ import { Button, TouchableOpacity } from 'react-native';
 import { doc, addDoc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { FlatList } from 'react-native';
-import Voice from '@react-native-community/voice';
 
 const Homepage = () => {
     const [listingInfo, setListingInfo] = useState([]);
