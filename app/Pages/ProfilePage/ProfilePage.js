@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity, TextInput} from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import Profile from '../../../assets/icons/profile.png';
 import Edit from '../../../assets/icons/edit.png';
@@ -11,7 +11,9 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import { doc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
+import { doc, collection, getDoc, updateDoc, onSnapshot, getDocs, setDoc } from 'firebase/firestore';
+
+
 
 const ProfilePage = () => {
     const { height } = useWindowDimensions();
@@ -19,6 +21,38 @@ const ProfilePage = () => {
     const [files, setFiles] = useState([]);
 
     const [userInfo, setUserInfo] = useState(null);
+
+    const [newName, setNewName] = useState('');
+    const [newEmail, setNewEmail] = useState('');
+  
+    const updateUserInfo = async () => {
+        try {
+          const user = FIREBASE_AUTH.currentUser;
+      
+          if (user) {
+            // Use the user's email as the document ID
+            const userRef = doc(collection(FIREBASE_DATABASE, "usersInfo"), user.email);
+      
+            // Update the Firestore document
+            await setDoc(userRef, {
+              name: newName,
+              email: newEmail,
+            });
+      
+            // Update the local state
+            setUserInfo({
+              name: newName,
+              email: newEmail,
+            });
+      
+            alert('Name and Email updated successfully!');
+          }
+        } catch (error) {
+          console.error('Error updating user data:', error);
+        }
+      };
+      
+      
 
     const getUserInfo = async () => {
         try {
@@ -107,6 +141,9 @@ const ProfilePage = () => {
 
                 </View>
 
+            
+
+
                 <TouchableOpacity style={{ flexDirection: 'row' }}
                 onPress={() => Navigation.navigate('FavoritePage')}>
                     
@@ -125,6 +162,29 @@ const ProfilePage = () => {
                         <Text style={{ color: 'black', textAlign: 'center' }}> Upload ID Verification </Text>
                     </TouchableOpacity>
                 </View>
+
+                <View style={styles.inputContainer}>
+        <Text>Enter new name:</Text>
+        <TextInput
+          style={styles.input}
+          value={newName}
+          onChangeText={text => setNewName(text)}
+        />
+        <Text>Enter new email:</Text>
+        <TextInput
+          style={styles.input}
+          value={newEmail}
+          onChangeText={text => setNewEmail(text)}
+        />
+        <TouchableOpacity
+          style={[styles.button]}
+          activeOpacity={0.7}
+          onPress={updateUserInfo}>
+          <Text style={{ color: 'black', textAlign: 'center' }}> Update Name and Email </Text>
+        </TouchableOpacity>
+      </View>
+
+
                 <View style={styles.custom}>
                     <TouchableOpacity
                         style={[styles.button]}
@@ -181,18 +241,30 @@ const styles = StyleSheet.create({
     },
     subicon: {
         marginTop: 22,
-        maxHeight: 20,
+        maxHeight: 15,
         maxWidth: 20
     },
     button: {
         backgroundColor: "#FFD43C",
         width: "60%",
-        padding: 15,
+        padding: 10,
         marginVertical: 10,
         alignItems: 'center',
-        borderRadius: 20,
+        borderRadius: 10,
         alignSelf: 'center',
     },
+    inputContainer: {
+        padding: 5,
+        alignItems: 'center',
+      },
+      input: {
+        height: 15,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 5,
+        paddingHorizontal: 8,
+        width: '80%',
+      },
 });
 
 export default ProfilePage;
