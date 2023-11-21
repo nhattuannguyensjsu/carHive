@@ -21,9 +21,7 @@ const ProfilePage = () => {
     const [files, setFiles] = useState([]);
 
     const [userInfo, setUserInfo] = useState(null);
-
     const [newName, setNewName] = useState('');
-    const [newEmail, setNewEmail] = useState('');
   
     const updateUserInfo = async () => {
         try {
@@ -36,16 +34,14 @@ const ProfilePage = () => {
             // Update the Firestore document
             await setDoc(userRef, {
               name: newName,
-              email: newEmail,
             });
       
             // Update the local state
             setUserInfo({
               name: newName,
-              email: newEmail,
             });
       
-            alert('Name and Email updated successfully!');
+            alert('Name updated successfully!');
           }
         } catch (error) {
           console.error('Error updating user data:', error);
@@ -170,17 +166,11 @@ const ProfilePage = () => {
           value={newName}
           onChangeText={text => setNewName(text)}
         />
-        <Text>Enter new email:</Text>
-        <TextInput
-          style={styles.input}
-          value={newEmail}
-          onChangeText={text => setNewEmail(text)}
-        />
         <TouchableOpacity
           style={[styles.button]}
           activeOpacity={0.7}
           onPress={updateUserInfo}>
-          <Text style={{ color: 'black', textAlign: 'center' }}> Update Name and Email </Text>
+          <Text style={{ color: 'black', textAlign: 'center' }}> Update Name </Text>
         </TouchableOpacity>
       </View>
 
