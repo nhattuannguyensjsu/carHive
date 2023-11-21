@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { doc, collection, getDoc, updateDoc, onSnapshot, getDocs, setDoc } from 'firebase/firestore';
+import { firebase } from '../../../config';
 
 
 
@@ -37,9 +38,10 @@ const ProfilePage = () => {
             });
       
             // Update the local state
-            setUserInfo({
+            setUserInfo((prevUserInfo) => ({
+                ...prevUserInfo,
               name: newName,
-            });
+            }));
       
             alert('Name updated successfully!');
           }
@@ -47,7 +49,24 @@ const ProfilePage = () => {
           console.error('Error updating user data:', error);
         }
       };
-      
+    
+      const forgotPassword = () => {
+        try {
+            const user = FIREBASE_AUTH.currentUser;
+    
+            if (user) {
+                firebase.auth().sendPasswordResetEmail(user.email)
+                    .then(() => {
+                        alert("Password reset email sent");
+                    })
+                    .catch((error) => {
+                        alert(error.message);
+                    });
+            }
+        } catch (error) {
+            console.error('Error sending password reset email:', error);
+        }
+    };
       
 
     const getUserInfo = async () => {
@@ -173,6 +192,13 @@ const ProfilePage = () => {
           <Text style={{ color: 'black', textAlign: 'center' }}> Update Name </Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity
+    style={[styles.button, { backgroundColor: 'red' }]} // Example styling for the button
+    activeOpacity={0.7}
+    onPress={forgotPassword}
+>
+    <Text style={{ color: 'black', textAlign: 'center' }}>Forgot Password</Text>
+</TouchableOpacity>
 
 
                 <View style={styles.custom}>
@@ -220,7 +246,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        marginTop: 25,
+        marginTop: 20,
         color: "#FAC503",
     },
     icon: {
