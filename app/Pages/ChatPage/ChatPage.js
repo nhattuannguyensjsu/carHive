@@ -10,6 +10,9 @@ import addImage from '../../../assets/icons/add-image.png';
 import profileImage from '../../../assets/icons/profile.png';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import InboxPage from '../InboxPage/InboxPage';
+import { AlanView } from '@alan-ai/alan-sdk-react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
+
 
 export default function ChatPage() {
   const navigation = useNavigation();
@@ -22,6 +25,9 @@ export default function ChatPage() {
 
   const recipient = route.params.recipient;
   const currentUserEmail = FIREBASE_AUTH.currentUser.email;
+
+  const { AlanManager, AlanEventEmitter } = NativeModules;
+  const alanEventEmitter = new NativeEventEmitter(AlanEventEmitter);
 
   async function pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -63,7 +69,6 @@ export default function ChatPage() {
                 _id: docData.user,
                 avatar: profileImage,
               },
-              // If the message includes an image, add it to the message object
               ...(docData.image && { image: docData.image }),
             };
             chatMessages.push(message);
@@ -146,9 +151,25 @@ export default function ChatPage() {
     }
   }
 
+  const handleAlanCommand = (data) => {
+    if (data.command === 'send_message') {
+      const { message } = data.data;
+      setInputText(message);
+    }
+  };
+
+  useEffect(() => {
+    alanEventEmitter.addListener('command', handleAlanCommand);
+    return () => {
+      alanEventEmitter.removeAllListeners('command');
+    };
+
+}, []);
+
 
   return (
     <React.Fragment>
+
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{ padding: 5, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center' }}
@@ -164,6 +185,8 @@ export default function ChatPage() {
       <GiftedChat
         messages={messages}
         onSend={onSend}
+        text={inputText} 
+        onInputTextChanged={(text) => setInputText(text)} 
         renderActions={() => (
           <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton}>
             <Image

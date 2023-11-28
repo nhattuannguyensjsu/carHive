@@ -15,8 +15,13 @@ import { Button, TouchableOpacity } from 'react-native';
 import { doc, addDoc, collection, getDoc, updateDoc, onSnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_APP, FIREBASE_DATABASE } from '../../../firebaseConfig';
 import { FlatList } from 'react-native';
+import { AlanView, AlanManager } from '@alan-ai/alan-sdk-react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
 
-const Homepage = () => {
+
+const Homepage = ({route}) => {
+    const { height } = useWindowDimensions();
+    const Navigation = useNavigation();
     const [listingInfo, setListingInfo] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [filteredListingInfo, setFilteredListingInfo] = useState(null);
@@ -28,6 +33,11 @@ const Homepage = () => {
     const [selectedLocation, setSelectedLocation] = useState('');
     const [selectedYear, setSelectedYear] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isListening, setIsListening] = useState(false);
+
+    const { AlanManager, AlanEventEmitter } = NativeModules;
+    const alanEventEmitter = new NativeEventEmitter(AlanEventEmitter);
+
 
     const sortListingsByLowToHighPrices = () => {
         console.log('Starting sorting by low to high prices...');
@@ -126,62 +136,66 @@ const Homepage = () => {
         }
     };
 
-    // const handleSortingOption = (option) => {
-    //     setSortByPrice(option);
-    //     sortListingsByPrice(option);
+    const searchListings = async () => {
+        console.log('Search input:', searchInput);
 
-    // };
-    const searchListings = () => {
         const keywords = searchInput.toLowerCase().split(' ');
 
         const filteredList = listingInfo.filter((item) => {
-            const lowerCaseSearchInput = searchInput.toLowerCase();
             const lowerCaseTitle = item.Title.toLowerCase();
             const lowerCaseDescription = item.Description.toLowerCase();
             const lowerCaseVIN = item.VIN.toLowerCase();
             const lowerCaseLocation = item.Location.toLowerCase();
+            const lowerCaseYear = item.Year.toLowerCase();
+            const lowerCaseColor = item.Color.toLowerCase();
 
             return keywords.some((keyword) => {
                 return lowerCaseTitle.includes(keyword) ||
                     lowerCaseDescription.includes(keyword) ||
                     lowerCaseVIN.includes(keyword) ||
-                    lowerCaseLocation.includes(lowerCaseSearchInput)
-
+                    lowerCaseLocation.includes(keyword) ||
+                    lowerCaseYear.includes(keyword) ||
+                    lowerCaseColor.includes(keyword)
             });
         });
+        console.log('Filtered list:', filteredList);
+
         setFilteredListingInfo(filteredList);
+
     };
 
     const handleSearchInputChange = (text) => {
         setSearchInput(text);
     };
 
-    const handleSearchButtonClick = () => {
+    const handleSearchButtonClick = async () => {
         console.log('Starting search...');
-        setLoading(true);
         const startTime = performance.now();
         if (searchInput) {
-            searchListings();
+          searchListings();
         } else {
-            setFilteredListingInfo(null);
+          setFilteredListingInfo(null);
         }
         const endTime = performance.now();
         const elapsedTime = endTime - startTime;
         console.log(`Search completed in ${elapsedTime} ms`);
-        setLoading(false);
-    };
 
-    const getListingInfo = async () => {
+      };
+    
+      const getListingInfo = async () => {
         try {
-            const listingsCollection = collection(FIREBASE_DATABASE, 'usersListing');
-            onSnapshot(listingsCollection, (querySnapshot) => {
-                const updatedListings = querySnapshot.docs.map(doc => doc.data());
-                setListingInfo(updatedListings);
-            });
+          const listingsCollection = collection(FIREBASE_DATABASE, 'usersListing');
+          onSnapshot(listingsCollection, (querySnapshot) => {
+            const updatedListings = querySnapshot.docs
+              .filter((doc) => doc.data().status !== 'sold')
+              .map((doc) => doc.data());
+            setListingInfo(updatedListings);
+          });
         } catch (error) {
-            console.error('Error fetching user listings:', error);
+          console.error('Error fetching user listings:', error);
         }
-    };
+      };
+      
     const handleSaveToFavorites = async (listing) => {
         try {
             const user = FIREBASE_AUTH.currentUser;
@@ -206,17 +220,69 @@ const Homepage = () => {
 
     useEffect(() => {
         getListingInfo();
+        alanEventEmitter.addListener('command', handleAlanSearch);
+        return () => {
+          alanEventEmitter.removeAllListeners('command');
+        };
 
     }, []);
 
+    const handleAlanSearch = (data) => {
+        if (data.command === 'search') {
+            const { keywords } = data.data;
+            if (keywords) {
+                setSearchInput(keywords);
+            }
+        }
+    };
 
+    const handleSearchAlanButton = async () => {
+        console.log('Starting search...');
+        const startTime = performance.now();
+        if (searchInput) {
+            console.log('Search input:', searchInput);
 
-    const { height } = useWindowDimensions();
-    const Navigation = useNavigation();
+          // Your existing search logic
+          const keywords = searchInput.toLowerCase().split(' ');
+      
+          const filteredList = listingInfo.filter((item) => {
+            const lowerCaseTitle = item.Title.toLowerCase();
+            const lowerCaseDescription = item.Description.toLowerCase();
+            const lowerCaseVIN = item.VIN.toLowerCase();
+            const lowerCaseLocation = item.Location.toLowerCase();
+            const lowerCaseYear = item.Year.toLowerCase();
+            const lowerCaseColor = item.Color.toLowerCase();
+      
+            return keywords.some((keyword) => {
+              return (
+                lowerCaseTitle.includes(keyword) ||
+                lowerCaseDescription.includes(keyword) ||
+                lowerCaseVIN.includes(keyword) ||
+                lowerCaseLocation.includes(keyword) ||
+                lowerCaseYear.includes(keyword) ||
+                lowerCaseColor.includes(keyword)
+              );
+            });
+          });
+      
+          setFilteredListingInfo(filteredList);
+        } else {
+          setFilteredListingInfo(null);
+        }
+        const endTime = performance.now();
+        const elapsedTime = endTime - startTime;
+        console.log(`Search completed in ${elapsedTime} ms`);
+      };
 
-    return (
-
+    const handleVINSearch = () => {
+        Navigation.navigate('VINsearchPage');
+    };
+         
+    return ( 
         <SafeAreaView style={styles.safe}>
+
+        {/* <AlanView onCommand={handleAlanSearch}
+            projectid='c056da2846443117a4ed345f4dde6a702e956eca572e1d8b807a3e2338fdd0dc/stage' /> */}
 
             <View style={{ flex: 1 }}>
 
@@ -227,9 +293,6 @@ const Homepage = () => {
                         resizeMode="contain"
                     />
                     <Text style={styles.title}> CarHive </Text>
-
-
-
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>
@@ -248,18 +311,6 @@ const Homepage = () => {
                         placeholderTextColor="black"
                         value={searchInput}
                         onChangeText={handleSearchInputChange} />
-
-                    {/* <TouchableOpacity onPress={startRecording}
-                    >
-                        <Image
-                            style={{
-                                width: 40,
-                                height: 40,
-                                marginTop: 15,
-                                marginLeft: 10,
-                            }}
-                            source={voice} resizeMode='contain' />
-                    </TouchableOpacity> */}
 
                     <TouchableOpacity
                         onPress={handleSearchButtonClick}
@@ -309,6 +360,14 @@ const Homepage = () => {
                             resizeMode="contain"
                         />
                     </TouchableOpacity>
+
+                    <TouchableOpacity
+                    style={[styles.button3]}
+                    onPress={handleVINSearch}
+                >
+                    <Text style={{ color: 'black', textAlign: 'center' }}> VIN Search </Text>
+                </TouchableOpacity>
+                    
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>
@@ -320,13 +379,13 @@ const Homepage = () => {
                                     onPress={sortListingsByLowToHighPrices}
                                     style={styles.sortOption}
                                 >
-                                    <Text>Price: ⬆</Text>
+                                    <Text>Price ⬆</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={sortListingsByHighToLowPrices}
                                     style={styles.sortOption1}
                                 >
-                                    <Text>Price: ⬇</Text>
+                                    <Text>Price ⬇</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
@@ -334,13 +393,13 @@ const Homepage = () => {
                                     onPress={sortListingsByLowToHighYear}
                                     style={styles.sortOption}
                                 >
-                                    <Text>Year: ⬆</Text>
+                                    <Text>Year ⬆</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={sortListingsByHighToLowYear}
                                     style={styles.sortOption1}
                                 >
-                                    <Text>Year: ⬇</Text>
+                                    <Text>Year ⬇</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
@@ -348,13 +407,13 @@ const Homepage = () => {
                                     onPress={sortListingsByLowToHighMiles}
                                     style={styles.sortOption}
                                 >
-                                    <Text>Mileage: ⬆</Text>
+                                    <Text>Mileage ⬆</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={sortListingsByHighToLowMiles}
                                     style={styles.sortOption1}
                                 >
-                                    <Text>Mileage: ⬇</Text>
+                                    <Text>Mileage ⬇</Text>
                                 </TouchableOpacity>
                             </View>
 
@@ -410,16 +469,18 @@ const Homepage = () => {
                 </View>
 
                 <FlatList
-                    data={filteredListingInfo || listingInfo}
-                    keyExtractor={(item, index) => `${item.id}-${index}`}
-                    numColumns={2}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            style={styles.listingContainer}
-                            onPress={() => {
-                                Navigation.navigate('ListingPage', { listingData: item });
-                            }}
-                        >
+                data={filteredListingInfo || listingInfo}
+                keyExtractor={(item, index) =>
+                    `${item.id}-${index}-${filteredListingInfo ? 'filtered' : 'all'}`
+                }
+                numColumns={2}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                    style={styles.listingContainer}
+                    onPress={() => {
+                        Navigation.navigate('ListingPage', { listingData: item });
+                    }}
+                    >
                             <View style={styles.listingPair}>
                                 <Image
                                     source={{ uri: item.imageURL }}
@@ -449,6 +510,7 @@ const Homepage = () => {
         </SafeAreaView>
     );
 };
+
 
 const styles = StyleSheet.create({
     root: {
@@ -576,7 +638,7 @@ const styles = StyleSheet.create({
     },
     sortOption: {
         backgroundColor: 'lightgrey',
-        width: '33%',
+        width: '38%',
         height: 30,
         borderColor: 'white',
         borderWidth: 1,
@@ -607,7 +669,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         alignItems: 'center',
         marginHorizontal: 20,
-
     },
     button1: {
         width: "35%",
@@ -625,6 +686,15 @@ const styles = StyleSheet.create({
         marginBottom: -280,
         marginRight: 30
     },
+    button3: {
+        backgroundColor: "#FFD43C",
+        width: 100,
+        height: 30,
+        padding: 5,
+        borderRadius: 20,
+        marginLeft: "55%",
+        marginTop: 15
+    },
     listingContent: {
         flex: 1,
         justifyContent: 'space-between',
@@ -641,6 +711,7 @@ const styles = StyleSheet.create({
         maxHeight: 30,
         maxWidth: 30,
     },
+
 
 });
 

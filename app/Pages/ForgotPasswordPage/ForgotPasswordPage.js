@@ -4,7 +4,7 @@ import Logo from '../../../assets/images/logo.png';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native-gesture-handler';
-import { FIREBASE_APP } from '../../../firebaseConfig';
+import { firebase } from '../../../config';
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ const ForgotPasswordPage = () => {
 
     //forgot password
     const forgotpassword = () => {
-        FIREBASE_APP.auth().sendPasswordResetEmail(email)
+        firebase.auth().sendPasswordResetEmail(email)
             .then(() => {
                 alert("Password reset email sent")
             }
@@ -55,8 +55,7 @@ const ForgotPasswordPage = () => {
                     onChangeText={setEmail}
                 />
 
-                <CustomButton text="Send Code" onPress={onSendPressed} />
-                <CustomButton text="Change New Password" onPress={onNewPassword} />
+                <CustomButton text="Send Reset Link" onPress={onSendPressed} />
 
                 <Text style={{ color: "blue", textDecorationLine: "underline" }}
                     onPress={onBackSignInPressed}> Back To Sign In
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
     },
     input: {
         backgroundColor: 'lightgrey',
-        width: '90%',
+        width: '100%',
         height: 40,
         borderColor: 'white',
         borderWidth: 1,

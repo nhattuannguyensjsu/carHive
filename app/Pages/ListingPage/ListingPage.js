@@ -17,22 +17,34 @@ const ListingPage = ({ route }) => {
     const currentUserEmail = FIREBASE_AUTH.currentUser.email;
 
     useEffect(() => {
-        const { listingData } = route.params; // Get the listing data from the route params
+        const { listingData } = route.params;
 
         if (listingData) {
             setListingData(listingData);
         }
     }, [route.params]);
 
+    const handleMakeOffer = () => {
+        if (listingData.Email === currentUserEmail) {
+          navigation.navigate('EditListingPage', { listingData });
+        } else {
+          navigation.navigate('MakeOfferPage', { listingData });
+        }
+      };
+    
+
     const handleChatOrMyListing = () => {
         if (listingData.Email === currentUserEmail) {
-            // If the listing belongs to the current user, navigate to My Listing page
             navigation.navigate('MyListingPage');
         } else {
-            // If the listing belongs to someone else, navigate to the ChatPage
             navigation.navigate('ChatPage', { recipient: listingData.Email });
         }
     };
+
+    const handleEditListing = () => {
+        navigation.navigate('EditListingPage', { listingData });
+    };
+
 
     const renderItem = ({ item }) => (
         <View>
@@ -44,39 +56,29 @@ const ListingPage = ({ route }) => {
 
     return (
         <SafeAreaView style={styles.safe}>
-            <View>
                 <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={() => navigation.navigate('Homepage')}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={Goback} style={[styles.goback, { height: height * 0.05 }]} resizeMode="contain" />
                     </TouchableOpacity>
                     <Image source={Logo} style={[styles.logo, { height: height * 0.1 }]} resizeMode="contain" />
                     <Text style={styles.title}> CarHive </Text>
                 </View>
+                <ScrollView>
 
                 {listingData && (
                     <View>
                         <Image source={{ uri: listingData.imageURL }} style={styles.listingImage} resizeMode="cover" />
-
-                        {/* Listing information displayed in a FlatList */}
-                        <FlatList
-                            data={[
-                                { label: 'Email', value: listingData.Email },
-                                { label: 'Title', value: listingData.Title },
-                                { label: 'Price', value: listingData.Price },
-                                { label: 'Year', value: listingData.Year },
-                                { label: 'Color', value: listingData.Color },
-                                { label: 'Mileage', value: listingData.Mileage },
-                                { label: 'Location', value: listingData.Location },
-                                { label: 'Zipcode', value: listingData.Zipcode },
-                                { label: 'VIN', value: listingData.VIN },
-                            ]}
-
-                            renderItem={renderItem}
-                            keyExtractor={(item) => item.label}
-                        />
+                    
+                        <View>
+                            <Text selectable style={{ fontSize: 25, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>{listingData.Title}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>{listingData.Email}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Price:   {listingData.Price}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Location:    {listingData.Location}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Zip Code:    {listingData.Zipcode}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>VIN:     {listingData.VIN}</Text>
                         <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Description: </Text>
                         <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5 }}>{listingData.Description}</Text>
-
+                        </View>
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity style={styles.button1} onPress={handleChatOrMyListing}>
                                 <Text style={{ color: 'black', textAlign: 'center' }}>
@@ -84,13 +86,18 @@ const ListingPage = ({ route }) => {
                                 </Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.button}>
-                                <Text style={{ color: 'black', textAlign: 'center' }}> Make Offer </Text>
+                            <TouchableOpacity 
+                            onPress={handleMakeOffer}
+                            style={styles.button}>
+                                <Text style={{ color: 'black', textAlign: 'center' }}> 
+                                {listingData.Email === currentUserEmail ? 'Edit Listing' : 'Make Offer'}
+
+                                </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 )}
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
@@ -159,10 +166,12 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     listingImage: {
-        width: '100%',
+        width: '95%',
         height: 200,
         resizeMode: 'cover',
-        marginBottom: 10
+        marginBottom: 10,
+        marginLeft: 10,
+        borderRadius: 20
     },
     listingTitle: {
         padding: 10,
@@ -180,6 +189,17 @@ const styles = StyleSheet.create({
         marginLeft: 30,
         fontWeight: 'normal',
         fontSize: 15,
+    },
+    editButton: {
+        backgroundColor: '#FFD43C',  
+        width: '40%',
+        padding: 15,
+        alignItems: 'center',
+        borderRadius: 20,
+        alignSelf: 'center',
+        marginLeft: 20,
+        marginRight: 30,
+        marginBottom: 10
     },
 });
 

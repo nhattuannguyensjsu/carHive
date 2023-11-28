@@ -30,10 +30,12 @@ const PostPage = () => {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [files, setFiles] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const [pickedImage, setPickedImage] = useState("");
+  const [isImageSelected, setIsImageSelected] = useState(false);
 
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false); // State for success modal
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false); 
 
   async function pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -44,9 +46,19 @@ const PostPage = () => {
     });
 
     if (!result.canceled) {
-      setPickedImage(result.assets[0].uri); // Set the picked image URL
+      setPickedImage(result.assets[0].uri); 
     }
   }
+
+
+  const handleImagePress = () => {
+    if (pickedImage) {
+      setPickedImage("");
+    } else {
+      pickImage();
+    }
+  };
+
 
   async function uploadImage(uri) {
     if (!pickedImage) {
@@ -81,6 +93,26 @@ const PostPage = () => {
     );
   }
 
+  async function handleUpload() {
+    if (pickedImage && title && price && desc && Location && VIN && year && color && mileage) {
+      await uploadImage(pickedImage, "image");
+      setIsSuccessModalVisible(true);
+      // Reset the input fields
+      setTitle('');
+      setPrice('');
+      setDesc('');
+      setVIN('');
+      setLocation('');
+      setZipcode('');
+      setMileage('');
+      setColor('');
+      setYear('');
+      setPickedImage('');
+
+    } else {
+      console.log("Please fill out all fields and select an image.");
+    }
+  }
   async function saveRecord(imageURL) {
     const user = FIREBASE_AUTH.currentUser;
     const userDocRef = collection(FIREBASE_DATABASE, "usersListing");
@@ -105,28 +137,6 @@ const PostPage = () => {
       console.error("Error saving data to Firestore: ", error);
     }
   }
-
-  async function handleUpload() {
-    if (pickedImage && title && price && desc && Location && VIN && year && color && mileage) {
-      await uploadImage(pickedImage, "image");
-      setIsSuccessModalVisible(true);
-      // Reset the input fields
-      setTitle('');
-      setPrice('');
-      setDesc('');
-      setVIN('');
-      setLocation('');
-      setZipcode('');
-      setMileage('');
-      setColor('');
-      setYear('');
-      setPickedImage('');
-
-    } else {
-      console.log("Please fill out all fields and select an image.");
-    }
-  }
-
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(FIREBASE_DATABASE, "usersListing"), (snapshot) => {
       snapshot.docChanges().forEach((change) => {
@@ -141,36 +151,40 @@ const PostPage = () => {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <ScrollView>
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row' }}>
+          
+          <Image
+            source={Logo}
+            style={[styles.logo, { height: height * 0.1 }]}
+            resizeMode="contain"
+          />
+          <Text style={styles.title}> CarHive </Text>
+        </View>
 
-            <Image source={Logo}
-              style={[styles.logo, { height: height * 0.1 }]}
-              resizeMode="contain"
-            />
-            <Text style={styles.title}> CarHive </Text>
+          <ScrollView>
 
-          </View>
           <Text style={styles.heading}>Post Item</Text>
 
-          <View style={styles.body} >
-            {pickedImage ? (
-              <Image
-                source={{ uri: pickedImage }}
-                style={{ width: 300, height: 100, marginTop: 20 }}
-                resizeMode="contain"
-              />
+          <View style={styles.body}>
+          {pickedImage ? (
+              <TouchableOpacity onPress={handleImagePress}>
+                <Image
+                  source={{ uri: pickedImage }}
+                  style={{ width: 300, height: 100, marginTop: 20 }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             ) : (
-              <TouchableOpacity onPress={pickImage}>
-                <Image source={AddPhoto}
+              <TouchableOpacity onPress={handleImagePress}>
+                <Image
+                  source={AddPhoto}
                   style={[styles.image]}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
             )}
 
-            {/* <Text style={styles.subheading}> Title </Text> */}
+            <Text style={styles.subheading}> TITLE </Text>
             <TextInput style={styles.input}
               placeholder="Title"
               autoCapitalize="none"
@@ -178,45 +192,57 @@ const PostPage = () => {
               onChangeText={(text) => setTitle(text)}>
             </TextInput>
 
-
-
-            {/* <Text style={styles.subheading}> Price </Text> */}
             <View style={{ flexDirection: 'row' }}>
-              <TextInput style={styles.input2}
-                placeholder="Price"
-                keyboardType="numeric"
-                autoCapitalize="none"
-                value={price}
-                onChangeText={(text) => setPrice(text)}>
-              </TextInput>
-              <TextInput style={styles.input2}
-                placeholder="Year"
-                autoCapitalize="none"
-                value={year}
-                onChangeText={(text) => setYear(text)}>
-              </TextInput>
+              <Text style={styles.subheading1}> PRICE </Text>
+              <Text style={styles.subheading2}> YEAR </Text>
+            </View>           
+             <View style={{ flexDirection: 'row' }}>
+            <TextInput
+              style={styles.input2}
+              placeholder="Price"
+              keyboardType="numeric"
+              autoCapitalize="none"
+              value={price}
+              onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ''))}
+            />
+            <TextInput
+              style={styles.input2}
+              placeholder="Year"
+              keyboardType="numeric"
+              autoCapitalize="none"
+              value={year}
+              onChangeText={(text) => setYear(text.replace(/[^0-9]/g, ''))}
+            />
             </View>
+            
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.subheading1}> COLOR</Text>
+              <Text style={styles.subheading2}>MILEAGE </Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+
+            <TextInput
+              style={styles.input2}
+              placeholder="Color"
+              autoCapitalize="none"
+              value={color}
+              onChangeText={(text) => setColor(text.replace(/[^a-z]/g, ''))}
+
+            />
+            <TextInput
+              style={styles.input2}
+              placeholder="Mileage"
+              keyboardType="numeric"
+              autoCapitalize="none"
+              value={mileage}
+              onChangeText={(text) => setMileage(text.replace(/[^0-9]/g, ''))}
+            />        
+    </View>
 
             <View style={{ flexDirection: 'row' }}>
-              <TextInput style={styles.input2}
-                placeholder="Color"
-                autoCapitalize="none"
-                value={color}
-                onChangeText={(text) => setColor(text)}>
-              </TextInput>
-              <TextInput style={styles.input2}
-                placeholder="Mileage"
-                keyboardType="numeric"
-                autoCapitalize="none"
-                value={mileage}
-                onChangeText={(text) => setMileage(text)}>
-              </TextInput>
+              <Text style={styles.subheading1}> LOCATION</Text>
+              <Text style={styles.subheading3}>ZIPCODE </Text>
             </View>
-
-            {/* <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.subheading1}> Location </Text>
-              <Text style={styles.subheading}> Zip Code </Text>
-            </View> */}
 
             <View style={{ flexDirection: 'row' }}>
               <TextInput style={styles.input2}
@@ -234,7 +260,7 @@ const PostPage = () => {
               </TextInput>
             </View>
 
-            {/* <Text style={styles.subheading}> Description </Text> */}
+            <Text style={styles.subheading}> DESCRIPTION </Text>
             <TextInput style={styles.input1}
               placeholder="Description"
               autoCapitalize="none"
@@ -243,11 +269,12 @@ const PostPage = () => {
               onChangeText={(text) => setDesc(text)}>
             </TextInput>
 
-            {/* <Text style={styles.subheading} > Vehicle VIN </Text> */}
+            <Text style={styles.subheading} > VEHICLE VIN </Text>
             <TextInput style={styles.input}
               placeholder="VIN"
               autoCapitalize="none"
               value={VIN}
+              maxLength={17}
               onChangeText={(text) => setVIN(text)}>
             </TextInput>
 
@@ -278,9 +305,6 @@ const PostPage = () => {
               </View>
             </Modal>
           </View>
-
-        </View>
-
       </ScrollView>
     </SafeAreaView>
   )
@@ -289,9 +313,8 @@ const PostPage = () => {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "white",
-    marginTop: "-10%",
-    marginBottom: "15%"
+    backgroundColor: 'white',
+    marginTop: '-10%',
   },
   logo: {
     marginLeft: 20,
@@ -300,7 +323,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     marginTop: 25,
-    color: "#FAC503",
+    color: '#FAC503',
   },
   heading: {
     fontSize: 25,
@@ -308,19 +331,36 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   subheading: {
-    textAlign: 'center',
-    fontSize: 20
+    textAlign: 'center' ,
+    fontSize: 15,
+    marginRight: 50,
+    fontWeight: 'bold'
+
   },
   subheading1: {
-    fontSize: 20,
-    marginLeft: "-20%",
-    marginRight: "22%"
+    fontSize: 15,
+    marginLeft: '13%',
+    fontWeight: 'bold'
+
   },
+  subheading2: {
+    fontSize: 15,
+    marginLeft: '31%',
+    fontWeight: 'bold'
+
+  },
+  subheading3: {
+    fontSize: 15,
+    marginLeft: '23%',
+    fontWeight: 'bold'
+  },
+
   image: {
-    marginTop: 20,
-    width: 100,
-    height: 100,
-    alignSelf: 'center'
+    marginRight: 20,
+    width: 60,
+    height: 60,
+    alignSelf: 'center',
+    marginRight: 50
   },
   input: {
     backgroundColor: 'lightgrey',
@@ -335,7 +375,7 @@ const styles = StyleSheet.create({
   input1: {
     backgroundColor: 'lightgrey',
     width: '90%',
-    height: 150,
+    height: 100,
     borderColor: 'white',
     borderWidth: 1,
     borderRadius: 20,
@@ -354,7 +394,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   body: {
-    alignItems: 'center'
+    marginLeft: 30
   },
   modalContainer: {
     backgroundColor: 'white',
@@ -376,11 +416,12 @@ const styles = StyleSheet.create({
   },
   custom: {
     alignItems: 'center',
-    marginTop: -10
+    marginTop: -10,
+    marginRight: 40
   },
   button: {
     backgroundColor: "#FFD43C",
-    width: "80%",
+    width: "30%",
     padding: 10,
     marginVertical: 10,
     borderRadius: 20,

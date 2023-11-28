@@ -1,17 +1,15 @@
 import React, { useState, Component, useEffect } from "react";
 import {
+  TouchableOpacity,
   ScrollView,
   View,
   Text,
   TextInput,
   Image,
   StyleSheet,
-  useWindowDimensions,
-  Button,
   SafeAreaView,
 } from "react-native";
 import Logo from "../../../assets/images/logo.png";
-import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DATABASE } from "../../../firebaseConfig";
@@ -27,7 +25,11 @@ const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const auth = FIREBASE_AUTH;
 
   const onForgotPasswordPressed = () => {
@@ -41,20 +43,15 @@ const SignUpPage = () => {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          // Use the user's email as the document ID
           const userDocRef = doc(FIREBASE_DATABASE, "usersInfo", user.email);
-          // const signUpCollectionRef = collection(userDocRef, "UserInfo");
-          // Set user data in Firestore
           setDoc(userDocRef, {
             name: name,
             email: email,
             password: password,
-            // You may not want to store the password in Firestore for security reasons
-            // Instead, you can store other user-related data here
           })
             .then(() => {
-              const endTime = new Date().getTime(); // Record the end time
-              const elapsedTime = endTime - startTime; // Calculate elapsed time in milliseconds
+              const endTime = new Date().getTime(); 
+              const elapsedTime = endTime - startTime; 
               console.log(`Sign-up completed in ${elapsedTime} ms`);
 
               console.log('Data submitted');
@@ -74,7 +71,6 @@ const SignUpPage = () => {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* <ScrollView showVerticalScrollIndicator={false}> */}
       <View style={styles.root}>
         <Image source={Logo} style={[styles.logo]} resizeMode="contain" />
         <Text style={styles.text}> Welcome to CarHive! </Text>
@@ -101,8 +97,18 @@ const SignUpPage = () => {
           onChangeText={(text) => setEmail(text)}
           autoCapitalize="none">
         </TextInput>
+        <View style={{ flexDirection: 'row', alignItems: "center"}}>
 
         <Text> Password </Text>
+        <TouchableOpacity style={styles.eye} onPress={toggleShowPassword}>
+        <Image
+          source={showPassword ? require('../../../assets/icons/eyeoff.png') : require('../../../assets/icons/eye.png')}
+          style={styles.eyeIcon}
+        />
+      </TouchableOpacity>
+      </View>
+
+        
         <TextInput
           style={styles.input}
           required
@@ -110,8 +116,9 @@ const SignUpPage = () => {
           placeholder="Password"
           onChangeText={(text) => setPassword(text)}
           autoCapitalize="none"
-          secureTextEntry={true}>
+          secureTextEntry={!showPassword}>
         </TextInput>
+        
 
         {loading ? <ActivityIndicator size="large" color="#0000ff" />
           : (
@@ -132,7 +139,6 @@ const SignUpPage = () => {
 
 
       </View>
-      {/* </ScrollView> */}
     </SafeAreaView>
   );
 }
@@ -149,7 +155,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: 'lightgrey',
-    width: '90%',
+    width: '100%',
     height: 40,
     borderColor: 'white',
     borderWidth: 1,
@@ -171,6 +177,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     margin: 10,
   },
+  eyeIcon: {
+    width: 20,
+    height: 20,
+  },
+ 
+    
+
 });
 
 export default SignUpPage;
