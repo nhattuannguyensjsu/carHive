@@ -17,7 +17,9 @@ Before you begin, ensure you have the following installed on your machine:
 Node.js: Download and Install Node.js
 npm (Node Package Manager): Comes with Node.js installation
 React Native CLI: Install using the following command:
+```javascript
 ## npm install -g react-native-cli
+
 Xcode (for macOS users): Install Xcode from the App Store
 Android Studio (for Android users): Download and Install Android Studio
 
@@ -43,11 +45,6 @@ For a more seamless experience, consider running the React Native development se
 
 If you encounter Metro Bundler issues, you can reset the cache:
 ## npm start -- --reset-cache
-
-Project Structure
-/src: Contains the source code of the React Native application.
-/android: Android-specific project files.
-/ios: iOS-specific project files.
 
 # Acknowledgments
 San Jose State University, CMPE 195E/F instructors and advisors, and team members for their contributions to CarHive.
