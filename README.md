@@ -27,13 +27,13 @@ Android Studio (for Android users): Download and Install Android Studio
 
 Clone the Repository
 ```javascript
-## git clone https://github.com/your-username/CarHive.git
-## cd CarHive
+git clone https://github.com/your-username/CarHive.git
+cd CarHive
 ```
 
 Install Dependencies
 ```javascript
-## npm install
+npm install
 ```
 
 Run the Application on:
@@ -48,6 +48,12 @@ If you encounter any issues related to Xcode, open the ios folder in Xcode and r
 react-native run-android
 ```
 If you encounter any issues related to Android Studio, open the android folder in Android Studio and resolve them.
+
+## Another way to run the app
+```javascript
+npm start
+```
+Then, follow the instructions on the cmd/terminal to run the app
 
 ## Additional Steps
 For a more seamless experience, consider running the React Native development server:
