@@ -22,8 +22,8 @@ React Native CLI: Install using the following command:
 npm install -g react-native-cli
 ```
 
-Xcode (for macOS users): Install Xcode from the App Store
-Android Studio (for Android users): Download and Install Android Studio
+- Xcode (for macOS users): Install Xcode from the App Store
+- Android Studio (for Android users): Download and Install Android Studio
 
 Clone the Repository
 ```javascript
