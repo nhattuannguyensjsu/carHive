@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, useWindowDimensions, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, Image, StyleSheet, 
+    useWindowDimensions, SafeAreaView, TouchableOpacity } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
@@ -12,6 +13,11 @@ const SignInPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
 
     const auth = FIREBASE_AUTH;
 
@@ -64,14 +70,23 @@ const SignInPage = () => {
                     onChangeText={(text) => setEmail(text)}>
                 </TextInput>
 
+                <View style={{ flexDirection: 'row', alignItems: "center"}}>
                 <Text> Password </Text>
+                <TouchableOpacity style={styles.eye} onPress={toggleShowPassword}>
+                <Image
+                source={showPassword ? require('../../../assets/icons/eyeoff.png') : require('../../../assets/icons/eye.png')}
+                style={styles.eyeIcon}
+                />
+                </TouchableOpacity>
+                </View>
+
                 <TextInput style={styles.input}
                     placeholder="Password"
                     autoCapitalize="none"
                     value={password}
                     onChangeText={(text) => setPassword(text)}
-                    secureTextEntry={true}>
-                </TextInput>
+                    secureTextEntry={!showPassword}>
+                    </TextInput>
 
                 {loading ? <ActivityIndicator size="large" color="#0000ff" />
                     : (
@@ -131,6 +146,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginVertical: 10,
     },
+    eyeIcon: {
+        width: 20,
+        height: 20,
+        marginLeft: 5
+      },
 
 });
 

@@ -12,6 +12,8 @@ import ProfilePage from "../Pages/ProfilePage/ProfilePage";
 import Homepage from "../Pages/Homepage/Homepage";
 import UploadIDPage from "../Pages/UploadIDPage/UploadIDPage";
 import ListingPage from "../Pages/ListingPage";
+import VINsearchPage from "../Pages/VINsearchPage";
+import FeedbackPage from "../Pages/FeedbackPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +31,8 @@ export default function AppNavigation() {
         <Stack.Screen name="Homepage" component={Homepage} />
         <Stack.Screen name="UploadIDPage" component={UploadIDPage} />
         <Stack.Screen name="ListingPage" component={ListingPage} />
+        <Stack.Screen name="VINsearchPage" component={VINsearchPage} />
+        <Stack.Screen name="FeedbackPage" component={FeedbackPage} />
 
       </Stack.Navigator>
     </NavigationContainer>

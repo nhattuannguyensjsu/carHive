@@ -1,4 +1,4 @@
-package com.carhive;
+package com.nhattuannguyen.CARHIVE;
 
 import android.app.Application;
 import android.content.res.Configuration;
