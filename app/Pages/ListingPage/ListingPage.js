@@ -70,14 +70,17 @@ const ListingPage = ({ route }) => {
                         <Image source={{ uri: listingData.imageURL }} style={styles.listingImage} resizeMode="cover" />
                     
                         <View>
-                            <Text selectable style={{ fontSize: 25, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>{listingData.Title}</Text>
-                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>{listingData.Email}</Text>
-                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Price:   {listingData.Price}</Text>
-                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Location:    {listingData.Location}</Text>
-                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Zip Code:    {listingData.Zipcode}</Text>
-                            <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>VIN:     {listingData.VIN}</Text>
-                        <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5, fontWeight: 'bold' }}>Description: </Text>
-                        <Text selectable style={{ fontSize: 15, marginLeft: 30, marginBottom: 5 }}>{listingData.Description}</Text>
+                            <Text selectable style={{ fontSize: 20, marginLeft: 30, fontWeight: 'bold' }}>{listingData.Title}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, fontWeight: 'bold' }}>{listingData.Email}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, fontWeight: 'bold' }}>Price:   {listingData.Price}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, fontWeight: 'bold' }}>Year:   {listingData.Year}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, fontWeight: 'bold' }}>Color:   {listingData.Color}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, fontWeight: 'bold' }}>Mileage:   {listingData.Mileage}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, fontWeight: 'bold' }}>Location:    {listingData.Location}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, fontWeight: 'bold' }}>Zip Code:    {listingData.Zipcode}</Text>
+                            <Text selectable style={{ fontSize: 15, marginLeft: 30, fontWeight: 'bold' }}>VIN:     {listingData.VIN}</Text>
+                        <Text selectable style={{ fontSize: 15, marginLeft: 30, fontWeight: 'bold' }}>Description: </Text>
+                        <Text selectable style={{ fontSize: 15, marginLeft: 30 }}>{listingData.Description}</Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity style={styles.button1} onPress={handleChatOrMyListing}>

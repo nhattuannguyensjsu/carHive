@@ -136,8 +136,7 @@ const ProfilePage = () => {
 
       <View>
         <View style={{ flexDirection: 'row', marginBottom: -40 }}>
-          <Text style={styles.text_sub}>
-            Name: {userInfo ? userInfo.name : ''}
+          <Text style={styles.text_sub}> Name: {userInfo ? userInfo.name : ''}
           </Text>
           <TouchableOpacity
             onPress={() => setModalVisible(true)} 

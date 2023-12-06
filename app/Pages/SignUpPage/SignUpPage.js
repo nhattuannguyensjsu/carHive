@@ -16,7 +16,7 @@ import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DATABASE } from "../../../firebas
 import { ActivityIndicator } from 'react-native-web';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, addDoc, collection } from "firebase/firestore";
-
+import Modal from 'react-native-modal';
 
 const SignUpPage = () => {
 
@@ -26,15 +26,23 @@ const SignUpPage = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
   const auth = FIREBASE_AUTH;
 
   const onForgotPasswordPressed = () => {
     Navigation.navigate('ForgotPasswordPage');
   }
+
+  const goToSignInPage = () => {
+    Navigation.navigate('SignInPage');
+  };
 
   const SignUp = async () => {
     if (email !== '' && password !== '') {
@@ -53,9 +61,8 @@ const SignUpPage = () => {
               const endTime = new Date().getTime(); 
               const elapsedTime = endTime - startTime; 
               console.log(`Sign-up completed in ${elapsedTime} ms`);
-
+              toggleModal(); 
               console.log('Data submitted');
-              Navigation.navigate("SignUpConfirmationPage");
             })
             .catch((error) => {
               console.error("Error writing document: ", error);
@@ -66,8 +73,6 @@ const SignUpPage = () => {
         });
     }
   };
-
-
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -129,14 +134,24 @@ const SignUpPage = () => {
               <CustomButton
                 text="Sign Up" onPress={() => SignUp()} />
 
+          <CustomButton
+          text="Already have an account? Click here to Login"
+          onPress={() => Navigation.navigate("SignInPage")} />
 
             </>
           )}
 
-        <CustomButton
-          text="Already have an account? Click here to Login"
-          onPress={() => Navigation.navigate("SignInPage")} />
+        
 
+          <Modal isVisible={isModalVisible}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Sign Up Successfully!</Text>
+            <CustomButton text="Go Back to Sign In" onPress={() => {
+              toggleModal();
+              goToSignInPage();
+                          }} />
+          </View>
+        </Modal>
 
       </View>
     </SafeAreaView>
@@ -180,6 +195,19 @@ const styles = StyleSheet.create({
   eyeIcon: {
     width: 20,
     height: 20,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+    
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
  
     

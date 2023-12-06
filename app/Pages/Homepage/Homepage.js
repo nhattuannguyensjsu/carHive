@@ -520,7 +520,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white",
         marginTop: "-10%",
-        marginBottom: "15%"
     },
     icons: {
         marginTop: 10,

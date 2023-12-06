@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, StyleSheet, useWindowDimensions } from 'react-native'
+import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState } from 'react'
 import Logo from '../../../assets/images/logo.png';
@@ -13,7 +13,7 @@ import { TouchableOpacity } from 'react-native';
 import AddPhoto from '../../../assets/images/addphoto.png';
 import * as ImagePicker from "expo-image-picker";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
+import { ScrollView } from 'react-native-gesture-handler';
 const PostPage = () => {
 
   const { height } = useWindowDimensions();
@@ -161,7 +161,7 @@ const PostPage = () => {
           <Text style={styles.title}> CarHive </Text>
         </View>
 
-          <ScrollView>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
 
           <Text style={styles.heading}>Post Item</Text>
 
@@ -170,7 +170,8 @@ const PostPage = () => {
               <TouchableOpacity onPress={handleImagePress}>
                 <Image
                   source={{ uri: pickedImage }}
-                  style={{ width: 300, height: 100, marginTop: 20 }}
+                  style={{ width: 300, height: 100, marginTop: 10
+                  }}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
@@ -226,7 +227,7 @@ const PostPage = () => {
               placeholder="Color"
               autoCapitalize="none"
               value={color}
-              onChangeText={(text) => setColor(text.replace(/[^a-z]/g, ''))}
+              onChangeText={(text) => setColor(text.replace(/[^a-zA-Z]/g, ''))}
 
             />
             <TextInput
@@ -360,7 +361,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     alignSelf: 'center',
-    marginRight: 50
+    marginRight: 50,
   },
   input: {
     backgroundColor: 'lightgrey',
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     paddingHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 5,
   },
   input1: {
     backgroundColor: 'lightgrey',

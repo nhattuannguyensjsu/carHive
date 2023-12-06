@@ -35,9 +35,10 @@ const VINSearchPage = () => {
           vin: vin
         },
         headers: {
-          'X-RapidAPI-Key': '3344d43135mshf5ef6f8b1605ac3p1d4a5bjsn231837c90b84',
+          'X-RapidAPI-Key': '9531c4d218mshe08df7808f927dcp149005jsndd878704a7e6',
           'X-RapidAPI-Host': 'vindecoder.p.rapidapi.com'
         }
+        
       };
 
       const carInfoResponse = await axios.request(carInfoOptions);
@@ -50,17 +51,15 @@ const VINSearchPage = () => {
           vin: vin
         },
         headers: {
-          'X-RapidAPI-Key': '3344d43135mshf5ef6f8b1605ac3p1d4a5bjsn231837c90b84',
+          'X-RapidAPI-Key': '9531c4d218mshe08df7808f927dcp149005jsndd878704a7e6',
           'X-RapidAPI-Host': 'vindecoder.p.rapidapi.com'
         }
       };
 
       const salvageCheckResponse = await axios.request(salvageCheckOptions);
 
-      // Assuming the salvage information is directly in the response
       const salvageInfoData = salvageCheckResponse.data;
 
-      // Check if salvageInfoData is defined and not empty
       if (salvageInfoData !== undefined && Object.keys(salvageInfoData).length > 0) {
         setSalvageInfo(salvageInfoData);
       } else {
@@ -116,7 +115,6 @@ const VINSearchPage = () => {
         <View style={styles.resultContainer}>
           <Text style={styles.resultLabel}>Car Information:</Text>
           {Object.entries(flattenObject(carInfo)).map(([key, value]) => {
-            // Exclude keys starting with 'success' and 'vin'
             if (!key.toLowerCase().startsWith('success') && !key.toLowerCase().startsWith('vin')) {
               const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
               const displayKey = formattedKey.startsWith('Specification') ? formattedKey.split('.').pop() : formattedKey;
@@ -133,15 +131,12 @@ const VINSearchPage = () => {
           {Object.entries(flattenObject(salvageInfo)).map(([key, value]) => {
             const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
-            // Remove prefix 'info.' from the key
             const displayKey = formattedKey.replace(/^Info\./i, '');
 
-            // Exclude the 'Salvage' key
             if (displayKey.toLowerCase() === 'salvage') {
               return null;
             }
 
-            // Check if the key contains 'success' or 'info'
             if (!displayKey.toLowerCase().includes('success') && !displayKey.toLowerCase().includes('info')) {
               return <Text key={key}>{`${displayKey}: ${value}`}</Text>;
             }
@@ -149,7 +144,6 @@ const VINSearchPage = () => {
             return null;
           })}
 
-          {/* Additional check for 'success' property */}
           {salvageInfo.success !== undefined && (
             <Text>
               {salvageInfo.success

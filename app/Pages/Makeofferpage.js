@@ -24,8 +24,14 @@ const MakeOfferPage = ({route}) => {
       if (!price || isNaN(price)) {
         return;
       }
-  
-      const offerMessage = `"${listingData.Email}" has made an offer on listing "${listingData.Title}" for $${price}`;
+
+    const user = FIREBASE_AUTH.currentUser.email;
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
+
+      const offerMessage = `"${user}" has made an offer on listing "${listingData.Title}" for $${price}`;
   
       await addDoc(collection(FIREBASE_DATABASE, 'chats'), {
         text: offerMessage,

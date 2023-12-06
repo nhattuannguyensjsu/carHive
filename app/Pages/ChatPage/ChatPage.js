@@ -44,7 +44,80 @@ export default function ChatPage() {
     }
   }
 
+  async function onSend(newMessages = []) {
+    try {
+      const newMessage = newMessages[0];
+      if (!newMessage) {
+        return;
+      }
+  
+      console.log('Starting send message...');
+      setLoading(true);
+  
+      const startTime = performance.now();
+  
+      const messageData = {
+        user: newMessage.user._id,
+        createdAt: newMessage.createdAt,
+        recipient: recipient,
+      };
+  
+      if (newMessage.text) {
+        messageData.text = newMessage.text;
+      }
+  
+      if (pickedImage) {
+        console.log('Starting send image...');
+        // Send image message
+        const imageURI = pickedImage;
+        const storageRef = ref(FIREBASE_STORAGE, `ChatImages/${new Date().getTime()}`);
+        const imageBlob = await fetch(imageURI).then((response) => response.blob());
+        const uploadTask = uploadBytesResumable(storageRef, imageBlob);
+  
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+          },
+          (error) => {
+            console.error('Error uploading image:', error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+              console.log("File available at", downloadURL);
+              // Save the image URL in the database
+              messageData.image = downloadURL;
+              await addDoc(collection(FIREBASE_DATABASE, 'chats'), messageData);
+              const endTime = performance.now();
+              const elapsedTime = endTime - startTime;
+              console.log(`Send image completed in ${elapsedTime} ms`);
+              setLoading(false); // Reset loading state
+              setPickedImage(null); // Reset pickedImage after sending
+            });
+          }
+        );
+      } else if (newMessage.text) {
+        // Send text message only
+        await addDoc(collection(FIREBASE_DATABASE, 'chats'), messageData);
+      }
+  
+      const endTime = performance.now();
+      const elapsedTime = endTime - startTime;
+      console.log(`Send message completed in ${elapsedTime} ms`);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  }
+  
 
+  const handleImagePress = () => {
+    if (pickedImage) {
+      setPickedImage("");
+    } else {
+      pickImage();
+    }
+  };
 
   useEffect(() => {
     const loadChatHistory = async () => {
@@ -91,66 +164,69 @@ export default function ChatPage() {
       if (!newMessage) {
         return;
       }
-
-      if (newMessage.text) {
-        // Send text message
-        console.log('Starting send text...');
-        setLoading(true);
-        const startTime = performance.now();
-        await addDoc(collection(FIREBASE_DATABASE, 'chats'), {
-          text: newMessage.text,
-          user: newMessage.user._id,
-          createdAt: newMessage.createdAt,
-          recipient: recipient,
-        });
-        const endTime = performance.now();
-        const elapsedTime = endTime - startTime;
-        console.log(`Send text completed in ${elapsedTime} ms`);
-      }
-
-      if (pickedImage) {
-        console.log('Starting send image...');
-        setLoading(true);
-        const startTime = performance.now();
-        // Send image message
-        const imageURI = pickedImage;
-        const storageRef = ref(FIREBASE_STORAGE, `ChatImages/${new Date().getTime()}`);
-        const imageBlob = await fetch(imageURI).then((response) => response.blob());
-        const uploadTask = uploadBytesResumable(storageRef, imageBlob);
-
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-          },
-          (error) => {
-            console.error('Error uploading image:', error);
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-              console.log("File available at", downloadURL);
-              // Save the image URL in the database
-              await addDoc(collection(FIREBASE_DATABASE, 'chats'), {
-                image: downloadURL,
-                user: newMessage.user._id,
-                createdAt: newMessage.createdAt,
-                recipient: recipient,
+  
+      console.log('Starting send message...');
+      setLoading(true);
+  
+      const startTime = performance.now();
+  
+      if (newMessage.text || pickedImage) {
+        if (newMessage.text) {
+          // Send text message
+          await addDoc(collection(FIREBASE_DATABASE, 'chats'), {
+            text: newMessage.text,
+            user: newMessage.user._id,
+            createdAt: newMessage.createdAt,
+            recipient: recipient,
+          });
+        }
+  
+        if (pickedImage) {
+          console.log('Starting send image...');
+          // Send image message
+          const imageURI = pickedImage;
+          const storageRef = ref(FIREBASE_STORAGE, `ChatImages/${new Date().getTime()}`);
+          const imageBlob = await fetch(imageURI).then((response) => response.blob());
+          const uploadTask = uploadBytesResumable(storageRef, imageBlob);
+  
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log("Upload is " + progress + "% done");
+            },
+            (error) => {
+              console.error('Error uploading image:', error);
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                console.log("File available at", downloadURL);
+                // Save the image URL in the database
+                await addDoc(collection(FIREBASE_DATABASE, 'chats'), {
+                  image: downloadURL,
+                  user: newMessage.user._id,
+                  createdAt: newMessage.createdAt,
+                  recipient: recipient,
+                });
+                const endTime = performance.now();
+                const elapsedTime = endTime - startTime;
+                console.log(`Send image completed in ${elapsedTime} ms`);
+                setLoading(false); // Reset loading state
+                setPickedImage(null); // Reset pickedImage after sending
               });
-              const endTime = performance.now();
-              const elapsedTime = endTime - startTime;
-              console.log(`Send image completed in ${elapsedTime} ms`);
-            });
-          }
-        );
-
-        setPickedImage(null); // Reset pickedImage after sending
+            }
+          );
+        }
       }
+  
+      const endTime = performance.now();
+      const elapsedTime = endTime - startTime;
+      console.log(`Send message completed in ${elapsedTime} ms`);
     } catch (error) {
       console.error('Error sending message:', error);
     }
   }
-
+  
   const handleAlanCommand = (data) => {
     if (data.command === 'send_message') {
       const { message } = data.data;
@@ -185,8 +261,9 @@ export default function ChatPage() {
       <GiftedChat
         messages={messages}
         onSend={onSend}
-        text={inputText} 
-        onInputTextChanged={(text) => setInputText(text)} 
+        text={inputText}
+        onInputTextChanged={(text) => setInputText(text)}
+        alwaysShowSend
         renderActions={() => (
           <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton}>
             <Image
@@ -200,8 +277,12 @@ export default function ChatPage() {
           _id: currentUserEmail,
         }}
       />
+
+
       {pickedImage && (
+        <TouchableOpacity onPress={handleImagePress}> 
         <Image source={{ uri: pickedImage }} style={styles.pickedImage} resizeMode="contain" />
+        </TouchableOpacity>
       )}
     </React.Fragment>
   );
@@ -228,7 +309,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   pickedImage: {
-    width: 100,
+    width: 150,
     height: 100,
     marginLeft: 20
   },

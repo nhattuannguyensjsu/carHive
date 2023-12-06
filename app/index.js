@@ -45,33 +45,70 @@ const OutsideStack = createNativeStackNavigator();
 
 export default function Home() {
 
-  const [user, setUser] = useState(null);
+  const [authUser, setAuthUser] = useState(null);
 
 
   useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (authUser) => {
+      setAuthUser(authUser);
     });
+
+    return () => unsubscribe();
   }, []);
-  function InsideLayout() {
+
+  
+  const InsideLayout = () => {
     return (
       <SafeAreaView style={styles.text}>
         <InsideStack.Navigator>
-          <InsideStack.Screen name="HomepageNavi" component={HomepageNavi} options={{ headerShown: false }} />
-
+          <InsideStack.Screen
+            name="HomepageNavi"
+            component={HomepageNavi}
+            options={{ headerShown: false }}
+          />
         </InsideStack.Navigator>
       </SafeAreaView>
-    )
-  }
+    );
+  };
 
   return (
 
     <SafeAreaView style={styles.text}>
       <NavigationContainer independent={true}>
 
-        <Stack.Navigator initialRouteName='SignInPage'>
+      <Stack.Navigator initialRouteName={authUser ? 'Inside' : 'SignInPage'}>
+          {authUser ? (
+            <Stack.Screen
+              name='Inside'
+              component={HomepageNavi}
+              options={{ headerShown: false }}
+            />
+          ) : (
+            <> 
+            <Stack.Screen
+              name='SignInPage'
+              component={SignInPage}
+              options={{ headerShown: false }}
+            />
+            </>
 
-          {user ? (
+          )}   
+          <Stack.Screen name='SignUpPage' component={SignUpPage} options={{ headerShown: false }} />     
+          <Stack.Screen name="ChatPage" component={ChatPage} options={{ headerShown: false }} />
+          <Stack.Screen name="InboxPage" component={InboxPage} options={{ headerShown: false }} />
+          <Stack.Screen name="ListingPage" component={ListingPage} options={{ headerShown: false }} />
+          <Stack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
+          <Stack.Screen name="UploadIDPage" component={UploadIDPage} options={{ headerShown: false }} />
+          <Stack.Screen name="SignUpConfirmationPage" component={SignUpConfirmationPage} options={{ headerShown: false }} />
+          <Stack.Screen name='ForgotPasswordPage' component={ForgotPasswordPage} options={{ headerShown: false }} />
+          <Stack.Screen name='NewPasswordPage' component={NewPasswordPage} options={{ headerShown: false }} />
+          <Stack.Screen name='FavoritePage' component={FavoritePage} options={{ headerShown: false }} />
+          <Stack.Screen name='VINsearchPage' component={VINsearchPage} options={{ headerShown: false }} />
+          <Stack.Screen name='FeedbackPage' component={FeedbackPage} options={{ headerShown: false }} />
+          <Stack.Screen name='EditListingPage' component={EditListingPage} options={{ headerShown: false }} />
+          <Stack.Screen name='MakeOfferPage' component={MakeOfferPage} options={{ headerShown: false }} />
+
+          {/* {user ? (
             <Stack.Screen name='Inside' component={InsideLayout} options={{ headerShown: false }} />
           ) : (
             <Stack.Screen name='SignInPage' component={SignInPage} options={{ headerShown: false }} />
@@ -89,7 +126,7 @@ export default function Home() {
           <Stack.Screen name='VINsearchPage' component={VINsearchPage} options={{ headerShown: false }} />
           <Stack.Screen name='FeedbackPage' component={FeedbackPage} options={{ headerShown: false }} />
           <Stack.Screen name='EditListingPage' component={EditListingPage} options={{ headerShown: false }} />
-          <Stack.Screen name='MakeOfferPage' component={MakeOfferPage} options={{ headerShown: false }} />
+          <Stack.Screen name='MakeOfferPage' component={MakeOfferPage} options={{ headerShown: false }} /> */}
 
         </Stack.Navigator>
       </NavigationContainer>
@@ -115,12 +152,12 @@ const screenOptions = {
   tabBarShowLabel: false,
   headerShown: false,
   tabBarStyle: {
-    position: "absolute",
-    bottom: -30,
+    position: "absolute" ,
+    bottom: -40,
     right: 0,
     left: 0,
     elevation: 10,
-    height: 100,
+    height: 95,
     background: "#FFD43C"
   }
 }
