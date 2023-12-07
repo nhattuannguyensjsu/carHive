@@ -27,7 +27,7 @@ npm install -g react-native-cli
 
 Clone the Repository
 ```javascript
-git clone https://github.com/your-username/carHive.git
+git clone https://github.com/nhattuannguyensjsu/carHive.git
 cd carHive
 ```
 
