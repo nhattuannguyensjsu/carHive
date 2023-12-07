@@ -1,7 +1,6 @@
 # [CarHive: Cost-effective and Safe Car Trade Platform]
-
 # CMPE 195E/F San Jose State University
-
+## Github Repo: https://github.com/nhattuannguyensjsu/carHive
 # Team Member
 - Eleasha Dela Cruz
 - Mai Vo Xuan Tran
